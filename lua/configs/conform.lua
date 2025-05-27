@@ -1,15 +1,21 @@
 local options = {
   formatters_by_ft = {
     lua = { "stylua" },
-    -- css = { "prettier" },
-    -- html = { "prettier" },
+    py = { "ast-grep" },
+    javascript = { "ast-grep" },
+    rust = { "ast-grep" },
+    typescript = { "ast-grep" },
+    go = { "ast-grep" },
+    cpp = { "clangd" },
+    c = { "clangd" },
+    jsx = { "ast-grep" },
+    elixir = { "mix" },
   },
-
-  -- format_on_save = {
-  --   -- These options will be passed to conform.format()
-  --   timeout_ms = 500,
-  --   lsp_fallback = true,
-  -- },
+  default_format_opts = {
+    lsp_format = "fallback",
+  },
+  -- Set up format-on-save
+  format_on_save = { timeout_ms = 500 },
 }
 
 return options
