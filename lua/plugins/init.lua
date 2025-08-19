@@ -1,6 +1,8 @@
 local NS = { noremap = true, silent = true }
 
 return {
+  { "github/copilot.vim", lazy = false },
+  { "OmniSharp/omnisharp-vim" },
   { "ranjithshegde/ccls.nvim" },
   {
     "jmacadie/telescope-hierarchy.nvim",
@@ -209,6 +211,10 @@ return {
     "nvim-tree/nvim-tree.lua",
     config = function(_)
       require("nvim-tree").setup {
+        diagnostics = {
+          enable = true,
+          show_on_dirs = true,
+        },
         view = {
           side = "right",
         },

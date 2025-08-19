@@ -13,6 +13,9 @@ function Close_buffer()
   vim.cmd "bnext | bd! #"
 end
 
+vim.g.copilot_no_tab_map = true
+vim.api.nvim_set_keymap("i", "<C-K>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+
 unmap("n", "<leader>th")
 unmap("n", "<TAB>")
 unmap("n", "<leader>fh")
@@ -42,7 +45,7 @@ map(
 
 map("n", "<leader>t", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
 
-map("i", "jk", "<ESC>")
+map("i", "jk", "<ESC>l")
 
 map("n", "<leader>q", function()
   Close_buffer()
@@ -112,3 +115,6 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.keymap.set("n", "<leader>l", ":echo 'awe'<CR>", { buffer = true })
   end,
 })
+
+-- inlay hint
+-- shift + k
