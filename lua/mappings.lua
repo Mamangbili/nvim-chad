@@ -13,6 +13,15 @@ function Close_buffer()
   vim.cmd "bnext | bd! #"
 end
 
+map("n", "<C-y>", "<C-r>", { noremap = true, silent = true })
+
+map("n", "zk", function()
+  local winid = require("ufo").peekFoldedLinesUnderCursor()
+  if not winid then
+    vim.lsp.buf.hover()
+  end
+end, { desc = "peek fold or lsp hover", noremap = true })
+
 vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<C-K>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 
@@ -26,6 +35,7 @@ map("n", "<C-i>", "<C-i>")
 map("n", "<leader>y", ":setf cpp<Cr>", { desc = "setfile to cpp", noremap = true })
 
 local telescope = require "telescope.builtin"
+map("n", "<leader>fx", telescope.lsp_workspace_symbols, { desc = "Find symbols in workspace", noremap = true })
 map("n", "<leader>fs", telescope.lsp_document_symbols, { desc = "Find document symbols", noremap = true })
 map("n", "<leader>fr", telescope.lsp_references, { desc = "Find document symbols", noremap = true })
 map(

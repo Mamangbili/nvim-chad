@@ -4,17 +4,49 @@ require("nvchad.configs.lspconfig").defaults()
 local lspconfig = require "lspconfig"
 
 -- EXAMPLE
-local servers = { "html", "cssls", "eslint", "omnisharp" }
+local servers = { "html", "cssls", "eslint", "omnisharp", "cmake", "yamlls" }
 local nvlsp = require "nvchad.configs.lspconfig"
+
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.foldingRange = {
+  dynamicRegistration = false,
+  lineFoldingOnly = true,
+}
+
+local language_servers = vim.lsp.get_clients() -- or list servers manually like {'gopls', 'clangd'}
+for _, ls in ipairs(language_servers) do
+  require("lspconfig")[ls].setup {
+    capabilities = capabilities,
+    -- you can add other fields for setting up lsp server in this table
+  }
+end
 
 -- lsps with default config
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = nvlsp.on_attach,
     on_init = nvlsp.on_init,
-    capabilities = nvlsp.capabilities,
+    capabilities = capabilities,
   }
 end
+
+lspconfig["pyright"].setup {
+  on_attach = nvlsp.on_attach,
+  on_init = nvlsp.on_init,
+  capabilities = nvlsp.capabilities,
+  settings = {
+    python = {
+      analysis = {
+        useLibraryCodeForTypes = true,
+        diagnosticSeverityOverrides = {
+          reportUnusedVariable = "warning",
+        },
+        typeCheckingMode = "standard", -- Set type-checking mode to off
+        diagnosticMode = "workspace", -- Disable diagnostics entirely
+      },
+    },
+  },
+}
 
 lspconfig["ts_ls"].setup {
   on_attach = nvlsp.on_attach,
@@ -37,9 +69,16 @@ lspconfig.clangd.setup {
   on_attach = nvlsp.on_attach,
   on_init = nvlsp.on_init,
   capabilities = nvlsp.capabilities,
+  cmd = {
+    "clangd",
+    "--background-index",
+    "--clang-tidy",
+    "--log=verbose",
+  },
   init_options = {
     fallbackFlags = { "-std=c++23" },
   },
+  root_dir = require("lspconfig.util").root_pattern(".clangd", ".git"),
 }
 
 lspconfig.omnisharp.setup {

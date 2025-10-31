@@ -1,6 +1,15 @@
 local NS = { noremap = true, silent = true }
 
 return {
+  { "p00f/clangd_extensions.nvim", event = "VeryLazy", opts = {} },
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    event = "VeryLazy",
+    ---@module "ibl"
+    ---@type ibl.config
+    opts = {},
+  },
   { "github/copilot.vim", lazy = false },
   { "OmniSharp/omnisharp-vim" },
   { "ranjithshegde/ccls.nvim" },
@@ -56,54 +65,7 @@ return {
       "mfussenegger/nvim-dap",
       "nvim-neotest/nvim-nio",
     },
-    config = function()
-      local dap = require "dap"
-      dap.adapters.codelldb = {
-        type = "executable",
-        command = "C:\\Users\\MSiGAMING\\Desktop\\extension\\adapter\\codelldb.exe",
-        -- khusus window
-        -- detached = false,
-      }
-      dap.adapters.cppdbg = {
-        id = "cppdbg",
-        type = "executable",
-        command = "C:\\Users\\MSiGAMING\\Desktop\\extension\\debugAdapters\\bin\\OpenDebugAD7.exe",
-        options = {
-          detached = false,
-        },
-      }
-      dap.configurations.cpp = {
-        {
-          name = "Launch",
-          type = "codelldb",
-          request = "launch",
-          program = function()
-            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "\\", "file")
-          end,
-          cwd = "${workspaceFolder}",
-          stopOnEntry = false,
-          args = {},
-        },
-      }
-      local dapui = require "dapui"
-      dapui.setup()
-      dap.listeners.after.event_initialized["dapui_config"] = function()
-        dapui.open()
-      end
-      dap.listeners.after.event_terminated["dapui_config"] = function()
-        dapui.close()
-      end
-      dap.listeners.after.event_exited["dapui_config"] = function()
-        dapui.close()
-      end
-
-      vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
-      vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Continue" })
-      vim.keymap.set("n", "<F1>", dap.step_over)
-      vim.keymap.set("n", "<F2>", dap.step_into)
-      vim.keymap.set("n", "<F3>", dap.step_out)
-      vim.keymap.set("n", "<F10>", dapui.close)
-    end,
+    config = require "configs.dap-ui",
   },
   {
     "jay-babu/mason-nvim-dap.nvim",
@@ -187,6 +149,7 @@ return {
   -- These are some examples, uncomment them if you want to see them work!
   {
     "neovim/nvim-lspconfig",
+    event = "VeryLazy",
     config = function()
       require "configs.lspconfig"
     end,
@@ -209,24 +172,12 @@ return {
 
   {
     "nvim-tree/nvim-tree.lua",
-    config = function(_)
-      require("nvim-tree").setup {
-        diagnostics = {
-          enable = true,
-          show_on_dirs = true,
-        },
-        view = {
-          side = "right",
-        },
-        on_attach = function(bufnr)
-          local api = require "nvim-tree.api"
-          local map = vim.keymap.set
-
-          api.config.mappings.default_on_attach(bufnr)
-          map("n", "D", api.marks.bulk.delete, { desc = "hapus bulk di tree buffer", noremap = true, buffer = bufnr })
-        end,
-      }
-    end,
+    event = "VeryLazy",
+    config = require "configs.nvim-tree",
+  },
+  {
+    "folke/which-key.nvim",
+    lazy = false,
   },
   {
     "williamboman/mason.nvim",
@@ -238,6 +189,61 @@ return {
         "eslint-lsp",
       },
     },
+  },
+  {
+    "ewis6991/gitsigns.nvim",
+    event = "VeryLazy",
+  },
+  {
+    "Badhi/nvim-treesitter-cpp-tools",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    -- Optional: Configuration
+    opts = function()
+      local options = {
+        preview = {
+          quit = "q", -- optional keymapping for quit preview
+          accept = "<tab>", -- optional keymapping for accept preview
+        },
+        header_extension = "h", -- optional
+        source_extension = "cpp", -- optional
+        custom_define_class_function_commands = { -- optional
+          TSCppImplWrite = {
+            output_handle = require("nt-cpp-tools.output_handlers").get_add_to_cpp(),
+          },
+          --[[
+                <your impl function custom command name> = {
+                    output_handle = function (str, context) 
+                        -- string contains the class implementation
+                        -- do whatever you want to do with it
+                    end
+                }
+                ]]
+        },
+      }
+      return options
+    end,
+    -- End configuration
+    config = true,
+  },
+  {
+    "kevinhwang91/nvim-ufo",
+    dependencies = "kevinhwang91/promise-async",
+    event = "VeryLazy",
+    config = require "configs.ufo",
+    opts = {
+      provider_selector = function(bufnr, filetype, buftype)
+        return { "lsp", "indent" }
+      end,
+    },
+  },
+  {
+    "ThePrimeagen/refactoring.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    event = "VeryLazy",
+    opts = require "configs.refactor",
   },
 
   -- {
