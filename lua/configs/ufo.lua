@@ -10,17 +10,26 @@ return function(_, opts)
 
   require("ufo").setup(opts)
 
-  vim.api.nvim_create_autocmd({ "BufWinLeave" }, {
-    pattern = { "*" },
+  -- Save folds on exit (only for real files)
+  vim.api.nvim_create_autocmd("BufWinLeave", {
+    pattern = "*",
     desc = "Save folds on exit",
-    command = "mkview",
+    callback = function()
+      if vim.fn.expand "%" ~= "" then
+        vim.cmd "mkview"
+      end
+    end,
   })
 
-  vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
-    pattern = { "*" },
+  -- Load folds on entry (only for real files)
+  vim.api.nvim_create_autocmd("BufWinEnter", {
+    pattern = "*",
     desc = "Load folds on entry",
-    command = "silent! loadview",
+    callback = function()
+      if vim.fn.expand "%" ~= "" then
+        vim.cmd "silent! loadview"
+      end
+    end,
   })
-
-  vim.opt.foldopen:remove "search"
+  vim.opt.foldopen:remove { "search", "hor" }
 end

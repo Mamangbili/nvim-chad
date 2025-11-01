@@ -1,7 +1,11 @@
 local NS = { noremap = true, silent = true }
 
 return {
-  { "p00f/clangd_extensions.nvim", event = "VeryLazy", opts = {} },
+  {
+    "p00f/clangd_extensions.nvim",
+    event = "VeryLazy",
+    opts = require("configs.clangd-extension").options,
+  },
   {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
