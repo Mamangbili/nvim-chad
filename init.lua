@@ -85,7 +85,10 @@ if vim.g.vscode then
 else
   vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
   vim.g.mapleader = " "
-  vim.o.shell = "powershell"
+  vim.o.shell = "powershell.exe"
+  vim.o.shellcmdflag = "-Command"
+  vim.opt.shellquote = ""
+  vim.opt.shellxquote = ""
   vim.o.relativenumber = true
   vim.o.clipboard = ""
 

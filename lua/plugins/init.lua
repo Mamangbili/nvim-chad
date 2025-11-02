@@ -2,16 +2,99 @@ local NS = { noremap = true, silent = true }
 
 return {
   {
-    "p00f/clangd_extensions.nvim",
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
     event = "VeryLazy",
-    opts = require("configs.clangd-extension").options,
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = require "configs.harpoon",
+  },
+  {
+    "isakbm/gitgraph.nvim",
+    dependencies = {
+      "sindrets/diffview.nvim",
+    },
+    opts = {
+      git_cmd = "git",
+      symbols = {
+        merge_commit = "M",
+        commit = "*",
+      },
+      format = {
+        timestamp = "%H:%M:%S %d-%m-%Y",
+        fields = { "hash", "timestamp", "author", "branch_name", "tag" },
+      },
+      hooks = {
+        -- Check diff of a commit
+        on_select_commit = function(commit)
+          vim.notify("DiffviewOpen " .. commit.hash .. "^!")
+          vim.cmd(":DiffviewOpen " .. commit.hash .. "^!")
+        end,
+        -- Check diff from commit a -> commit b
+        on_select_range_commit = function(from, to)
+          vim.notify("DiffviewOpen " .. from.hash .. "~1.." .. to.hash)
+          vim.cmd(":DiffviewOpen " .. from.hash .. "~1.." .. to.hash)
+        end,
+      },
+    },
+    keys = {
+      {
+        "<leader>gl",
+        function()
+          require("gitgraph").draw({}, { all = true, max_count = 5000 })
+        end,
+        desc = "GitGraph - Draw",
+      },
+    },
+  },
+  {
+    "kdheepak/lazygit.nvim",
+    event = "VeryLazy",
+    cmd = {
+      "LazyGit",
+      "LazyGitConfig",
+      "LazyGitCurrentFile",
+      "LazyGitFilter",
+      "LazyGitFilterCurrentFile",
+    },
+    -- optional for floating window border decoration
+    dependencies = {
+      "nvim-telescope/telescope.nvim",
+      "nvim-lua/plenary.nvim",
+    },
+    opts = {
+      config = {},
+    },
+    keys = {
+      { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
+    },
+    config = function()
+      require("telescope").load_extension "lazygit"
+    end,
+  },
+
+  {
+    "NeogitOrg/neogit",
+    cmd = "Neogit",
+    dependencies = {
+      "nvim-lua/plenary.nvim", -- required
+      "sindrets/diffview.nvim", -- optional - Diff integration
+      "nvim-telescope/telescope.nvim", -- optional
+    },
+    opts = require "configs.neogit",
+  },
+  {
+    "dnlhc/glance.nvim",
+    cmd = "Glance",
+    opts = {
+      border = {
+        enable = true,
+      },
+    },
   },
   {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
     event = "VeryLazy",
-    ---@module "ibl"
-    ---@type ibl.config
     opts = {},
   },
   { "github/copilot.vim", lazy = false },
@@ -235,7 +318,7 @@ return {
     event = "VeryLazy",
     config = require "configs.ufo",
     opts = {
-      provider_selector = function(bufnr, filetype, buftype)
+      provider_selector = function(_, _, _)
         return { "lsp", "indent" }
       end,
     },

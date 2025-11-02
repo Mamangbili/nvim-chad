@@ -1,6 +1,7 @@
 require "nvchad.mappings"
 
 -- add yours here
+-- telescope outgoing calls expand <l>, fold <h>
 
 local map = vim.keymap.set
 local unmap = vim.keymap.del
@@ -13,7 +14,15 @@ function Close_buffer()
   vim.cmd "bnext | bd! #"
 end
 
+map("n", "<leader>n", "<cmd>Neogit<cr>", { desc = "neogit", noremap = true })
+
+map("n", "<leader>dq", "<cmd>DiffviewClose<cr>", { desc = "close diff", noremap = true })
+
 map("n", "<C-y>", "<C-r>", { noremap = true, silent = true })
+
+-- glance reference
+map("n", "<leader>fr", "<cmd>Glance references<cr>", { desc = "glance references", noremap = true })
+map("n", "<leader>fd", "<cmd>Glance definitions<cr>", { desc = "glance definitions", noremap = true })
 
 map("n", "zk", function()
   local winid = require("ufo").peekFoldedLinesUnderCursor()
@@ -37,7 +46,7 @@ map("n", "<leader>y", ":setf cpp<Cr>", { desc = "setfile to cpp", noremap = true
 local telescope = require "telescope.builtin"
 map("n", "<leader>fx", telescope.lsp_workspace_symbols, { desc = "Find symbols in workspace", noremap = true })
 map("n", "<leader>fs", telescope.lsp_document_symbols, { desc = "Find document symbols", noremap = true })
-map("n", "<leader>fr", telescope.lsp_references, { desc = "Find document symbols", noremap = true })
+-- map("n", "<leader>fr", telescope.lsp_references, { desc = "Find document symbols", noremap = true })
 map(
   "n",
   "<leader>fi",
@@ -59,7 +68,7 @@ map("i", "jk", "<ESC>l")
 
 map("n", "<leader>q", function()
   Close_buffer()
-end, { desc = "close window" })
+end, { desc = "close buffer/diff" })
 
 map("n", "<leader>ww", function()
   Close_window()
@@ -83,7 +92,7 @@ map("n", "<S-h>", function()
 end, { desc = "buffer goto next" })
 
 -- terminal mode
-map("t", "<ESC>", "<C-\\><C-N>", { desc = "terminal escape terminal mode" })
+map("t", "<leader><Esc>", "<C-\\><C-N>", { desc = "terminal escape terminal mode" })
 map({ "n", "i" }, "<A-t>", "<cmd>terminal<CR>", { desc = "enter terminal mode" })
 
 -- toggleable
@@ -105,6 +114,7 @@ map({ "n", "t" }, "<A-i>", function()
 end, { desc = "terminal toggle floating term" })
 
 map("n", "gf", vim.lsp.buf.code_action, { desc = "quick fix" })
+map("n", "gi", vim.lsp.buf.implementation, { desc = "lsp implementation" })
 
 -- redo
 map("n", "U", function()
