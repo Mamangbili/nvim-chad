@@ -83,6 +83,8 @@ if vim.g.vscode then
   end, { silent = true })
   vim.keymap.set("n", "<leader>n", ":nohl<CR>", { silent = true })
 else
+  -- vim.o.sessionoptions = "blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,localoptions"
+  vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
   vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
   vim.g.mapleader = " "
   vim.o.shell = "powershell.exe"

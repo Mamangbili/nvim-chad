@@ -1,4 +1,5 @@
 require "nvchad.mappings"
+local tree = require("nvim-tree.api").tree
 
 -- add yours here
 -- telescope outgoing calls expand <l>, fold <h>
@@ -11,8 +12,13 @@ function Close_window()
 end
 
 function Close_buffer()
-  vim.cmd "bnext | bd! #"
+  vim.cmd "bd#"
 end
+
+map("n", "<leader>z", function()
+  tree.close()
+  vim.cmd "CopilotChatToggle"
+end, { desc = "copilot chat toggle", noremap = true })
 
 map("n", "<leader>n", "<cmd>Neogit<cr>", { desc = "neogit", noremap = true })
 
@@ -25,7 +31,7 @@ map("n", "<leader>fr", "<cmd>Glance references<cr>", { desc = "glance references
 map("n", "<leader>fd", "<cmd>Glance definitions<cr>", { desc = "glance definitions", noremap = true })
 
 map("n", "zk", function()
-  local winid = require("ufo").peekFoldedLinesUnderCursor()
+  local winid = require("ufo").pee()
   if not winid then
     vim.lsp.buf.hover()
   end
@@ -62,7 +68,10 @@ map(
 -- e,l untuk expand. c,h untuk fold tree hierarchy. t untuk toggle buka tutup
 -- d untuk defini current node hierarchy
 
-map("n", "<leader>t", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
+map("n", "<leader>t", function()
+  vim.cmd "CopilotChatClose"
+  vim.cmd "NvimTreeToggle>"
+end, { desc = "nvimtree toggle window" })
 
 map("i", "jk", "<ESC>l")
 
@@ -96,11 +105,11 @@ map("t", "<leader><Esc>", "<C-\\><C-N>", { desc = "terminal escape terminal mode
 map({ "n", "i" }, "<A-t>", "<cmd>terminal<CR>", { desc = "enter terminal mode" })
 
 -- toggleable
-map({ "n", "t" }, "<A-\\>", function()
-  require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
-  -- require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm" }
-  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
-end, { desc = "terminal toggleable vertical term" })
+-- map({ "n", "t" }, "<A-\\>", function()
+--   require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
+--   -- require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm" }
+--   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
+-- end, { desc = "terminal toggleable vertical term" })
 
 map({ "n", "t" }, "<A-/>", function()
   require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
@@ -121,6 +130,8 @@ map("n", "U", function()
   vim.cmd "redo"
 end, { desc = "redo" })
 
+-- map for indenting in visual mode
+
 -- resize window
 map({ "n", "i", "x" }, "<C-Up>", ":resize +5<CR>", { desc = "increase height", noremap = true })
 map({ "n", "i", "x" }, "<C-Down>", ":resize -5<CR>", { desc = "decrease height", noremap = true })
@@ -132,7 +143,6 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = { "cpp", "c", "h", "hpp", "cc" },
   callback = function()
     map("n", "gf", vim.lsp.buf.code_action, { desc = "quick fix" })
-    vim.keymap.set("n", "<leader>l", ":echo 'awe'<CR>", { buffer = true })
   end,
 })
 

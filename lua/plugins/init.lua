@@ -2,12 +2,42 @@ local NS = { noremap = true, silent = true }
 
 return {
   {
+    "rmagatti/auto-session",
+    lazy = false,
+    config = function()
+      require("auto-session").setup {
+        log_level = "error",
+        auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads" },
+      }
+    end,
+  },
+  {
+    "CopilotC-Nvim/CopilotChat.nvim",
+    dependencies = {
+      { "nvim-lua/plenary.nvim", branch = "master" },
+      "github/copilot.vim",
+    },
+    event = "VeryLazy",
+    build = "make tiktoken",
+    opts = {
+      -- See Configuration section for options
+    },
+  },
+  -- {
+  --   "Shatur/neovim-session-manager",
+  --   dependencies = { "nvim-lua/plenary.nvim" },
+  --   config = require "configs.session-manager",
+  -- },
+  {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",
     event = "VeryLazy",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = require "configs.harpoon",
   },
+
+  -- cpp ccls lazy plugins
+
   {
     "isakbm/gitgraph.nvim",
     dependencies = {
@@ -261,6 +291,7 @@ return {
     "nvim-tree/nvim-tree.lua",
     event = "VeryLazy",
     config = require "configs.nvim-tree",
+    enable = false,
   },
   {
     "folke/which-key.nvim",

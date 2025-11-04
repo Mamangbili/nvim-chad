@@ -21,6 +21,7 @@ return function(_, opts)
     end,
   })
 
+  -- conflict with session
   -- Load folds on entry (only for real files)
   vim.api.nvim_create_autocmd("BufWinEnter", {
     pattern = "*",
@@ -31,6 +32,7 @@ return function(_, opts)
       end
     end,
   })
+
   vim.opt.foldopen:remove { "search", "hor" }
 
   -- Function to fold exact level
