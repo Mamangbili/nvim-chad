@@ -1,6 +1,7 @@
 local NS = { noremap = true, silent = true }
 
 return {
+  "famiu/bufdelete.nvim",
   {
     "rmagatti/auto-session",
     lazy = false,
@@ -291,7 +292,6 @@ return {
     "nvim-tree/nvim-tree.lua",
     event = "VeryLazy",
     config = require "configs.nvim-tree",
-    enable = false,
   },
   {
     "folke/which-key.nvim",

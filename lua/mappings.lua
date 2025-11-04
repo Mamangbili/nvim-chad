@@ -12,7 +12,15 @@ function Close_window()
 end
 
 function Close_buffer()
-  vim.cmd "bd#"
+  if vim.bo.filetype == "copilot-chat" then
+    vim.cmd "CopilotChatClose"
+    return
+  end
+  if vim.bo.filetype == "NvimTree" then
+    tree.close()
+    return
+  end
+  require("bufdelete").bufdelete(0, true)
 end
 
 map("n", "<leader>z", function()
@@ -31,7 +39,7 @@ map("n", "<leader>fr", "<cmd>Glance references<cr>", { desc = "glance references
 map("n", "<leader>fd", "<cmd>Glance definitions<cr>", { desc = "glance definitions", noremap = true })
 
 map("n", "zk", function()
-  local winid = require("ufo").pee()
+  local winid = require("ufo").peek()
   if not winid then
     vim.lsp.buf.hover()
   end
