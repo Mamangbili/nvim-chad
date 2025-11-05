@@ -186,4 +186,6 @@ else
       ["CMakeLists.txt"] = "cmake",
     },
   }
+
+  require("myplugins.my-sessions").setup()
 end

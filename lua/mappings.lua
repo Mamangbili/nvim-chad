@@ -23,7 +23,7 @@ function Close_buffer()
   require("bufdelete").bufdelete(0, true)
 end
 
-map("n", "<leader>z", function()
+map({ "n", "v" }, "<leader>z", function()
   tree.close()
   vim.cmd "CopilotChatToggle"
 end, { desc = "copilot chat toggle", noremap = true })
