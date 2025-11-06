@@ -1,8 +1,8 @@
 return function(_)
   require("nvim-tree").setup {
     diagnostics = {
-      enable = true,
-      show_on_dirs = true,
+      enable = false,
+      show_on_dirs = false,
     },
     view = {
       side = "right",

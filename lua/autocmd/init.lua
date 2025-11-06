@@ -2,6 +2,7 @@ local M = {}
 
 M.setup = function()
   local automcd = vim.api.nvim_create_autocmd
+  local cwd = vim.fn.getcwd()
 
   automcd("FileType", {
     pattern = { "cpp", "c", "h", "hpp", "cc" },
@@ -14,10 +15,7 @@ M.setup = function()
     pattern = "*",
     callback = function(args)
       local api = require "nvim-tree.api"
-      print "sebelum"
       if not api.tree.is_visible() then
-        print "ea"
-        api.tree.close()
         api.tree.open()
       end
     end,
@@ -26,6 +24,8 @@ M.setup = function()
   automcd({ "VimLeave" }, {
     pattern = "*",
     callback = function(args)
+      local api = require "nvim-tree.api"
+      api.tree.change_root(cwd)
       vim.cmd "AutoSession save"
     end,
   })
