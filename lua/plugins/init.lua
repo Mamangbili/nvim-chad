@@ -204,9 +204,6 @@ return {
       },
     },
     config = function(_, opts)
-      -- Calling telescope's setup from multiple specs does not hurt, it will happily merge the
-      -- configs for us. We won't use data, as everything is iin it's own namespace (telescope
-      -- defaults, as well as each extension).i
       require("telescope").setup(opts)
       require("telescope").load_extension "hierarchy"
     end,
@@ -341,7 +338,6 @@ return {
       "nvim-tree/nvim-web-devicons",
     },
   },
-  { "NvChad/nvim-colorify", enabled = false },
   {
     "nvim-tree/nvim-web-devicons",
     opts = {

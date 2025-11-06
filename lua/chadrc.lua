@@ -23,6 +23,9 @@ M.ui = {
     lazyload = false,
   },
 }
+M.colorify = {
+  enabled = false,
+}
 
 M.term = {
   float = {
