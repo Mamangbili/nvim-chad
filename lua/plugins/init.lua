@@ -1,7 +1,58 @@
 local NS = { noremap = true, silent = true }
 
 return {
-  "famiu/bufdelete.nvim",
+  {
+    "rmagatti/auto-session",
+    priority = 1000,
+    lazy = false,
+
+    ---enables autocomplete for opts
+    ---@module "auto-session"
+    ---@type AutoSession.Config
+    opts = {
+      -- auto_save = true,
+      -- auto_restore = true,
+      suppressed_dirs = { "~/", "~/projects", "~/Projects", "~/Downloads", "/" },
+      -- log_level = 'debug',
+    },
+  },
+  {
+    "stevearc/aerial.nvim",
+    opts = {
+      autojump = true,
+      backends = { "treesitter", "markdown" },
+      nav = {
+        autojump = true,
+      },
+    },
+    event = "VeryLazy",
+    -- Optional dependencies
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons",
+    },
+  },
+  {
+    "nvim-treesitter/nvim-treesitter-context",
+    event = "VeryLazy",
+    opts = {
+      mode = "topline",
+    },
+  },
+  { "famiu/bufdelete.nvim" },
+  { "OXY2DEV/foldtext.nvim", lazy = false },
+  {
+    "kevinhwang91/nvim-ufo",
+    dependencies = { "kevinhwang91/promise-async" },
+    event = "VeryLazy",
+    config = require "configs.ufo",
+    init = function()
+      vim.o.foldenable = true
+      vim.o.foldlevel = 99
+      vim.o.foldcolumn = "1"
+      vim.o.foldlevelstart = 99
+    end,
+  },
   {
     "CopilotC-Nvim/CopilotChat.nvim",
     dependencies = {
@@ -9,10 +60,8 @@ return {
       "github/copilot.vim",
     },
     event = "VeryLazy",
+    cmd = { "CopilotChatToggle", "CopilotChatClose", "CopilotChatOpen" },
     build = "make tiktoken",
-    opts = {
-      -- See Configuration section for options
-    },
   },
   {
     "ThePrimeagen/harpoon",
@@ -274,6 +323,9 @@ return {
     "nvim-tree/nvim-tree.lua",
     event = "VeryLazy",
     config = require "configs.nvim-tree",
+    -- dependencies = {
+    --   "github/copilot.vim",
+    -- },
   },
   {
     "folke/which-key.nvim",
@@ -310,31 +362,12 @@ return {
           TSCppImplWrite = {
             output_handle = require("nt-cpp-tools.output_handlers").get_add_to_cpp(),
           },
-          --[[
-                <your impl function custom command name> = {
-                    output_handle = function (str, context) 
-                        -- string contains the class implementation
-                        -- do whatever you want to do with it
-                    end
-                }
-                ]]
         },
       }
       return options
     end,
     -- End configuration
     config = true,
-  },
-  {
-    "kevinhwang91/nvim-ufo",
-    dependencies = "kevinhwang91/promise-async",
-    event = "VeryLazy",
-    config = require "configs.ufo",
-    opts = {
-      provider_selector = function(_, _, _)
-        return { "lsp", "indent" }
-      end,
-    },
   },
   {
     "ThePrimeagen/refactoring.nvim",
@@ -345,14 +378,4 @@ return {
     event = "VeryLazy",
     opts = require "configs.refactor",
   },
-
-  -- {
-  -- 	"nvim-treesitter/nvim-treesitter",
-  -- 	opts = {
-  -- 		ensure_installed = {
-  -- 			"vim", "lua", "vimdoc",
-  --      "html", "css"
-  -- 		},
-  -- 	},
-  -- },
 }

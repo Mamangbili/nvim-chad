@@ -84,7 +84,9 @@ if vim.g.vscode then
   vim.keymap.set("n", "<leader>n", ":nohl<CR>", { silent = true })
 else
   -- vim.o.sessionoptions = "blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,localoptions"
-  vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+  --
+  vim.o.sessionoptions = "blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,localoptions"
+
   vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
   vim.g.mapleader = " "
   vim.o.shell = "powershell.exe"
@@ -93,6 +95,7 @@ else
   vim.opt.shellxquote = ""
   vim.o.relativenumber = true
   vim.o.clipboard = ""
+  vim.o.scrolloff = 6
 
   -- bootstrap lazy and all plugins
   local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
@@ -187,5 +190,5 @@ else
     },
   }
 
-  require("myplugins.my-sessions").setup()
+  require("autocmd").setup()
 end

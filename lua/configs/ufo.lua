@@ -1,64 +1,53 @@
 return function(_, opts)
-  vim.o.foldcolumn = "1" -- '0' is not bad
-  vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
-  vim.o.foldlevelstart = 99
-  vim.o.foldenable = true
-
   -- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
   vim.keymap.set("n", "zR", require("ufo").openAllFolds)
   vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
+  local more_msg_highlight = vim.api.nvim_get_hl_id_by_name "MoreMsg"
+  local non_text_highlight = vim.api.nvim_get_hl_id_by_name "NonText"
 
-  require("ufo").setup(opts)
-
-  -- Save folds on exit (only for real files)
-  vim.api.nvim_create_autocmd("BufWinLeave", {
-    pattern = "*",
-    desc = "Save folds on exit",
-    callback = function()
-      if vim.fn.expand "%" ~= "" then
-        vim.cmd "mkview"
-      end
-    end,
-  })
-
-  -- conflict with session
-  -- Load folds on entry (only for real files)
-  vim.api.nvim_create_autocmd("BufWinEnter", {
-    pattern = "*",
-    desc = "Load folds on entry",
-    callback = function()
-      if vim.fn.expand "%" ~= "" then
-        vim.cmd "silent! loadview"
-      end
-    end,
-  })
-
-  vim.opt.foldopen:remove { "search", "hor" }
-
-  -- Function to fold exact level
-  local function fold_exact_level_close(level)
-    local last = vim.api.nvim_buf_line_count(0)
-    local lnum = 1
-    while lnum <= last do
-      local flevel = vim.fn.foldlevel(lnum)
-      local fclosed = vim.fn.foldclosed(lnum)
-
-      -- only fold if level matches and it's open
-      if flevel == level and fclosed == -1 then
-        vim.cmd(lnum .. "foldclose")
-        -- skip lines inside this fold
-        local fold_end = vim.fn.foldclosedend(lnum)
-        if fold_end > 0 then
-          lnum = fold_end + 1
-        else
-          lnum = lnum + 1
-        end
+  local fold_virt_text_handler = function(
+    -- The start_line's text.
+    virtual_text_chunks,
+    -- Start and end lines of fold.
+    start_line,
+    end_line,
+    -- Total text width.
+    text_width,
+    -- fun(str: string, width: number): string Trunctation function.
+    truncate,
+    -- Context for the fold.
+    ctx
+  )
+    local line_delta = (" 󰁂 %d "):format(end_line - start_line)
+    local remaining_width = text_width - vim.fn.strdisplaywidth(ctx.text) - vim.fn.strdisplaywidth(line_delta)
+    table.insert(virtual_text_chunks, { line_delta, more_msg_highlight })
+    local line = start_line
+    while remaining_width > 0 and line < end_line do
+      line = line + 1
+      local line_text = vim.api.nvim_buf_get_lines(ctx.bufnr, line, line + 1, true)[1]
+      line_text = " " .. vim.trim(line_text)
+      local line_text_width = vim.fn.strdisplaywidth(line_text)
+      if line_text_width <= remaining_width - 2 then
+        remaining_width = remaining_width - line_text_width
       else
-        lnum = lnum + 1
+        line_text = truncate(line_text, remaining_width - 2) .. "…"
+        remaining_width = remaining_width - vim.fn.strdisplaywidth(line_text)
       end
+      table.insert(virtual_text_chunks, { line_text, non_text_highlight })
     end
+    return virtual_text_chunks
   end
 
+  require("ufo").setup {
+    fold_virt_text_handler = fold_virt_text_handler,
+    provider_selector = function()
+      return { "treesitter", "indent" }
+    end,
+  }
+  --
+  vim.opt.foldopen:remove { "search", "hor" }
+
+  --
   -- Function to open exact level
   local function fold_exact_level_open(level)
     local last = vim.api.nvim_buf_line_count(0)
@@ -123,8 +112,8 @@ return function(_, opts)
     -- Restore view
     vim.fn.winrestview(view)
   end
-
-  -- Open all folds of a specific level inside the root-level fold under cursor
+  --
+  -- -- Open all folds of a specific level inside the root-level fold under cursor
   local function open_level_in_root(level)
     local cursor = vim.fn.line "."
     local buf_last = vim.api.nvim_buf_line_count(0)
@@ -159,11 +148,12 @@ return function(_, opts)
       end
     end
   end
-
+  --
   -- Keymaps for levels 1–9
-  for level = 1, 9 do
+  for level = 0, 9 do
     vim.keymap.set("n", "z" .. level .. "c", function()
-      fold_exact_level_close(level)
+      -- fold_exact_level_close(level)
+      require("ufo").closeFoldsWith(level)
     end, { noremap = true, silent = true })
 
     vim.keymap.set("n", "z" .. level .. "o", function()
@@ -182,4 +172,11 @@ return function(_, opts)
       open_level_in_root(level)
     end, { noremap = true, silent = true })
   end
+
+  vim.keymap.set("n", "K", function()
+    local winid = require("ufo").peekFoldedLinesUnderCursor()
+    if not winid then
+      vim.lsp.buf.hover()
+    end
+  end)
 end

@@ -7,19 +7,12 @@ local lspconfig = require "lspconfig"
 local servers = { "html", "cssls", "eslint", "omnisharp", "cmake", "yamlls" }
 local nvlsp = require "nvchad.configs.lspconfig"
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.foldingRange = {
+nvlsp.capabilities.textDocument.foldingRange = {
   dynamicRegistration = false,
   lineFoldingOnly = true,
 }
 
-local language_servers = vim.lsp.get_clients() -- or list servers manually like {'gopls', 'clangd'}
-for _, ls in ipairs(language_servers) do
-  require("lspconfig")[ls].setup {
-    capabilities = capabilities,
-    -- you can add other fields for setting up lsp server in this table
-  }
-end
+local capabilities = nvlsp.capabilities
 
 -- lsps with default config
 for _, lsp in ipairs(servers) do
@@ -33,7 +26,7 @@ end
 lspconfig["pyright"].setup {
   on_attach = nvlsp.on_attach,
   on_init = nvlsp.on_init,
-  capabilities = nvlsp.capabilities,
+  capabilities = capabilities,
   settings = {
     python = {
       analysis = {
@@ -51,7 +44,7 @@ lspconfig["pyright"].setup {
 lspconfig["ts_ls"].setup {
   on_attach = nvlsp.on_attach,
   on_init = nvlsp.on_init,
-  capabilities = nvlsp.capabilities,
+  capabilities = capabilities,
   cmd = { "typescript-language-server", "--stdio" },
   settings = {
     tsserver = {
@@ -68,7 +61,7 @@ lspconfig["ts_ls"].setup {
 lspconfig.clangd.setup {
   on_attach = nvlsp.on_attach,
   on_init = nvlsp.on_init,
-  capabilities = nvlsp.capabilities,
+  capabilities = capabilities,
   cmd = {
     "clangd",
     "--background-index",
@@ -84,7 +77,7 @@ lspconfig.clangd.setup {
 lspconfig.omnisharp.setup {
 
   on_attach = nvlsp.on_attach,
-  capabilities = nvlsp.capabilities,
+  capabilities = capabilities,
 
   cmd = { vim.fn.stdpath "data" .. "/mason/bin/omnisharp.cmd" },
 

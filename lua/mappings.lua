@@ -23,6 +23,12 @@ function Close_buffer()
   require("bufdelete").bufdelete(0, true)
 end
 
+vim.keymap.set("i", "<C-Space>", function()
+  require("cmp").complete()
+end, { noremap = true, silent = true, expr = true, desc = "show autocompletion" })
+
+map("i", "<C-i>", "cpm#complete()", { desc = "show autocompletion" })
+
 map({ "n", "v" }, "<leader>z", function()
   tree.close()
   vim.cmd "CopilotChatToggle"
@@ -37,13 +43,6 @@ map("n", "<C-y>", "<C-r>", { noremap = true, silent = true })
 -- glance reference
 map("n", "<leader>fr", "<cmd>Glance references<cr>", { desc = "glance references", noremap = true })
 map("n", "<leader>fd", "<cmd>Glance definitions<cr>", { desc = "glance definitions", noremap = true })
-
-map("n", "zk", function()
-  local winid = require("ufo").peek()
-  if not winid then
-    vim.lsp.buf.hover()
-  end
-end, { desc = "peek fold or lsp hover", noremap = true })
 
 vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<C-K>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
@@ -147,12 +146,10 @@ map({ "n", "i", "x" }, "<C-Left>", ":vertical resize -5<CR>", { desc = "decrease
 map({ "n", "i", "x" }, "<C-Right>", ":vertical resize +5<CR>", { desc = "increase width", noremap = true })
 
 -- map("n", "<leader>t", "<cmd>NvimTreeToggle<CR>", {desc = "Toggle Nvim Tree", noremap=true})
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "cpp", "c", "h", "hpp", "cc" },
-  callback = function()
-    map("n", "gf", vim.lsp.buf.code_action, { desc = "quick fix" })
-  end,
-})
+
+-- aerial
+map({ "n", "v" }, "N", "<cmd>AerialToggle<cr>", { desc = "aerial toggle", noremap = true })
 
 -- inlay hint
 -- shift + k
+-- ----------------------------- fold mapping ------------------------------

@@ -19,6 +19,9 @@ M.ui = {
   telescope = {
     style = "borderless",
   },
+  tabufline = {
+    lazyload = false,
+  },
 }
 
 M.term = {
@@ -29,6 +32,7 @@ M.term = {
     height = 0.6,
   },
 }
+
 -- M.nvdash = { load_on_startup = true }
 -- M.ui = {
 --   theme="gruvbox",
