@@ -323,9 +323,21 @@ return {
     "nvim-tree/nvim-tree.lua",
     event = "VeryLazy",
     config = require "configs.nvim-tree",
-    -- dependencies = {
-    --   "github/copilot.vim",
-    -- },
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
+  },
+  {
+    "nvim-tree/nvim-web-devicons",
+    opts = {
+      override = {
+        CSS = {
+          icon = "",
+          color = "#42A5F5",
+          name = "CSS",
+        },
+      },
+    },
   },
   {
     "folke/which-key.nvim",
