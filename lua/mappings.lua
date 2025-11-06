@@ -148,7 +148,7 @@ map({ "n", "i", "x" }, "<C-Right>", ":vertical resize +5<CR>", { desc = "increas
 -- map("n", "<leader>t", "<cmd>NvimTreeToggle<CR>", {desc = "Toggle Nvim Tree", noremap=true})
 
 -- aerial
-map({ "n", "v" }, "N", "<cmd>AerialToggle<cr>", { desc = "aerial toggle", noremap = true })
+map({ "n", "v" }, "A", "<cmd>AerialToggle<cr>", { desc = "aerial toggle", noremap = true })
 
 -- inlay hint
 -- shift + k
