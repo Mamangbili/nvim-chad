@@ -5,13 +5,26 @@ return {
     "rmagatti/auto-session",
     priority = 1000,
     lazy = false,
-
+    depedencies = {
+      "nvim-tree/nvim-tree.lua",
+    },
     ---enables autocomplete for opts
     ---@module "auto-session"
     ---@type AutoSession.Config
     opts = {
-      -- auto_save = true,
-      -- auto_restore = true,
+      auto_save = true,
+      auto_restore = true,
+      post_restore_cmds = {
+        function()
+          -- if ok then
+          local api = require "nvim-tree.api"
+          api.tree.open()
+          api.tree.change_root(vim.fn.getcwd())
+          -- else
+          --   vim.notify("nvim-tree not ready", vim.log.levels.WARN)
+          -- end
+        end,
+      },
       suppressed_dirs = { "~/", "~/projects", "~/Projects", "~/Downloads", "/" },
       -- log_level = 'debug',
     },
@@ -159,7 +172,7 @@ return {
     event = "VeryLazy",
     opts = {},
   },
-  { "github/copilot.vim", lazy = false },
+  { "github/copilot.vim", event = "VimEnter" },
   { "OmniSharp/omnisharp-vim" },
   { "ranjithshegde/ccls.nvim" },
   {
@@ -298,26 +311,27 @@ return {
   -- These are some examples, uncomment them if you want to see them work!
   {
     "neovim/nvim-lspconfig",
-    event = "VeryLazy",
+    -- lazy = false,
+    event = "VimEnter",
     config = function()
       require "configs.lspconfig"
     end,
   },
 
-  {
-    "folke/tokyonight.nvim",
-    lazy = false,
-    priority = 1000,
-    opts = {
-      transparent = true,
-    },
-
-    config = function(_, opts)
-      local tokyonight = require "tokyonight"
-      tokyonight.setup(opts)
-      tokyonight.load()
-    end,
-  },
+  -- {
+  --   "folke/tokyonight.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   opts = {
+  --     transparent = true,
+  --   },
+  --
+  --   config = function(_, opts)
+  --     local tokyonight = require "tokyonight"
+  --     tokyonight.setup(opts)
+  --     tokyonight.load()
+  --   end,
+  -- },
 
   {
     "nvim-tree/nvim-tree.lua",
@@ -327,6 +341,7 @@ return {
       "nvim-tree/nvim-web-devicons",
     },
   },
+  { "NvChad/nvim-colorify", enabled = false },
   {
     "nvim-tree/nvim-web-devicons",
     opts = {

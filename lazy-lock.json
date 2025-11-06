@@ -5,6 +5,7 @@
   "NvChad": { "branch": "v2.5", "commit": "46b15ef1b9d10a83ab7df26b14f474d15c01e770" },
   "aerial.nvim": { "branch": "master", "commit": "5e687b5a14004fa2dd9eccbee042b96869fe1557" },
   "align.nvim": { "branch": "v2", "commit": "bc5d57df5f4c26f6abee6b6c8529308c2c126d2b" },
+  "auto-session": { "branch": "main", "commit": "292492ab7af4bd8b9e37e28508bc8ce995722fd5" },
   "base46": { "branch": "v3.0", "commit": "cee12a263602cc97652d3dd55f0fc5e171012967" },
   "bufdelete.nvim": { "branch": "master", "commit": "f6bcea78afb3060b198125256f897040538bcb81" },
   "ccls.nvim": { "branch": "main", "commit": "4b258c269d58cc5e37e55cf2316074e2740e5f57" },

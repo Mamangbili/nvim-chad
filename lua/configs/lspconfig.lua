@@ -4,7 +4,7 @@ require("nvchad.configs.lspconfig").defaults()
 local lspconfig = require "lspconfig"
 
 -- EXAMPLE
-local servers = { "html", "cssls", "eslint", "omnisharp", "cmake", "yamlls" }
+local servers = { "html", "cssls", "eslint", "cmake", "yamlls" }
 local nvlsp = require "nvchad.configs.lspconfig"
 
 nvlsp.capabilities.textDocument.foldingRange = {

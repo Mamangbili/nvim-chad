@@ -11,17 +11,7 @@ M.setup = function()
     end,
   })
 
-  automcd("VimEnter", {
-    pattern = "*",
-    callback = function(args)
-      local api = require "nvim-tree.api"
-      if not api.tree.is_visible() then
-        api.tree.open()
-      end
-    end,
-  })
-
-  automcd({ "VimLeave" }, {
+  automcd({ "BufWinLeave" }, {
     pattern = "*",
     callback = function(args)
       local api = require "nvim-tree.api"
