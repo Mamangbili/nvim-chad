@@ -11,14 +11,22 @@ M.setup = function()
     end,
   })
 
-  automcd({ "BufWinLeave" }, {
-    pattern = "*",
-    callback = function(args)
-      local api = require "nvim-tree.api"
-      api.tree.change_root(cwd)
-      vim.cmd "AutoSession save"
+  -- Refresh nvim-tree when entering its buffer/reopen
+  vim.api.nvim_create_autocmd("BufEnter", {
+    pattern = "NvimTree_*",
+    callback = function()
+      vim.cmd "NvimTreeRefresh"
     end,
   })
+
+  -- automcd({ "BufWinLeave" }, {
+  --   pattern = "*",
+  --   callback = function(args)
+  --     local api = require "nvim-tree.api"
+  --     api.tree.change_root(cwd)
+  --     vim.cmd "AutoSession save"
+  --   end,
+  -- })
 end
 
 return M

@@ -140,10 +140,20 @@ end, { desc = "redo" })
 -- map for indenting in visual mode
 
 -- resize window
-map({ "n", "i", "x" }, "<C-Up>", ":resize +5<CR>", { desc = "increase height", noremap = true })
-map({ "n", "i", "x" }, "<C-Down>", ":resize -5<CR>", { desc = "decrease height", noremap = true })
-map({ "n", "i", "x" }, "<C-Left>", ":vertical resize -5<CR>", { desc = "decrease width", noremap = true })
-map({ "n", "i", "x" }, "<C-Right>", ":vertical resize +5<CR>", { desc = "increase width", noremap = true })
+map({ "n", "i", "x" }, "<C-Up>", ":resize +5<CR>", { desc = "increase height", noremap = true, silent = true })
+map({ "n", "i", "x" }, "<C-Down>", ":resize -5<CR>", { desc = "decrease height", noremap = true, silent = true })
+map(
+  { "n", "i", "x" },
+  "<C-Left>",
+  ":vertical resize -5<CR>",
+  { desc = "decrease width", noremap = true, silent = true }
+)
+map(
+  { "n", "i", "x" },
+  "<C-Right>",
+  ":vertical resize +5<CR>",
+  { desc = "increase width", noremap = true, silent = true }
+)
 
 -- map("n", "<leader>t", "<cmd>NvimTreeToggle<CR>", {desc = "Toggle Nvim Tree", noremap=true})
 

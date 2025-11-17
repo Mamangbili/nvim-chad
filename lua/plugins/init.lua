@@ -2,33 +2,51 @@ local NS = { noremap = true, silent = true }
 
 return {
   {
-    "rmagatti/auto-session",
-    priority = 1000,
-    lazy = false,
-    depedencies = {
-      "nvim-tree/nvim-tree.lua",
-    },
-    ---enables autocomplete for opts
-    ---@module "auto-session"
-    ---@type AutoSession.Config
+    "KaitoMuraoka/websearcher.nvim",
+  },
+  {
+    "natecraddock/sessions.nvim",
+    event = "VimEnter",
     opts = {
-      auto_save = true,
-      auto_restore = true,
-      post_restore_cmds = {
-        function()
-          -- if ok then
-          local api = require "nvim-tree.api"
-          api.tree.open()
-          api.tree.change_root(vim.fn.getcwd())
-          -- else
-          --   vim.notify("nvim-tree not ready", vim.log.levels.WARN)
-          -- end
-        end,
-      },
-      suppressed_dirs = { "~/", "~/projects", "~/Projects", "~/Downloads", "/" },
-      -- log_level = 'debug',
+      events = { "WinEnter" },
+      session_filepath = vim.fn.stdpath "data" .. "/sessions",
+      absolute = true,
     },
   },
+  -- {
+  --   "rmagatti/auto-session",
+  --   priority = 1000,
+  --   lazy = false,
+  --   depedencies = {
+  --     "nvim-tree/nvim-tree.lua",
+  --   },
+  --   ---enables autocomplete for opts
+  --   ---@module "auto-session"
+  --   ---@type AutoSession.Config
+  --   opts = {
+  --     auto_save = true,
+  --     auto_restore = true,
+  --     auto_create = true,
+  --     save_extra_cmds = {
+  --       function()
+  --         print "Saving nvim-tree state..."
+  --       end,
+  --     },
+  --     post_restore_cmds = {
+  --       function()
+  --         -- if ok then
+  --         local api = require "nvim-tree.api"
+  --         api.tree.open()
+  --         api.tree.change_root(vim.fn.getcwd())
+  --         -- else
+  --         --   vim.notify("nvim-tree not ready", vim.log.levels.WARN)
+  --         -- end
+  --       end,
+  --     },
+  --     suppressed_dirs = { "~/", "~/projects", "~/Projects", "~/Downloads", "/" },
+  --     -- log_level = 'debug',
+  --   },
+  -- },
   {
     "stevearc/aerial.nvim",
     opts = {
@@ -144,6 +162,10 @@ return {
     },
     config = function()
       require("telescope").load_extension "lazygit"
+    end,
+    init = function()
+      vim.g.lazygit_floating_window_use_plenary = 0
+      vim.g.lazygit_floating_window_scaling_factor = 0.96
     end,
   },
 
@@ -337,7 +359,9 @@ return {
     dependencies = {
       "nvim-tree/nvim-web-devicons",
     },
+    enable = false,
   },
+
   {
     "nvim-tree/nvim-web-devicons",
     opts = {

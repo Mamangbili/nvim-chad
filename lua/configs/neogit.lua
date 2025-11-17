@@ -65,6 +65,8 @@ return {
     italic = true,
     bold = true,
     underline = true,
+    line_red = "#5e4245",
+    line_green = "#324740",
   },
   -- Set to false if you want to be responsible for creating _ALL_ keymappings
   use_default_keymaps = true,

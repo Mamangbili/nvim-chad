@@ -16,6 +16,10 @@ local function clangd_format_exists_in_root()
   end
 end
 
+-- prepend_args = {
+--   "--style={BasedOnStyle: Chromium, IndentWidth: 4, AlignConsecutiveDeclarations: true}",
+--   "--fallback-style=Google",
+-- },
 local options = {
   formatters = {
     clang_format = {
