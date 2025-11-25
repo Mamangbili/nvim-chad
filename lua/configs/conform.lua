@@ -3,7 +3,7 @@ local function clangd_format_exists_in_root()
   local cwd = vim.fn.getcwd()
   local clangd_format_path = cwd .. "\\.clang-format"
   local file = io.open(clangd_format_path, "r")
-  print("Checking for .clangd-format at: " .. clangd_format_path .. " - Found: " .. tostring(file ~= nil))
+  -- print("Checking for .clangd-format at: " .. clangd_format_path .. " - Found: " .. tostring(file ~= nil))
 
   if file then
     io.close(file)
@@ -16,10 +16,6 @@ local function clangd_format_exists_in_root()
   end
 end
 
--- prepend_args = {
---   "--style={BasedOnStyle: Chromium, IndentWidth: 4, AlignConsecutiveDeclarations: true}",
---   "--fallback-style=Google",
--- },
 local options = {
   formatters = {
     clang_format = {
@@ -39,6 +35,7 @@ local options = {
     c = { "clangd" },
     jsx = { "ast-grep" },
     elixir = { "mix" },
+    cmake = { "gersemi" },
   },
   default_format_opts = {},
   -- Set up format-on-save

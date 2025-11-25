@@ -4,7 +4,7 @@ require("nvchad.configs.lspconfig").defaults()
 local lspconfig = require "lspconfig"
 
 -- EXAMPLE
-local servers = { "html", "cssls", "eslint", "cmake", "yamlls" }
+local servers = { "html", "cssls", "eslint", "yamlls" }
 local nvlsp = require "nvchad.configs.lspconfig"
 
 nvlsp.capabilities.textDocument.foldingRange = {
@@ -67,12 +67,29 @@ lspconfig.clangd.setup {
     "--background-index",
     "--clang-tidy",
     "--log=verbose",
+    "--compile-commands-dir=build",
   },
   init_options = {
     fallbackFlags = { "-std=c++23" },
   },
   root_dir = require("lspconfig.util").root_pattern(".clangd", ".git"),
 }
+
+lspconfig.cmake.setup {
+  on_attach = nvlsp.on_attach,
+  on_init = nvlsp.on_init,
+  capabilities = capabilities,
+  cmd = { "cmake-language-server" },
+  settings = {
+    cmake = {
+      filetypes = { "cmake" },
+      format = {
+        enable = true,
+      },
+    },
+  },
+}
+
 
 lspconfig.omnisharp.setup {
 

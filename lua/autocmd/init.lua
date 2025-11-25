@@ -19,6 +19,19 @@ M.setup = function()
     end,
   })
 
+  vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+    pattern = { ".env*", "NvTerm_float" },
+    callback = function()
+      vim.b.copilot_enabled = false
+    end,
+  })
+
+  -- for CMake lsp
+  vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+    pattern = { "CMakeLists.txt", "*.cmake", "CmakeLists.txt", "cmakelists.txt" },
+    command = "set filetype=cmake",
+  })
+
   -- automcd({ "BufWinLeave" }, {
   --   pattern = "*",
   --   callback = function(args)

@@ -87,8 +87,7 @@ if vim.g.vscode then
   end, { silent = true })
   vim.keymap.set("n", "<leader>n", ":nohl<CR>", { silent = true })
 else
-  -- vim.o.sessionoptions = "blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,localoptions"
-  --
+
   vim.o.sessionoptions = "blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,localoptions"
 
   vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
@@ -159,26 +158,6 @@ else
       require("conform").format { async = true, bufnr = args.buf }
     end,
   })
-
-  -- local afk_timeout = 60 -- seconds
-  -- local last_input_time = os.time()
-  --
-  -- -- Track any keypress
-  -- vim.on_key(function()
-  --   last_input_time = os.time()
-  -- end)
-  --
-  -- -- Check every 5 seconds for AFK
-  -- vim.fn.timer_start(5000, function()
-  --   if os.time() - last_input_time >= afk_timeout then
-  --     -- Put your AFK action here
-  --     print "AFK detected: no input for 30 seconds"
-  --     vim.cmd "silent! write"
-  --     print("💾 Auto-saved at " .. os.date "%H:%M:%S")
-  --     -- Optionally reset last_input_time to avoid repeated triggers
-  --     last_input_time = os.time()
-  --   end
-  -- end, { ["repeat"] = -1 })
 
   vim.api.nvim_create_autocmd("FileType", {
     pattern = "cpp",
