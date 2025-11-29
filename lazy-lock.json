@@ -50,8 +50,10 @@
   "sessions.nvim": { "branch": "master", "commit": "f13158483e0b6255c6dfe473145ce4ee3495d844" },
   "telescope-hierarchy.nvim": { "branch": "main", "commit": "2ba4840d8ba9288ca85dc34b01cf946aee0b8fca" },
   "telescope.nvim": { "branch": "master", "commit": "b4da76be54691e854d3e0e02c36b0245f945c2c7" },
+  "tree-sitter-cpp-google": { "branch": "master", "commit": "5f1af85ab4101acc0665ff1098d5c4badea8988e" },
   "ui": { "branch": "v3.0", "commit": "2fe0652081a5fe358db041633fca3efd39d215c7" },
   "volt": { "branch": "main", "commit": "7b8c5e790120d9f08c8487dcb80692db6d2087a1" },
+  "vscode.nvim": { "branch": "main", "commit": "cb9df0873c10a21d05362455ae3bb355eadcef6b" },
   "websearcher.nvim": { "branch": "main", "commit": "cb83380f5cfc264142efe3ea0d721b9cf5351343" },
   "which-key.nvim": { "branch": "main", "commit": "370ec46f710e058c9c1646273e6b225acf47cbed" }
 }

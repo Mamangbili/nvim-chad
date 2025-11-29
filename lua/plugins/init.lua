@@ -2,6 +2,10 @@ local NS = { noremap = true, silent = true }
 
 return {
   {
+    "smartpde/tree-sitter-cpp-google",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+  },
+  {
     "KaitoMuraoka/websearcher.nvim",
   },
   {

@@ -10,8 +10,28 @@ M.base46 = {
   transparency = true,
 
   hl_override = {
-    Comment = { italic = true },
+    --   Comment = { italic = true },
     ["@comment"] = { italic = true },
+    Type = { fg = "#26d988", bold = false },
+    ["@type.builtin"] = { fg = "#26d988", bold = false },
+    ["@variable.builtin"] = { fg = "base08" },
+    ["@variable.parameter"] = { fg = "base08" },
+    ["@constructor"] = { fg = "base0D" },
+    ["@module"] = { fg = "#26d988" },
+    ["@keyword.repeat"] = { fg = "purple" },
+    ["@keyword"] = { fg = "#5252e0" },
+    ["@constant"] = { fg = "#2239e9", bold = true },
+  },
+  --
+  changed_themes = {
+    vscode_dark = {
+      base_16 = {
+        base08 = "#6dcbf9",
+        base0B = "#c27246",
+        base09 = "#73ad9e",
+        base0D = "#dcdcaa",
+      },
+    },
   },
 }
 
@@ -45,5 +65,7 @@ M.term = {
 -- }
 --
 --
+---- Place in init.lua
+-- This ensures your "Namespace" rules beat the default "Uppercase = Type" rule
 
 return M

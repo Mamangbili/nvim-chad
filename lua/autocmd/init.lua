@@ -1,10 +1,10 @@
 local M = {}
 
 M.setup = function()
-  local automcd = vim.api.nvim_create_autocmd
+  local autocmd = vim.api.nvim_create_autocmd
   local cwd = vim.fn.getcwd()
 
-  automcd("FileType", {
+  autocmd("FileType", {
     pattern = { "cpp", "c", "h", "hpp", "cc" },
     callback = function()
       vim.keymap.set("n", "gf", vim.lsp.buf.code_action, { desc = "quick fix" })
@@ -12,14 +12,14 @@ M.setup = function()
   })
 
   -- Refresh nvim-tree when entering its buffer/reopen
-  vim.api.nvim_create_autocmd("BufEnter", {
+  autocmd("BufWinLeave", {
     pattern = "NvimTree_*",
     callback = function()
       vim.cmd "NvimTreeRefresh"
     end,
   })
 
-  vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  autocmd({ "BufRead", "BufNewFile" }, {
     pattern = { ".env*", "NvTerm_float" },
     callback = function()
       vim.b.copilot_enabled = false
@@ -27,19 +27,17 @@ M.setup = function()
   })
 
   -- for CMake lsp
-  vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  autocmd({ "BufRead", "BufNewFile" }, {
     pattern = { "CMakeLists.txt", "*.cmake", "CmakeLists.txt", "cmakelists.txt" },
     command = "set filetype=cmake",
   })
 
-  -- automcd({ "BufWinLeave" }, {
-  --   pattern = "*",
-  --   callback = function(args)
-  --     local api = require "nvim-tree.api"
-  --     api.tree.change_root(cwd)
-  --     vim.cmd "AutoSession save"
-  --   end,
-  -- })
+  autocmd("FileType", {
+    pattern = "NvimTree",
+    callback = function()
+      vim.keymap.set("n", "<leader>ct", "<cmd>NvimTreeCollapse<cr>", { desc = "Collapse Tree", noremap = true })
+    end,
+  })
 end
 
 return M

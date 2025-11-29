@@ -90,6 +90,10 @@ lspconfig.cmake.setup {
   },
 }
 
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = { "CMakeLists.txt", "*.cmake", "CmakeLists.txt", "cmakelists.txt" },
+  command = "set filetype=cmake",
+})
 
 lspconfig.omnisharp.setup {
 
