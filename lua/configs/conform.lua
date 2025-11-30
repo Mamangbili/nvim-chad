@@ -30,12 +30,12 @@ local options = {
     rust = { "ast-grep" },
     typescript = { "ast-grep" },
     go = { "ast-grep" },
-    -- cpp = { "clang-format" },
     cpp = { "clang_format" },
     c = { "clangd" },
     jsx = { "ast-grep" },
     elixir = { "mix" },
     cmake = { "gersemi" },
+    json = { "fixjson" },
   },
   default_format_opts = {},
   -- Set up format-on-save
