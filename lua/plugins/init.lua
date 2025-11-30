@@ -2,10 +2,6 @@ local NS = { noremap = true, silent = true }
 
 return {
   {
-    "smartpde/tree-sitter-cpp-google",
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-  },
-  {
     "KaitoMuraoka/websearcher.nvim",
   },
   {
@@ -17,47 +13,31 @@ return {
       absolute = true,
     },
   },
-  -- {
-  --   "rmagatti/auto-session",
-  --   priority = 1000,
-  --   lazy = false,
-  --   depedencies = {
-  --     "nvim-tree/nvim-tree.lua",
-  --   },
-  --   ---enables autocomplete for opts
-  --   ---@module "auto-session"
-  --   ---@type AutoSession.Config
-  --   opts = {
-  --     auto_save = true,
-  --     auto_restore = true,
-  --     auto_create = true,
-  --     save_extra_cmds = {
-  --       function()
-  --         print "Saving nvim-tree state..."
-  --       end,
-  --     },
-  --     post_restore_cmds = {
-  --       function()
-  --         -- if ok then
-  --         local api = require "nvim-tree.api"
-  --         api.tree.open()
-  --         api.tree.change_root(vim.fn.getcwd())
-  --         -- else
-  --         --   vim.notify("nvim-tree not ready", vim.log.levels.WARN)
-  --         -- end
-  --       end,
-  --     },
-  --     suppressed_dirs = { "~/", "~/projects", "~/Projects", "~/Downloads", "/" },
-  --     -- log_level = 'debug',
-  --   },
-  -- },
   {
     "stevearc/aerial.nvim",
     opts = {
-      autojump = true,
-      backends = { "treesitter", "markdown" },
+      close_on_select = false,
+      autojump = false,
+      backends = { "lsp", "treesitter", "markdown" },
+      layout = {
+        default_direction = "left",
+      },
       nav = {
-        autojump = true,
+        autojump = false,
+      },
+      filter_kind = {
+        "Class",
+        "Constructor",
+        "Enum",
+        "Function",
+        "Interface",
+        "Module",
+        "Method",
+        "Struct",
+        "Trait",
+        "TypeParameter",
+        "Variable",
+        "Property",
       },
     },
     event = "VeryLazy",
@@ -69,10 +49,13 @@ return {
   },
   {
     "nvim-treesitter/nvim-treesitter-context",
-    event = "VeryLazy",
+    lazy = false,
     opts = {
-      mode = "topline",
+      mode = "cursor",
     },
+    init = function()
+      vim.cmd "hi TreesitterContextBottom gui=underline guisp=Grey"
+    end,
   },
   { "famiu/bufdelete.nvim" },
   { "OXY2DEV/foldtext.nvim", lazy = false },
@@ -398,29 +381,6 @@ return {
     event = "VeryLazy",
   },
   {
-    "Badhi/nvim-treesitter-cpp-tools",
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-    -- Optional: Configuration
-    opts = function()
-      local options = {
-        preview = {
-          quit = "q", -- optional keymapping for quit preview
-          accept = "<tab>", -- optional keymapping for accept preview
-        },
-        header_extension = "h", -- optional
-        source_extension = "cpp", -- optional
-        custom_define_class_function_commands = { -- optional
-          TSCppImplWrite = {
-            output_handle = require("nt-cpp-tools.output_handlers").get_add_to_cpp(),
-          },
-        },
-      }
-      return options
-    end,
-    -- End configuration
-    config = true,
-  },
-  {
     "ThePrimeagen/refactoring.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -428,5 +388,46 @@ return {
     },
     event = "VeryLazy",
     opts = require "configs.refactor",
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      ensure_installed = {
+        "c",
+        "cpp",
+        "lua",
+        "python",
+        "javascript",
+        "typescript",
+        "tsx",
+        "rust",
+        "go",
+        "java",
+        "json",
+        "html",
+        "css",
+        "bash",
+        "yaml",
+        "cmake",
+      },
+    },
+    build = function()
+      local function cpp_priority()
+        local file_path = vim.fn.stdpath "data" .. "/lazy/nvim-treesitter/queries/cpp/highlights.scm"
+        local lines = {}
+        for line in io.lines(file_path) do
+          if line:match "%(namespace_identifier%) %@module" then
+            table.insert(lines, "((namespace_identifier) @module (#set! priority 105))")
+          else
+            table.insert(lines, line)
+          end
+        end
+        local f = io.open(file_path, "w")
+        f:write(table.concat(lines, "\n"))
+        f:close()
+      end
+
+      cpp_priority()
+    end,
   },
 }

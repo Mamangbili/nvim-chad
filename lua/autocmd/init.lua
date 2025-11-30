@@ -38,6 +38,13 @@ M.setup = function()
       vim.keymap.set("n", "<leader>ct", "<cmd>NvimTreeCollapse<cr>", { desc = "Collapse Tree", noremap = true })
     end,
   })
+
+  autocmd("FileType", {
+    pattern = "aerial-nav",
+    callback = function()
+      vim.keymap.set("n", "q", "<cmd>AerialNavClose<cr>", { desc = "Aerial nav close", noremap = true })
+    end,
+  })
 end
 
 return M

@@ -158,7 +158,7 @@ map(
 -- map("n", "<leader>t", "<cmd>NvimTreeToggle<CR>", {desc = "Toggle Nvim Tree", noremap=true})
 
 -- aerial
-map({ "n", "v" }, "A", "<cmd>AerialToggle<cr>", { desc = "aerial toggle", noremap = true })
+map({ "n", "v" }, "A", "<cmd>AerialNavToggle<cr>", { desc = "aerial toggle", noremap = true })
 
 -- inlay hint
 -- shift + k

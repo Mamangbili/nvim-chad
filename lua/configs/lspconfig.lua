@@ -4,7 +4,7 @@ require("nvchad.configs.lspconfig").defaults()
 local lspconfig = require "lspconfig"
 
 -- EXAMPLE
-local servers = { "html", "cssls", "eslint", "yamlls" }
+local servers = { "html", "cssls", "eslint", "yamlls", "glsl_analyzer" }
 local nvlsp = require "nvchad.configs.lspconfig"
 
 nvlsp.capabilities.textDocument.foldingRange = {
@@ -13,6 +13,14 @@ nvlsp.capabilities.textDocument.foldingRange = {
 }
 
 local capabilities = nvlsp.capabilities
+
+local function custom_on_attach(client, bufnr)
+  nvlsp.on_attach(client, bufnr)
+
+  if client.server_capabilities.semanticTokensProvider then
+    vim.lsp.semantic_tokens.start(bufnr, client.id)
+  end
+end
 
 -- lsps with default config
 for _, lsp in ipairs(servers) do
@@ -59,7 +67,7 @@ lspconfig["ts_ls"].setup {
 }
 
 lspconfig.clangd.setup {
-  on_attach = nvlsp.on_attach,
+  on_attach = custom_on_attach,
   on_init = nvlsp.on_init,
   capabilities = capabilities,
   cmd = {
