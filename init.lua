@@ -141,42 +141,6 @@ else
         require "mappings"
     end)
 
-    local start = os.time()
-    vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave" }, {
-        pattern = "*",
-        callback = function(args)
-            local deltaTime = os.time() - start
-            deltaTime = deltaTime
-
-            local sec = 10
-            print(deltaTime)
-            if deltaTime > sec then
-                vim.cmd "silent! write"
-                print("💾 Auto-saved at " .. os.date "%H:%M:%S")
-                start = os.time()
-            end
-        end,
-    })
-
-    vim.api.nvim_create_autocmd("BufWritePost", {
-        pattern = "*",
-        callback = function(args)
-            require("conform").format { async = true, bufnr = args.buf }
-            return 1
-        end,
-    })
-
-    vim.api.nvim_create_autocmd("FileType", {
-        pattern = "cpp",
-        callback = function()
-            vim.bo.commentstring = "// %s"
-            vim.opt_local.tabstop = 4
-            vim.opt_local.shiftwidth = 4
-            vim.opt_local.expandtab = true
-            vim.opt_local.autoindent = true
-            vim.opt_local.smarttab = true
-        end,
-    })
 
     vim.filetype.add {
         filename = {
