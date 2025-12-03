@@ -4,8 +4,9 @@ require("nvchad.configs.lspconfig").defaults()
 local lspconfig = require "lspconfig"
 
 -- EXAMPLE
-local servers = { "html", "cssls", "eslint", "yamlls", "glsl_analyzer", "rust_analyzer", "gopls","elixirls" }
+local servers = { "html", "cssls", "eslint", "yamlls", "glsl_analyzer", "rust_analyzer", "gopls", "elixirls" }
 local nvlsp = require "nvchad.configs.lspconfig"
+local navbuddy = require "nvim-navbuddy"
 
 nvlsp.capabilities.textDocument.foldingRange = {
   dynamicRegistration = false,
@@ -16,6 +17,7 @@ local capabilities = nvlsp.capabilities
 
 local function custom_on_attach(client, bufnr)
   nvlsp.on_attach(client, bufnr)
+  navbuddy.attach(client, bufnr)
 
   if client.server_capabilities.semanticTokensProvider then
     vim.lsp.semantic_tokens.start(bufnr, client.id)

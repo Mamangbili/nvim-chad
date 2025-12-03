@@ -1,65 +1,31 @@
 local NS = { noremap = true, silent = true }
 
 return {
+  { "luk400/vim-jukit" },
   {
     "KaitoMuraoka/websearcher.nvim",
   },
   {
-    "natecraddock/sessions.nvim",
-    event = "VimEnter",
-    opts = {
-      events = { "WinEnter" },
-      session_filepath = vim.fn.stdpath "data" .. "/sessions",
-      absolute = true,
-    },
-  },
-  {
-    "stevearc/aerial.nvim",
-    opts = {
-      close_on_select = false,
-      autojump = false,
-      backends = { "lsp", "treesitter", "markdown" },
-      layout = {
-        default_direction = "left",
-      },
-      nav = {
-        autojump = false,
-      },
-      filter_kind = {
-        "Array",
-        "Boolean",
-        "Class",
-        "Constant",
-        "Constructor",
-        "Enum",
-        "EnumMember",
-        "Event",
-        "Field",
-        "File",
-        "Function",
-        "Interface",
-        "Key",
-        "Method",
-        "Module",
-        "Namespace",
-        "Null",
-        "Number",
-        "Object",
-        "Operator",
-        "Package",
-        "Property",
-        "String",
-        "Struct",
-        "TypeParameter",
-        "Variable",
-      },
-    },
-    event = "VeryLazy",
-    -- Optional dependencies
+    "neovim/nvim-lspconfig",
     dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-      "nvim-tree/nvim-web-devicons",
+      {
+        "SmiteshP/nvim-navbuddy",
+        dependencies = {
+          "SmiteshP/nvim-navic",
+          "MunifTanjim/nui.nvim",
+        },
+        opts = {
+          lsp = { auto_attach = true },
+          source_buffer = {
+            follow_node = false, -- Keep the current node in focus on the source buffer
+            highlight = true, -- Highlight the currently focused node
+            reorient = "smart", -- "smart", "top", "mid" or "none"
+            scrolloff = nil, -- scrolloff value when navbuddy is open
+          },
+        },
+      },
     },
+    -- your lsp config or other stuff
   },
   {
     "nvim-treesitter/nvim-treesitter-context",
