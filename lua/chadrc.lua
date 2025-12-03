@@ -23,6 +23,7 @@ M.base46 = {
     ["@keyword.repeat"] = { fg = "purple" },
     ["@keyword"] = { fg = "#5252e0" },
     ["@constant"] = { fg = "#2239e9", bold = true },
+    ["@character"] = { fg = "base0B" },
   },
   --
   changed_themes = {

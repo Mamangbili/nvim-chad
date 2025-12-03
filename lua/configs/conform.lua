@@ -10,7 +10,7 @@ local function clangd_format_exists_in_root()
     return {}
   else
     return {
-      "--style={BasedOnStyle: Chromium, IndentWidth: 4, AlignConsecutiveDeclarations: true}",
+      "--style={BasedOnStyle: Chromium, IndentWidth: 4, AlignConsecutiveDeclarations: true, SortIncludes: false}",
       "--fallback-style=Google",
     }
   end
