@@ -158,7 +158,11 @@ map(
 -- map("n", "<leader>t", "<cmd>NvimTreeToggle<CR>", {desc = "Toggle Nvim Tree", noremap=true})
 
 -- aerial
-map({ "n", "v" }, "<leader>nb", require("nvim-navbuddy").open, { desc = "aerial toggle", noremap = true })
+map({ "n", "v" }, "<leader>nb", require("nvim-navbuddy").open, { desc = "navboddy toggle", noremap = true })
 
 -- inlay hint
 -- shift + k
+vim.keymap.set("n", "<C-c>", "<Esc>", { buffer = true, desc = "Exit NavBuddy", noremap = true })
+
+-- remove q: to disable command-line window
+vim.keymap.set("n", "q:", ":", { desc = "Disable command-line window" })

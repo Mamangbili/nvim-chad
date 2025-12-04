@@ -4,6 +4,8 @@ vim.cmd [[
 -- if windows
 if vim.loop.os_uname().sysname == "Windows_NT" then
     vim.g._jukit_python_os_cmd = "python"
+    vim.o.shell = "pwsh.exe"
+    vim.o.shellcmdflag = "-NoLogo -Command"
 else
     vim.g._jukit_python_os_cmd = "/usr/bin/python3"
 end
@@ -98,10 +100,6 @@ else
 
     vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
     vim.g.mapleader = " "
-    vim.o.shell = "powershell.exe"
-    vim.o.shellcmdflag = "-Command"
-    vim.opt.shellquote = ""
-    vim.opt.shellxquote = ""
     vim.o.relativenumber = true
     vim.o.clipboard = ""
     vim.o.scrolloff = 6
@@ -140,7 +138,6 @@ else
     vim.schedule(function()
         require "mappings"
     end)
-
 
     vim.filetype.add {
         filename = {
