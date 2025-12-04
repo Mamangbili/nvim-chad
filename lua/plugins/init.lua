@@ -323,28 +323,43 @@ return {
         lazy = false,
     },
     {
-        "williamboman/mason.nvim",
+        "WhoIsSethDaniel/mason-tool-installer.nvim",
+        dependencies = {
+            "williamboman/mason.nvim",
+        },
+        event = "VeryLazy",
         opts = {
             ensure_installed = {
-                "clangd ",
-                "clangd-format",
+                "stylua",
+                "clangd",
+                "clang-format",
                 "codelldb",
-                "eslint-lsp",
                 "ast-grep",
                 "fixjson",
-                "gersemi",
-                "mix",
-                "html",
-                "cssls",
+                {
+                    "gersemi",
+                    condition = function()
+                        return vim.fn.executable "python3" == 1
+                    end,
+                },
+                "html-lsp",
                 "pyright",
-                "yamlls",
+                "yaml-language-server",
                 "typescript-language-server",
                 "rust-analyzer",
-                "gopls",
+                {
+                    "gopls",
+                    condition = function()
+                        return vim.fn.executable "go" == 1
+                    end,
+                },
                 "css-lsp",
-                "elixirls",
+                "elixir-ls",
             },
         },
+    },
+    {
+        "williamboman/mason.nvim",
     },
     {
         "ewis6991/gitsigns.nvim",

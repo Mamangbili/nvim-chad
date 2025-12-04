@@ -8,6 +8,7 @@ if vim.loop.os_uname().sysname == "Windows_NT" then
     vim.o.shellcmdflag = "-NoLogo -Command"
 else
     vim.g._jukit_python_os_cmd = "/usr/bin/python3"
+    vim.o.termguicolors = true
 end
 
 if vim.g.vscode then
@@ -169,4 +170,5 @@ else
         return a.count > b.count
     end)
     vim.print(counts)
+
 end

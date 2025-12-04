@@ -166,3 +166,4 @@ vim.keymap.set("n", "<C-c>", "<Esc>", { buffer = true, desc = "Exit NavBuddy", n
 
 -- remove q: to disable command-line window
 vim.keymap.set("n", "q:", ":", { desc = "Disable command-line window" })
+vim.keymap.set("n", "q/", "<nop>", { desc = "Disable command-line window" })
