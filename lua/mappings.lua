@@ -155,15 +155,35 @@ map(
     { desc = "increase width", noremap = true, silent = true }
 )
 
--- map("n", "<leader>t", "<cmd>NvimTreeToggle<CR>", {desc = "Toggle Nvim Tree", noremap=true})
-
 -- aerial
 map({ "n", "v" }, "<leader>nb", require("nvim-navbuddy").open, { desc = "navboddy toggle", noremap = true })
 
 -- inlay hint
 -- shift + k
-vim.keymap.set("n", "<C-c>", "<Esc>", { buffer = true, desc = "Exit NavBuddy", noremap = true })
 
 -- remove q: to disable command-line window
-vim.keymap.set("n", "q:", ":", { desc = "Disable command-line window" })
-vim.keymap.set("n", "q/", "<nop>", { desc = "Disable command-line window" })
+vim.keymap.set("n", "q:", "<nop>", { desc = "Disable command-line window", noremap = true })
+vim.keymap.set("n", "q/", "<Nop>", { desc = "Disable command-line window", noremap = true })
+
+-- Detect 'q' then '/' in Normal mode
+local last_key = nil
+
+local function on_key(key)
+    local mode = vim.fn.mode(1)
+
+    if mode ~= "n" then
+        last_key = nil -- reset on mode change
+        return
+    end
+
+    if (last_key == "q" and key == "/") or (last_key == "q" and key == ":") or (last_key == "q" and key == "?") then
+        vim.schedule(function()
+            vim.cmd "q!"
+        end)
+    end
+
+    last_key = key
+end
+
+-- Start listening
+vim.on_key(on_key)
