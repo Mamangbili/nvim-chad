@@ -162,4 +162,5 @@ map({ "n", "v" }, "A", require("nvim-navbuddy").open, { desc = "aerial toggle", 
 
 -- inlay hint
 -- shift + k
--- ----------------------------- fold mapping ------------------------------
+
+
