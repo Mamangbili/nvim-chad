@@ -14,15 +14,7 @@ return {
                     "SmiteshP/nvim-navic",
                     "MunifTanjim/nui.nvim",
                 },
-                opts = {
-                    lsp = { auto_attach = true },
-                    source_buffer = {
-                        follow_node = false, -- Keep the current node in focus on the source buffer
-                        highlight = true, -- Highlight the currently focused node
-                        reorient = "smart", -- "smart", "top", "mid" or "none"
-                        scrolloff = nil, -- scrolloff value when navbuddy is open
-                    },
-                },
+                config = require "configs.navbuddy",
             },
         },
         -- your lsp config or other stuff
@@ -303,21 +295,6 @@ return {
             require "configs.lspconfig"
         end,
     },
-
-    -- {
-    --   "folke/tokyonight.nvim",
-    --   lazy = false,
-    --   priority = 1000,
-    --   opts = {
-    --     transparent = true,
-    --   },
-    --
-    --   config = function(_, opts)
-    --     local tokyonight = require "tokyonight"
-    --     tokyonight.setup(opts)
-    --     tokyonight.load()
-    --   end,
-    -- },
 
     {
         "nvim-tree/nvim-tree.lua",

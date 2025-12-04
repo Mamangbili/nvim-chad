@@ -34,7 +34,7 @@ map({ "n", "v" }, "<leader>z", function()
     vim.cmd "CopilotChatToggle"
 end, { desc = "copilot chat toggle", noremap = true })
 
-map("n", "<leader>n", "<cmd>Neogit<cr>", { desc = "neogit", noremap = true })
+map("n", "<leader>ng", "<cmd>Neogit<cr>", { desc = "neogit", noremap = true })
 
 map("n", "<leader>dq", "<cmd>DiffviewClose<cr>", { desc = "close diff", noremap = true })
 
@@ -158,9 +158,7 @@ map(
 -- map("n", "<leader>t", "<cmd>NvimTreeToggle<CR>", {desc = "Toggle Nvim Tree", noremap=true})
 
 -- aerial
-map({ "n", "v" }, "A", require("nvim-navbuddy").open, { desc = "aerial toggle", noremap = true })
+map({ "n", "v" }, "<leader>nb", require("nvim-navbuddy").open, { desc = "aerial toggle", noremap = true })
 
 -- inlay hint
 -- shift + k
-
-

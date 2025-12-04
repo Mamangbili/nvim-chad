@@ -39,22 +39,6 @@ M.setup = function()
         end,
     })
 
-    autocmd("FileType", {
-        pattern = "NvTerm_float",
-        callback = function()
-            vim.keymap.set({ "t" }, "<F9>", function()
-                require("nvchad.tabufline").close_buffer()
-            end, { desc = "terminal escape terminal mode", noremap = true })
-        end,
-    })
-
-    autocmd("FileType", {
-        pattern = "aerial-nav",
-        callback = function()
-            vim.keymap.set("n", "q", "<cmd>AerialNavClose<cr>", { desc = "Aerial close Tree", noremap = true })
-        end,
-    })
-
     local start = os.time()
     autocmd({ "TextChanged", "InsertLeave" }, {
         pattern = "*",
