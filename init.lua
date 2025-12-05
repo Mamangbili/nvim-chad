@@ -4,8 +4,7 @@ vim.cmd [[
 -- if windows
 if vim.loop.os_uname().sysname == "Windows_NT" then
     vim.g._jukit_python_os_cmd = "python"
-    vim.o.shell = "pwsh.exe"
-    vim.o.shellcmdflag = "-NoLogo -Command"
+    vim.opt.shell = "pwsh.exe"
 else
     vim.g._jukit_python_os_cmd = "/usr/bin/python3"
     vim.o.termguicolors = true
@@ -170,5 +169,4 @@ else
         return a.count > b.count
     end)
     vim.print(counts)
-
 end

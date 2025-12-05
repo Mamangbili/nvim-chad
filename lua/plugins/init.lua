@@ -1,6 +1,15 @@
 local NS = { noremap = true, silent = true }
 
 return {
+    {
+        "sphamba/smear-cursor.nvim",
+        event = "VeryLazy",
+        opts = {
+            stiffness = 0.8,
+            trailing_stiffness_insert_mode = 0.7,
+            distance_stop_animating = 0.5,
+        },
+    },
     { "luk400/vim-jukit" },
     {
         "KaitoMuraoka/websearcher.nvim",
@@ -199,14 +208,22 @@ return {
 
     "nvim-neotest/nvim-nio",
     {
-        "rcarriga/nvim-dap-ui",
-        event = "VeryLazy",
-        depedencies = {
-            "mfussenegger/nvim-dap",
-            "nvim-neotest/nvim-nio",
-        },
-        config = require "configs.dap-ui",
+        "Jorenar/nvim-dap-disasm",
+        config = true,
+        dependencies = { "igorlfs/nvim-dap-view" },
     },
+    {
+        "rcarriga/nvim-dap-ui",
+        dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio", "Jorenar/nvim-dap-disasm" },
+        event = "VeryLazy",
+    },
+    {
+        "igorlfs/nvim-dap-view",
+        dependencies = { "mfussenegger/nvim-dap" },
+        config = require "configs.dap-view",
+        event = "VeryLazy",
+    },
+    -- mason dap no need unless want to ensure installation
     {
         "jay-babu/mason-nvim-dap.nvim",
         event = "VeryLazy",
@@ -214,7 +231,7 @@ return {
             "mfussenegger/nvim-dap",
             "williamboman/mason.nvim",
         },
-        opts = {},
+        opts = require "configs.dap-debugger",
     },
     {
         "mfussenegger/nvim-dap",
@@ -330,6 +347,7 @@ return {
         event = "VeryLazy",
         opts = {
             ensure_installed = {
+                "debugpy",
                 "stylua",
                 "clangd",
                 "clang-format",

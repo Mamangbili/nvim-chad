@@ -93,10 +93,12 @@ end, { desc = "close window" })
 -- split window
 map("n", "<leader>h", function()
     vim.cmd "sp"
+    vim.cmd "Telescope find_files"
 end, { desc = "new horizontal window" })
 
 map("n", "<leader>v", function()
     vim.cmd "vsp"
+    vim.cmd "Telescope find_files"
 end, { desc = "new vertical window" })
 
 map("n", "<S-l>", function()
@@ -110,13 +112,6 @@ end, { desc = "buffer goto next" })
 -- terminal mode
 map("t", "<leader><Esc>", "<C-\\><C-N>", { desc = "terminal escape terminal mode" })
 map({ "n", "i" }, "<A-t>", "<cmd>terminal<CR>", { desc = "enter terminal mode" })
-
--- toggleable
--- map({ "n", "t" }, "<A-\\>", function()
---   require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
---   -- require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm" }
---   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
--- end, { desc = "terminal toggleable vertical term" })
 
 map({ "n", "t" }, "<A-/>", function()
     require("nvchad.term").toggle { pos = "float", id = "floatTerm" }

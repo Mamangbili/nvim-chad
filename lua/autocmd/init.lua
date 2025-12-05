@@ -104,6 +104,18 @@ M.setup = function()
             end
         end,
     })
+
+    -- autocmd("FileType", {
+    --     pattern = "vim",
+    --     callback = function()
+    --         vim.schedule(function()
+    --             -- Optional: double-check we’re still in a vim filetype buffer
+    --             if vim.bo.filetype == "vim" then
+    --                 vim.cmd "silent! q!"
+    --             end
+    --         end)
+    --     end,
+    -- })
 end
 
 return M
