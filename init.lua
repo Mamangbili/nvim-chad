@@ -102,7 +102,7 @@ else
     vim.g.mapleader = " "
     vim.o.relativenumber = true
     vim.o.clipboard = ""
-    vim.o.scrolloff = 6
+    vim.o.scrolloff = 17
 
     -- bootstrap lazy and all plugins
     local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"

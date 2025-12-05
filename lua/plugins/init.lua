@@ -2,6 +2,13 @@ local NS = { noremap = true, silent = true }
 
 return {
     {
+        "ggandor/leap.nvim",
+        keys = {
+            { "s", "<Plug>(leap)", mode = { "n", "x", "o" }, desc = "Leap forward to" },
+            { "S", "<Plug>(leap-from-window)", mode = { "n", "x", "o" }, desc = "Leap from window" },
+        },
+    },
+    {
         "sphamba/smear-cursor.nvim",
         event = "VeryLazy",
         opts = {
