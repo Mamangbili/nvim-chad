@@ -2,6 +2,21 @@ local NS = { noremap = true, silent = true }
 
 return {
     {
+        "gbprod/yanky.nvim",
+        opts = {
+            system_clipboard = {
+                sync_with_ring = true,
+            },
+        },
+        init = function()
+            vim.o.clipboard = "unnamedplus"
+        end,
+        keys = {
+            { "p", "<Plug>(YankyPutAfter)", mode = { "n", "x" }, desc = "Yanky Put After" },
+            { "P", "<Plug>(YankyPutBefore)", mode = { "n", "x" }, desc = "Yanky Put Before" },
+        },
+    },
+    {
         "ggandor/leap.nvim",
         keys = {
             { "s", "<Plug>(leap)", mode = { "n", "x", "o" }, desc = "Leap forward to" },

@@ -23,7 +23,7 @@ function Close_buffer()
     require("bufdelete").bufdelete(0, true)
 end
 
-vim.keymap.set("i", "<C-Space>", function()
+vim.keymap.set("i", "<C-i>", function()
     require("cmp").complete()
 end, { noremap = true, silent = true, expr = true, desc = "show autocompletion" })
 
@@ -51,8 +51,6 @@ unmap("n", "<leader>th")
 unmap("n", "<TAB>")
 unmap("n", "<leader>fh")
 unmap("n", "<leader>fo")
-
-map("n", "<C-i>", "<C-i>")
 
 map("n", "<leader>y", ":setf cpp<Cr>", { desc = "setfile to cpp", noremap = true })
 
@@ -182,3 +180,18 @@ end
 
 -- Start listening
 vim.on_key(on_key)
+
+map("n", "<C-u>", "15k", { desc = "undotree toggle", noremap = true })
+map("n", "<C-d>", "15j", { desc = "undotree toggle", noremap = true })
+
+-- toggle between terminal mode and normal terminal mode
+local function toggle_betwee()
+    local mode = vim.fn.mode()
+    if mode == "t" then
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true), "n", false)
+    else
+        vim.api.nvim_feedkeys("i", "n", false)
+    end
+end
+
+map({ "t", "n" }, "<C-i>", toggle_betwee, { desc = "toggle terminal mode", noremap = true })
