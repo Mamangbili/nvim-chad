@@ -5,6 +5,9 @@ vim.cmd [[
 if vim.loop.os_uname().sysname == "Windows_NT" then
     vim.g._jukit_python_os_cmd = "python"
     vim.opt.shell = "pwsh.exe"
+    vim.opt.shellcmdflag = "-NoProfile -ExecutionPolicy RemoteSigned -Command"
+    vim.opt.shellquote = ""
+    vim.opt.shellxquote = ""
 else
     vim.g._jukit_python_os_cmd = "/usr/bin/python3"
     vim.o.termguicolors = true

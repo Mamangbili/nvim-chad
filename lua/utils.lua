@@ -1,0 +1,100 @@
+local M = {}
+local function Close_window()
+    vim.cmd "q!"
+end
+
+local tree = require("nvim-tree.api").tree
+local function Close_buffer()
+    if vim.bo.filetype == "copilot-chat" then
+        vim.cmd "CopilotChatClose"
+        return
+    end
+    if vim.bo.filetype == "NvimTree" then
+        tree.close()
+        return
+    end
+    require("bufdelete").bufdelete(0, true)
+end
+-- toggle between terminal mode and normal terminal mode
+local function toggle_betwee()
+    local mode = vim.fn.mode()
+    if mode == "t" then
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true), "n", false)
+    else
+        vim.api.nvim_feedkeys("i", "n", false)
+    end
+end
+
+local aunction get_visual_selection()
+    local start_pos = vim.api.nvim_buf_get_mark(0, "<") -- {line, col}
+    local end_pos = vim.api.nvim_buf_get_mark(0, ">") -- {line, col}
+
+    local start_row, start_col = start_pos[1], start_pos[2]
+    local end_row, end_col = end_pos[1], end_pos[2]
+
+    -- Get all lines in the range (1-indexed)
+    local lines = vim.api.nvim_buf_get_lines(0, start_row - 1, end_row, false)
+
+    -- Adjust columns for multi-line selection
+    if #lines == 1 then
+        lines[1] = string.sub(lines[1], start_col + 1, end_col + 1)
+    else
+        lines[1] = string.sub(lines[1], start_col + 1) -- from start_col to end of first line
+        lines[#lines] = string.sub(lines[#lines], 1, end_col + 1) -- from start of last line to end_col
+    end
+
+    return lines
+end
+
+local function subtitute_old_word()
+    local old_word = nil
+    vim.ui.input({ prompt = "Substitute old word: " }, function(input)
+        old_word = input
+    end)
+    if old_word == nil then
+        return
+    end
+    local prompt = "Substitute " .. old_word .. " with new word: "
+    vim.ui.input({ prompt = prompt }, function(new_word)
+        if old_word ~= "" and new_word ~= nil then
+            -- Escape inputs
+            local esc_old = vim.fn.escape(old_word, "/\\.*$^~[]")
+            local esc_new = vim.fn.escape(new_word, "/\\&~")
+            local start_pos = vim.fn.getpos "'<"
+            local end_pos = vim.fn.getpos "'>"
+
+            -- Build command safely
+            -- local cmd = string.format("'<,'>s/%s/%s/g", esc_old, esc_new)
+            local cmd = start_pos[2] .. "," .. end_pos[2] .. "s/" .. esc_old .. "/" .. esc_new .. "/gI"
+            vim.cmd(cmd)
+            vim.cmd ":nohl"
+        end
+    end)
+end
+
+-- Detect 'q' then '/' in Normal mode
+local last_key = nil
+
+local function on_key(key)
+    local mode = vim.fn.mode(1)
+
+    if mode ~= "n" then
+        last_key = nil -- reset on mode change
+        return
+    end
+
+    if (last_key == "q" and key == "/") or (last_key == "q" and key == ":") or (last_key == "q" and key == "?") then
+        vim.schedule(function()
+            vim.cmd "q!"
+        end)
+    end
+
+    last_key = key
+end
+M.on_key = on_key
+M.subtitute_old_word = subtitute_old_word
+M.Close_window = Close_window
+M.Close_buffer = Close_buffer
+M.get_visual_selection = get_visual_selection
+M.toggle_betwee = toggle_betwee
+return M

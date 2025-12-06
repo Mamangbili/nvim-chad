@@ -1,48 +1,33 @@
 require "nvchad.mappings"
+local u = require "lua.utils"
 local tree = require("nvim-tree.api").tree
 
 -- add yours here
 -- telescope outgoing calls expand <l>, fold <h>
 
-local map = vim.keymap.set
+local remap = vim.keymap.set
 local unmap = vim.keymap.del
 
-function Close_window()
-    vim.cmd "q!"
-end
-
-function Close_buffer()
-    if vim.bo.filetype == "copilot-chat" then
-        vim.cmd "CopilotChatClose"
-        return
-    end
-    if vim.bo.filetype == "NvimTree" then
-        tree.close()
-        return
-    end
-    require("bufdelete").bufdelete(0, true)
-end
-
-vim.keymap.set("i", "<C-i>", function()
+remap("i", "<C-i>", function()
     require("cmp").complete()
 end, { noremap = true, silent = true, expr = true, desc = "show autocompletion" })
 
-map("i", "<C-i>", "cpm#complete()", { desc = "show autocompletion" })
+remap("i", "<C-i>", "cpm#complete()", { desc = "show autocompletion" })
 
-map({ "n", "v" }, "<leader>z", function()
+remap({ "n", "v" }, "<leader>z", function()
     tree.close()
     vim.cmd "CopilotChatToggle"
 end, { desc = "copilot chat toggle", noremap = true })
 
-map("n", "<leader>ng", "<cmd>Neogit<cr>", { desc = "neogit", noremap = true })
+remap("n", "<leader>ng", "<cmd>Neogit<cr>", { desc = "neogit", noremap = true })
 
-map("n", "<leader>dq", "<cmd>DiffviewClose<cr>", { desc = "close diff", noremap = true })
+remap("n", "<leader>dq", "<cmd>DiffviewClose<cr>", { desc = "close diff", noremap = true })
 
-map("n", "<C-y>", "<C-r>", { noremap = true, silent = true })
+remap("n", "<C-y>", "<C-r>", { noremap = true, silent = true })
 
 -- glance reference
-map("n", "<leader>fr", "<cmd>Glance references<cr>", { desc = "glance references", noremap = true })
-map("n", "<leader>fd", "<cmd>Glance definitions<cr>", { desc = "glance definitions", noremap = true })
+remap("n", "<leader>fr", "<cmd>Glance references<cr>", { desc = "glance references", noremap = true })
+remap("n", "<leader>fd", "<cmd>Glance definitions<cr>", { desc = "glance definitions", noremap = true })
 
 vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<C-K>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
@@ -52,19 +37,19 @@ unmap("n", "<TAB>")
 unmap("n", "<leader>fh")
 unmap("n", "<leader>fo")
 
-map("n", "<leader>y", ":setf cpp<Cr>", { desc = "setfile to cpp", noremap = true })
+remap("n", "<leader>y", ":setf cpp<Cr>", { desc = "setfile to cpp", noremap = true })
 
 local telescope = require "telescope.builtin"
-map("n", "<leader>fx", telescope.lsp_workspace_symbols, { desc = "Find symbols in workspace", noremap = true })
-map("n", "<leader>fs", telescope.lsp_document_symbols, { desc = "Find document symbols", noremap = true })
+remap("n", "<leader>fx", telescope.lsp_workspace_symbols, { desc = "Find symbols in workspace", noremap = true })
+remap("n", "<leader>fs", telescope.lsp_document_symbols, { desc = "Find document symbols", noremap = true })
 -- map("n", "<leader>fr", telescope.lsp_references, { desc = "Find document symbols", noremap = true })
-map(
-    "n",
+remap(
+   n
     "<leader>fi",
     "<Cmd>Telescope hierarchy incoming_calls<Cr>",
     { desc = "Hierarchy incoming_calls", noremap = true }
 )
-map(
+remap(
     "n",
     "<leader>fo",
     "<Cmd>Telescope hierarchy outgoing_calls<Cr>",
@@ -73,75 +58,74 @@ map(
 -- e,l untuk expand. c,h untuk fold tree hierarchy. t untuk toggle buka tutup
 -- d untuk defini current node hierarchy
 
-map("n", "<leader>t", function()
+remap("n", "<leader>t", function()
     vim.cmd "CopilotChatClose"
     vim.cmd "NvimTreeToggle>"
 end, { desc = "nvimtree toggle window" })
 
-map("i", "jk", "<ESC>")
+remap("i", "jk", "<ESC>")
 
-map("n", "<leader>q", function()
-    Close_buffer()
+remap("n", "<leader>q", function()
+    u.Close_buffer()
 end, { desc = "close buffer/diff" })
 
-map("n", "<leader>ww", function()
-    Close_window()
+remap("n", "<leader>ww", function()
+    u.Close_window()
 end, { desc = "close window" })
 
 -- split window
-map("n", "<leader>h", function()
+remap("n", "<leader>h", function()
     vim.cmd "sp"
     vim.cmd "Telescope find_files"
 end, { desc = "new horizontal window" })
 
-map("n", "<leader>v", function()
+remap("n", "<leader>v", function()
     vim.cmd "vsp"
     vim.cmd "Telescope find_files"
 end, { desc = "new vertical window" })
 
-map("n", "<S-l>", function()
+remap("n", "<S-l>", function()
     require("nvchad.tabufline").next()
 end, { desc = "buffer goto next" })
 
-map("n", "<S-h>", function()
+remap("n", "<S-h>", function()
     require("nvchad.tabufline").prev()
 end, { desc = "buffer goto next" })
 
 -- terminal mode
-map("t", "<leader><Esc>", "<C-\\><C-N>", { desc = "terminal escape terminal mode" })
-map({ "n", "i" }, "<A-t>", "<cmd>terminal<CR>", { desc = "enter terminal mode" })
+remap("t", "<leader><Esc>", "<C-\\><C-N>", { desc = "terminal escape terminal mode" })
+remap({ "n", "i" }, "<A-t>", "<cmd>terminal<CR>", { desc = "enter terminal mode" })
 
-map({ "n", "t" }, "<A-/>", function()
+remap({ "n", "t" }, "<A-/>", function()
     require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
     -- require("nvchad.term").toggle { pos = "sp", id = "htoggleTerm" }
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
 end, { desc = "terminal toggleable horizontal term" })
 
-map({ "n", "t" }, "<A-i>", function()
+remap({ "n", "t" }, "<A-i>", function()
     require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
 end, { desc = "terminal toggle floating term" })
 
-map("n", "gf", vim.lsp.buf.code_action, { desc = "quick fix" })
-map("n", "gi", vim.lsp.buf.implementation, { desc = "lsp implementation" })
+remap("n", "gf", vim.lsp.buf.code_action, { desc = "quick fix" })
+remap("n", "gi", vim.lsp.buf.implementation, { desc = "lsp implementation" })
 
 -- redo
-map("n", "U", function()
+remap("n", "U", function()
     vim.cmd "redo"
 end, { desc = "redo" })
-
 -- map for indenting in visual mode
 
 -- resize window
-map({ "n", "i", "x" }, "<C-Up>", ":resize +5<CR>", { desc = "increase height", noremap = true, silent = true })
-map({ "n", "i", "x" }, "<C-Down>", ":resize -5<CR>", { desc = "decrease height", noremap = true, silent = true })
-map(
+remap({ "n", "i", "x" }, "<C-Up>", ":resize +5<CR>", { desc = "increase height", noremap = true, silent = true })
+remap({ "n", "i", "x" }, "<C-Down>", ":resize -5<CR>", { desc = "decrease height", noremap = true, silent = true })
+remap(
     { "n", "i", "x" },
     "<C-Left>",
     ":vertical resize -5<CR>",
     { desc = "decrease width", noremap = true, silent = true }
 )
-map(
+remap(
     { "n", "i", "x" },
     "<C-Right>",
     ":vertical resize +5<CR>",
@@ -149,49 +133,21 @@ map(
 )
 
 -- aerial
-map({ "n", "v" }, "<leader>nb", require("nvim-navbuddy").open, { desc = "navboddy toggle", noremap = true })
+remap({ "n", "v" }, "<leader>nb", require("nvim-navbuddy").open, { desc = "navboddy toggle", noremap = true })
 
 -- inlay hint
 -- shift + k
 
 -- remove q: to disable command-line window
-vim.keymap.set("n", "q:", "<nop>", { desc = "Disable command-line window", noremap = true })
-vim.keymap.set("n", "q/", "<Nop>", { desc = "Disable command-line window", noremap = true })
-
--- Detect 'q' then '/' in Normal mode
-local last_key = nil
-
-local function on_key(key)
-    local mode = vim.fn.mode(1)
-
-    if mode ~= "n" then
-        last_key = nil -- reset on mode change
-        return
-    end
-
-    if (last_key == "q" and key == "/") or (last_key == "q" and key == ":") or (last_key == "q" and key == "?") then
-        vim.schedule(function()
-            vim.cmd "q!"
-        end)
-    end
-
-    last_key = key
-end
+remap("n", "q:", "<nop>", { desc = "Disable command-line window", noremap = true })
+remap("n", "q/", "<Nop>", { desc = "Disable command-line window", noremap = true })
 
 -- Start listening
-vim.on_key(on_key)
+vim.on_key(u.on_key)
 
-map("n", "<C-u>", "15k", { desc = "undotree toggle", noremap = true })
-map("n", "<C-d>", "15j", { desc = "undotree toggle", noremap = true })
+remap("n", "<C-u>", "15k", { desc = "undotree toggle", noremap = true })
+remap("n", "<C-d>", "15j", { desc = "undotree toggle", noremap = true })
 
--- toggle between terminal mode and normal terminal mode
-local function toggle_betwee()
-    local mode = vim.fn.mode()
-    if mode == "t" then
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true), "n", false)
-    else
-        vim.api.nvim_feedkeys("i", "n", false)
-    end
-end
-
-map({ "t", "n" }, "<C-i>", toggle_betwee, { desc = "toggle terminal mode", noremap = true })
+remap({ "t", "n" }, "<C-i>", u.toggle_betwee, { desc = "toggle terminal mode", noremap = true })
+remap("v", "re", ":s/", { desc = "substitute in block", noremap = true })
+remap("n", "<leader>rr", ":.,$s/", { desc = "substitute until end", noremap = true })
