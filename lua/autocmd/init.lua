@@ -45,12 +45,19 @@ M.setup = function()
         callback = function(args)
             local deltaTime = os.time() - start
             deltaTime = deltaTime
-
             local sec = 10
-            print(deltaTime)
             if deltaTime > sec then
                 vim.cmd "silent! write"
-                print("💾 Auto-saved at " .. os.date "%H:%M:%S")
+                local ok, notify = pcall(require, "notify")
+
+                if not ok then
+                    print("Auto-saved at " .. os.date "%H:%M:%S")
+                else
+                    notify("💾 Auto-saved at " .. os.date "%H:%M:%S", "info", {
+                        title = "Auto-save",
+                        timeout = 1000, -- 1 second
+                    })
+                end
                 start = os.time()
             end
         end,

@@ -4,15 +4,11 @@ return {
     {
         "folke/noice.nvim",
         event = "VeryLazy",
-        config = {
-            cmdline = {
-                enable = true,
-            },
-        },
         dependencies = {
             "MunifTanjim/nui.nvim",
             "rcarriga/nvim-notify",
         },
+        config = require "configs.noice",
     },
     {
         "ggandor/leap.nvim",
