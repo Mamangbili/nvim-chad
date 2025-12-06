@@ -25,27 +25,6 @@ local function toggle_betwee()
     end
 end
 
-local aunction get_visual_selection()
-    local start_pos = vim.api.nvim_buf_get_mark(0, "<") -- {line, col}
-    local end_pos = vim.api.nvim_buf_get_mark(0, ">") -- {line, col}
-
-    local start_row, start_col = start_pos[1], start_pos[2]
-    local end_row, end_col = end_pos[1], end_pos[2]
-
-    -- Get all lines in the range (1-indexed)
-    local lines = vim.api.nvim_buf_get_lines(0, start_row - 1, end_row, false)
-
-    -- Adjust columns for multi-line selection
-    if #lines == 1 then
-        lines[1] = string.sub(lines[1], start_col + 1, end_col + 1)
-    else
-        lines[1] = string.sub(lines[1], start_col + 1) -- from start_col to end of first line
-        lines[#lines] = string.sub(lines[#lines], 1, end_col + 1) -- from start of last line to end_col
-    end
-
-    return lines
-end
-
 local function subtitute_old_word()
     local old_word = nil
     vim.ui.input({ prompt = "Substitute old word: " }, function(input)

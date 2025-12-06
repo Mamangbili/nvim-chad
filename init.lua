@@ -13,6 +13,8 @@ else
     vim.o.termguicolors = true
 end
 
+vim.o.clipboard = "unnamedplus"
+
 if vim.g.vscode then
     -- Set leader key
     print "✅ VSCode detected!"
@@ -38,9 +40,6 @@ if vim.g.vscode then
     end, { silent = true })
     vim.keymap.set("n", "<C-j>", function()
         vscode.call "editor.action.showDefinitionPreviewHover"
-    end, { silent = true })
-    vim.keymap.set("n", "<C-y>", function()
-        vscode.call "undo"
     end, { silent = true })
     vim.keymap.set("n", "<A-q>", function()
         vscode.call "workbench.action.closeActiveEditor"
@@ -104,7 +103,6 @@ else
     vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
     vim.g.mapleader = " "
     vim.o.relativenumber = true
-    vim.o.clipboard = ""
     vim.o.scrolloff = 17
 
     -- bootstrap lazy and all plugins
@@ -116,6 +114,7 @@ else
     end
 
     vim.opt.rtp:prepend(lazypath)
+    vim.opt.rtp:append(vim.fn.stdpath "config" .. "/lua")
 
     local lazy_config = require "configs.lazy"
 

@@ -1,5 +1,5 @@
 require "nvchad.mappings"
-local u = require "lua.utils"
+local u = require "utils"
 local tree = require("nvim-tree.api").tree
 
 -- add yours here
@@ -8,6 +8,8 @@ local tree = require("nvim-tree.api").tree
 local remap = vim.keymap.set
 local unmap = vim.keymap.del
 
+vim.opt.timeoutlen = 10000
+remap("v", "r", "<nop>")
 remap("i", "<C-i>", function()
     require("cmp").complete()
 end, { noremap = true, silent = true, expr = true, desc = "show autocompletion" })
@@ -22,8 +24,6 @@ end, { desc = "copilot chat toggle", noremap = true })
 remap("n", "<leader>ng", "<cmd>Neogit<cr>", { desc = "neogit", noremap = true })
 
 remap("n", "<leader>dq", "<cmd>DiffviewClose<cr>", { desc = "close diff", noremap = true })
-
-remap("n", "<C-y>", "<C-r>", { noremap = true, silent = true })
 
 -- glance reference
 remap("n", "<leader>fr", "<cmd>Glance references<cr>", { desc = "glance references", noremap = true })
@@ -44,7 +44,7 @@ remap("n", "<leader>fx", telescope.lsp_workspace_symbols, { desc = "Find symbols
 remap("n", "<leader>fs", telescope.lsp_document_symbols, { desc = "Find document symbols", noremap = true })
 -- map("n", "<leader>fr", telescope.lsp_references, { desc = "Find document symbols", noremap = true })
 remap(
-   n
+    "n",
     "<leader>fi",
     "<Cmd>Telescope hierarchy incoming_calls<Cr>",
     { desc = "Hierarchy incoming_calls", noremap = true }
@@ -145,9 +145,9 @@ remap("n", "q/", "<Nop>", { desc = "Disable command-line window", noremap = true
 -- Start listening
 vim.on_key(u.on_key)
 
-remap("n", "<C-u>", "15k", { desc = "undotree toggle", noremap = true })
-remap("n", "<C-d>", "15j", { desc = "undotree toggle", noremap = true })
+remap("n", "<C-u>", "10<C-y>", { desc = "undotree toggle", noremap = true })
+remap("n", "<C-d>", "10<C-e>", { desc = "undotree toggle", noremap = true })
 
 remap({ "t", "n" }, "<C-i>", u.toggle_betwee, { desc = "toggle terminal mode", noremap = true })
-remap("v", "re", ":s/", { desc = "substitute in block", noremap = true })
+remap("v", "rb", ":s/", { desc = "substitute in block", noremap = true })
 remap("n", "<leader>rr", ":.,$s/", { desc = "substitute until end", noremap = true })
