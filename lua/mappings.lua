@@ -30,7 +30,7 @@ remap("n", "<leader>fr", "<cmd>Glance references<cr>", { desc = "glance referenc
 remap("n", "<leader>fd", "<cmd>Glance definitions<cr>", { desc = "glance definitions", noremap = true })
 
 vim.g.copilot_no_tab_map = true
-remap("i", "<C-K>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+vim.api.nvim_set_keymap("i", "<C-K>", "copilot#Accept('<CR>')", { silent = true, expr = true }) -- DON"T USE REMAP"
 
 unmap("n", "<leader>b")
 unmap("n", "<TAB>")
@@ -59,7 +59,7 @@ remap(
 
 remap("n", "<leader>t", function()
     vim.cmd "CopilotChatClose"
-    vim.cmd "NvimTreeToggle>"
+    vim.cmd "NvimTreeToggle"
 end, { desc = "nvimtree toggle window" })
 
 remap("i", "jk", "<ESC>")
