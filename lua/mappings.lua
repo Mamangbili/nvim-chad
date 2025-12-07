@@ -33,6 +33,7 @@ vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<C-K>", "copilot#Accept('<CR>')", { silent = true, expr = true }) -- DON"T USE REMAP"
 
 unmap("n", "<leader>b")
+unmap("n", "<leader>th")
 unmap("n", "<TAB>")
 unmap("n", "<leader>fo")
 
