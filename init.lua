@@ -100,6 +100,8 @@ else
     vim.opt.guicursor = "n-v-c:block-blinkon100-blinkoff100,i:ver25-blinkon100-blinkoff100"
     vim.o.sessionoptions = "blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,localoptions"
 
+    vim.opt.guicursor = "n-v-c:block-blinkon100-blinkoff100,i:ver25-blinkon100-blinkoff100"
+    vim.o.sessionoptions = "blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,localoptions"
     vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
     vim.g.mapleader = " "
     vim.o.relativenumber = true

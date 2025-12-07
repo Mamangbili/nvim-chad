@@ -77,6 +77,7 @@ return function(_, opts)
             cwd = "${workspaceFolder}",
             stopOnEntry = false,
             args = {},
+            sourceLanguages = { "cpp" },
         },
     }
 

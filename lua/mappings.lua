@@ -75,13 +75,27 @@ end, { desc = "close window" })
 
 -- split window
 remap("n", "<leader>h", function()
-    vim.cmd "sp"
-    vim.cmd "Telescope find_files"
+    require("telescope.builtin").find_files {
+        attach_mappings = function(prompt_bufnr)
+            local actions = require "telescope.actions"
+            actions.select_default:replace(function()
+                actions.file_split(prompt_bufnr)
+            end)
+            return true
+        end,
+    }
 end, { desc = "new horizontal window" })
 
 remap("n", "<leader>v", function()
-    vim.cmd "vsp"
-    vim.cmd "Telescope find_files"
+    require("telescope.builtin").find_files {
+        attach_mappings = function(prompt_bufnr)
+            local actions = require "telescope.actions"
+            actions.select_default:replace(function()
+                actions.file_vsplit(prompt_bufnr)
+            end)
+            return true
+        end,
+    }
 end, { desc = "new vertical window" })
 
 remap("n", "<S-l>", function()

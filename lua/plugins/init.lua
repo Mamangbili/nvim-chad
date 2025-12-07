@@ -123,6 +123,14 @@ return {
             },
         },
     },
+  {
+    "nvim-telescope/telescope.nvim",
+    opts = {
+        defaults = {
+
+      }
+    }
+  },
     {
         "kdheepak/lazygit.nvim",
         event = "VeryLazy",
@@ -223,6 +231,27 @@ return {
     },
 
     "nvim-neotest/nvim-nio",
+    {
+        "theHamsta/nvim-dap-virtual-text",
+        dependencies = {
+            "mfussenegger/nvim-dap",
+            "nvim-treesitter/nvim-treesitter",
+        },
+        config = function()
+            require("nvim-dap-virtual-text").setup {
+                commented = true,
+                virt_text_pos = "inline",
+                display_callback = function(variable, _, _, _, options)
+                    if options.virt_text_pos == "inline" then
+                        return " = " .. variable.value:gsub("%s+", " ")
+                    else
+                        return variable.name .. " = " .. variable.value:gsub("%s+", " ")
+                    end
+                end,
+            }
+        end,
+        event = "VeryLazy",
+    },
     {
         "Jorenar/nvim-dap-disasm",
         config = true,
