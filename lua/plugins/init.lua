@@ -2,6 +2,12 @@ local NS = { noremap = true, silent = true }
 
 return {
     {
+        "catgoose/nvim-colorizer.lua",
+        event = "BufReadPre",
+        opts = { -- set to setup table
+        },
+    },
+    {
         "folke/noice.nvim",
         event = "VeryLazy",
         dependencies = {
@@ -123,14 +129,6 @@ return {
             },
         },
     },
-  {
-    "nvim-telescope/telescope.nvim",
-    opts = {
-        defaults = {
-
-      }
-    }
-  },
     {
         "kdheepak/lazygit.nvim",
         event = "VeryLazy",
