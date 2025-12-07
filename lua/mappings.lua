@@ -30,11 +30,10 @@ remap("n", "<leader>fr", "<cmd>Glance references<cr>", { desc = "glance referenc
 remap("n", "<leader>fd", "<cmd>Glance definitions<cr>", { desc = "glance definitions", noremap = true })
 
 vim.g.copilot_no_tab_map = true
-vim.api.nvim_set_keymap("i", "<C-K>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+remap("i", "<C-K>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 
-unmap("n", "<leader>th")
+unmap("n", "<leader>b")
 unmap("n", "<TAB>")
-unmap("n", "<leader>fh")
 unmap("n", "<leader>fo")
 
 remap("n", "<leader>y", ":setf cpp<Cr>", { desc = "setfile to cpp", noremap = true })
@@ -159,8 +158,8 @@ remap("n", "q/", "<Nop>", { desc = "Disable command-line window", noremap = true
 -- Start listening
 vim.on_key(u.on_key)
 
-remap("n", "<C-u>", "10<C-y>", { desc = "undotree toggle", noremap = true })
-remap("n", "<C-d>", "10<C-e>", { desc = "undotree toggle", noremap = true })
+remap({ "n", "v", "t" }, "<C-u>", "10<C-y>", { desc = "undotree toggle", noremap = true })
+remap({ "n", "v", "t" }, "<C-d>", "10<C-e>", { desc = "undotree toggle", noremap = true })
 
 remap({ "t", "n" }, "<C-i>", u.toggle_betwee, { desc = "toggle terminal mode", noremap = true })
 remap("v", "rb", ":s/", { desc = "substitute in block", noremap = true })
