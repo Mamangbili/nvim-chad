@@ -12,6 +12,6 @@ return function()
     require("notify").setup {
         fps = 30,
         top_down = false,
-        stages = "static"
+        stages = "static",
     }
 end

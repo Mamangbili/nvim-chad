@@ -32,10 +32,18 @@ remap("n", "<leader>fd", "<cmd>Glance definitions<cr>", { desc = "glance definit
 vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<C-K>", "copilot#Accept('<CR>')", { silent = true, expr = true }) -- DON"T USE REMAP"
 
+unmap("n", "<leader>e")
 unmap("n", "<leader>b")
 unmap("n", "<leader>th")
 unmap("n", "<TAB>")
 unmap("n", "<leader>fo")
+
+remap("t", "<F9>", require("nvchad.tabufline").close_buffer, { desc = "terminal toggle floating term" })
+
+local harpoon = require "harpoon"
+remap("n", "<leader>e", function()
+    harpoon.ui:toggle_quick_menu(harpoon:list())
+end, { desc = "Harpoon quick menu", noremap = true })
 
 remap("n", "<leader>y", ":setf cpp<Cr>", { desc = "setfile to cpp", noremap = true })
 
