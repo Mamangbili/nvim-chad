@@ -36,7 +36,6 @@ unmap("n", "<leader>n")
 unmap("n", "<leader>e")
 unmap("n", "<leader>b")
 unmap("n", "<leader>th")
--- unmap("n", "<TAB>")
 unmap("n", "<leader>fo")
 
 remap("i", "<C-h>", "<C-w>")
@@ -159,3 +158,4 @@ remap({ "n", "v", "t" }, "<C-d>", "10<C-e>", { desc = "undotree toggle", noremap
 remap({ "t", "n" }, "<C-i>", u.toggle_betwee, { desc = "toggle terminal mode", noremap = true })
 remap("v", "rb", ":s/", { desc = "substitute in block", noremap = true })
 remap("n", "<leader>rr", ":.,$s/", { desc = "substitute until end", noremap = true })
+unmap("t", "<Tab>")

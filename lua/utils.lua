@@ -50,8 +50,8 @@ local function toggle_betwee()
     local mode = vim.fn.mode()
     if mode == "t" then
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true), "n", false)
-    else
-        vim.api.nvim_feedkeys("i", "n", false)
+        -- else
+        --     vim.api.nvim_feedkeys("i", "n", false)
     end
 end
 

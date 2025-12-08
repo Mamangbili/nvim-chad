@@ -26,6 +26,20 @@ M.setup = function()
         end,
     })
 
+    local u = require "utils"
+    autocmd("FileType", {
+        pattern = "NvTerm_float",
+        callback = function()
+            vim.opt_local.timeoutlen = 100
+            vim.keymap.set(
+                { "t", "n" },
+                "<Esc>",
+                u.toggle_betwee,
+                { desc = "toggle terminal mode", noremap = true, buffer = true }
+            )
+        end,
+    })
+
     -- for CMake lsp
     autocmd({ "BufRead", "BufNewFile" }, {
         pattern = { "CMakeLists.txt", "*.cmake", "CmakeLists.txt", "cmakelists.txt" },
