@@ -14,6 +14,8 @@ else
 end
 
 vim.o.clipboard = "unnamedplus"
+vim.opt.number = true
+vim.opt.relativenumber = true
 
 if vim.g.vscode then
     -- Set leader key

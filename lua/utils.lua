@@ -2,6 +2,36 @@ local M = {}
 local function Close_window()
     vim.cmd "q!"
 end
+local function telescope_vsplit()
+    require("telescope.builtin").find_files {
+        attach_mappings = function(prompt_bufnr)
+            local actions = require "telescope.actions"
+            actions.select_default:replace(function()
+                actions.file_vsplit(prompt_bufnr)
+            end)
+            return true
+        end,
+    }
+end
+local function telescope_hsplit()
+    require("telescope.builtin").find_files {
+        attach_mappings = function(prompt_bufnr)
+            local actions = require "telescope.actions"
+            actions.select_default:replace(function()
+                actions.file_split(prompt_bufnr)
+            end)
+            return true
+        end,
+    }
+end
+
+local function paste_without_newline()
+    local content = vim.fn.getreg "+"
+    -- Remove trailing CR/LF (handles \n, \r\n, \r)
+    content = content:gsub("[\r\n]+$", "")
+    vim.fn.setreg("z", content) -- use 'z' as temp register (safe, non-default)
+    return "<C-r>z"
+end
 
 local tree = require("nvim-tree.api").tree
 local function Close_buffer()
@@ -70,10 +100,12 @@ local function on_key(key)
 
     last_key = key
 end
+M.telescope_vsplit = telescope_vsplit
+M.telescope_hsplit = telescope_hsplit
+M.paste_without_newline = paste_without_newline
 M.on_key = on_key
 M.subtitute_old_word = subtitute_old_word
 M.Close_window = Close_window
 M.Close_buffer = Close_buffer
-M.get_visual_selection = get_visual_selection
 M.toggle_betwee = toggle_betwee
 return M

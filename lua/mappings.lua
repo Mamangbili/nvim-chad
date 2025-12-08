@@ -32,13 +32,20 @@ remap("n", "<leader>fd", "<cmd>Glance definitions<cr>", { desc = "glance definit
 vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<C-K>", "copilot#Accept('<CR>')", { silent = true, expr = true }) -- DON"T USE REMAP"
 
+unmap("n", "<leader>n")
 unmap("n", "<leader>e")
 unmap("n", "<leader>b")
 unmap("n", "<leader>th")
-unmap("n", "<TAB>")
+-- unmap("n", "<TAB>")
 unmap("n", "<leader>fo")
 
 remap("t", "<F9>", require("nvchad.tabufline").close_buffer, { desc = "terminal toggle floating term" })
+remap(
+    "i",
+    "<C-v>",
+    u.paste_without_newline,
+    { expr = true, noremap = true, silent = true, desc = "Paste from clipboard (no trailing newline)" }
+)
 
 local harpoon = require "harpoon"
 remap("n", "<leader>e", function()
@@ -82,29 +89,8 @@ remap("n", "<leader>ww", function()
 end, { desc = "close window" })
 
 -- split window
-remap("n", "<leader>h", function()
-    require("telescope.builtin").find_files {
-        attach_mappings = function(prompt_bufnr)
-            local actions = require "telescope.actions"
-            actions.select_default:replace(function()
-                actions.file_split(prompt_bufnr)
-            end)
-            return true
-        end,
-    }
-end, { desc = "new horizontal window" })
-
-remap("n", "<leader>v", function()
-    require("telescope.builtin").find_files {
-        attach_mappings = function(prompt_bufnr)
-            local actions = require "telescope.actions"
-            actions.select_default:replace(function()
-                actions.file_vsplit(prompt_bufnr)
-            end)
-            return true
-        end,
-    }
-end, { desc = "new vertical window" })
+remap("n", "<leader>h", u.telescope_hsplit, { desc = "new horizontal window" })
+remap("n", "<leader>v", u.telescope_vsplit, { desc = "new vertical window" })
 
 remap("n", "<S-l>", function()
     require("nvchad.tabufline").next()
@@ -120,7 +106,6 @@ remap({ "n", "i" }, "<A-t>", "<cmd>terminal<CR>", { desc = "enter terminal mode"
 
 remap({ "n", "t" }, "<A-/>", function()
     require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
-    -- require("nvchad.term").toggle { pos = "sp", id = "htoggleTerm" }
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
 end, { desc = "terminal toggleable horizontal term" })
 

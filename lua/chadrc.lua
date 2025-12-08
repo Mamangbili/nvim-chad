@@ -70,5 +70,12 @@ M.term = {
 --
 ---- Place in init.lua
 -- This ensures your "Namespace" rules beat the default "Uppercase = Type" rule
+M.plugin = {
+    override = {
+      ["hrs7n/nvim-cmp-npm"] = {
+        disable = false,
+      },
+    },
+}
 
 return M

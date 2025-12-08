@@ -2,6 +2,10 @@ local NS = { noremap = true, silent = true }
 
 return {
     {
+        "hrsh7th/nvim-cmp",
+        opts = require "configs.cmp",
+    },
+    {
         "catgoose/nvim-colorizer.lua",
         event = "BufReadPre",
         opts = { -- set to setup table
@@ -48,6 +52,10 @@ return {
                 config = require "configs.navbuddy",
             },
         },
+        event = "VimEnter",
+        config = function()
+            require "configs.lspconfig"
+        end,
         -- your lsp config or other stuff
     },
     {
@@ -344,16 +352,6 @@ return {
         event = { "BufWritePre" }, -- uncomment for format on save
         cmd = "ConformInfo",
         opts = require "configs.conform",
-    },
-
-    -- These are some examples, uncomment them if you want to see them work!
-    {
-        "neovim/nvim-lspconfig",
-        -- lazy = false,
-        event = "VimEnter",
-        config = function()
-            require "configs.lspconfig"
-        end,
     },
 
     {
