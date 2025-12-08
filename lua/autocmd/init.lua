@@ -37,6 +37,17 @@ M.setup = function()
                 u.toggle_betwee,
                 { desc = "toggle terminal mode", noremap = true, buffer = true }
             )
+            vim.keymap.set("t", "<C-v>", function()
+                local text = vim.fn.getreg "+"
+
+                text = text:gsub("^%s*", ""):gsub("%s*$", "")
+
+                text = text:gsub("%s+", " ")
+
+                text = text:gsub("^%s*(.-)%s*$", "%1")
+
+                vim.api.nvim_paste(text, false, -1)
+            end, { desc = "Paste trimmed", noremap = true, buffer = true })
         end,
     })
 
