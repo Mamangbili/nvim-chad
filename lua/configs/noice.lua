@@ -3,12 +3,26 @@ return function()
         cmdline = {
             enable = true,
         },
+        lsp = {
+            override = {
+                ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+                ["vim.lsp.util.stylize_markdown"] = true,
+                ["cmp.entry.get_documentation"] = true,
+            },
+        },
+        presets = {
+            lsp_doc_border = true, -- Preserve borders
+        },
+        views = {
+            cmdline_popup = {
+                border = {
+                    style = "rounded",
+                    padding = { 1, 3 },
+                },
+            },
+        },
     }
     require("noice").setup(opts)
-    vim.api.nvim_set_hl(0, "NotifyBackground", {
-        bg = "#1E1E2E", -- Your preferred background color
-        fg = "#CDD6F4", -- Optional: foreground color
-    })
     require("notify").setup {
         fps = 30,
         top_down = false,
