@@ -39,6 +39,7 @@ unmap("n", "<leader>th")
 -- unmap("n", "<TAB>")
 unmap("n", "<leader>fo")
 
+remap("i", "<C-h>", "<C-w>")
 remap("t", "<F9>", require("nvchad.tabufline").close_buffer, { desc = "terminal toggle floating term" })
 remap(
     "i",

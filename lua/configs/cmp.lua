@@ -33,13 +33,6 @@ return function(_, opts)
             end
         end, { "i", "s" }),
 
-        ["<C-j>"] = cmp.mapping(function(fallback)
-            cmp.select_next_item()
-        end, { "i", "s" }),
-
-        ["<C-k>"] = cmp.mapping(function(fallback)
-            cmp.select_prev_item()
-        end, { "i", "s" }),
         ["<Down>"] = cmp.mapping(function(fallback)
             cmp.select_next_item()
         end, { "i", "s" }),
