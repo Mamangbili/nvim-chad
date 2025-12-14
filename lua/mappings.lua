@@ -155,7 +155,7 @@ vim.on_key(u.on_key)
 remap({ "n", "v", "t" }, "<C-u>", "10<C-y>", { desc = "undotree toggle", noremap = true })
 remap({ "n", "v", "t" }, "<C-d>", "10<C-e>", { desc = "undotree toggle", noremap = true })
 
-remap({ "t", "n" }, "<C-i>", u.toggle_betwee, { desc = "toggle terminal mode", noremap = true })
+remap("t", "<C-i>", u.toggle_betwee, { desc = "toggle terminal mode", noremap = true })
 remap("v", "rb", ":s/", { desc = "substitute in block", noremap = true })
 remap("n", "<leader>rr", ":.,$s/", { desc = "substitute until end", noremap = true })
 unmap("t", "<Tab>")

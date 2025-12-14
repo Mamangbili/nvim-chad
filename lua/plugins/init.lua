@@ -2,6 +2,69 @@ local NS = { noremap = true, silent = true }
 
 return {
     {
+        "folke/flash.nvim",
+        event = "VeryLazy",
+        keys = {
+            {
+                "s",
+                mode = { "n", "x", "o" },
+                function()
+                    require("flash").jump()
+                end,
+                desc = "Flash",
+            },
+            {
+                "S",
+                mode = { "n", "x", "o" },
+                function()
+                    require("flash").treesitter()
+                end,
+                desc = "Flash Treesitter",
+            },
+            {
+                "r",
+                mode = "o",
+                function()
+                    require("flash").remote()
+                end,
+                desc = "Remote Flash",
+            },
+            {
+                "R",
+                mode = { "o", "x" },
+                function()
+                    require("flash").treesitter_search()
+                end,
+                desc = "Treesitter Search",
+            },
+            {
+                "<c-s>",
+                mode = { "c" },
+                function()
+                    require("flash").toggle()
+                end,
+                desc = "Toggle Flash Search",
+            },
+        },
+    },
+    {
+        "MeanderingProgrammer/render-markdown.nvim",
+        dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.nvim" }, -- if you use the mini.nvim suite
+        ---@module 'render-markdown'
+        opts = {},
+        event = "VeryLazy",
+    },
+    {
+        "luckasRanarison/nvim-devdocs",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-telescope/telescope.nvim",
+            "nvim-treesitter/nvim-treesitter",
+        },
+        opts = {},
+        event = "VeryLazy",
+    },
+    {
         "hrsh7th/nvim-cmp",
         opts = require "configs.cmp",
     },
@@ -19,13 +82,6 @@ return {
             "rcarriga/nvim-notify",
         },
         config = require "configs.noice",
-    },
-    {
-        "ggandor/leap.nvim",
-        keys = {
-            { "s", "<Plug>(leap)", mode = { "n", "x", "o" }, desc = "Leap forward to" },
-            { "S", "<Plug>(leap-from-window)", mode = { "n", "x", "o" }, desc = "Leap from window" },
-        },
     },
     {
         "sphamba/smear-cursor.nvim",
