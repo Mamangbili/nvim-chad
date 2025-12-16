@@ -1,0 +1,3 @@
+return {
+    "KaitoMuraoka/websearcher.nvim",
+}
