@@ -158,4 +158,5 @@ remap({ "n", "v", "t" }, "<C-d>", "10<C-e>", { desc = "undotree toggle", noremap
 remap("t", "<C-i>", u.toggle_betwee, { desc = "toggle terminal mode", noremap = true })
 remap("v", "rb", ":s/", { desc = "substitute in block", noremap = true })
 remap("n", "<leader>rr", ":.,$s/", { desc = "substitute until end", noremap = true })
+remap("n", "<leader>wb", ":BDeleteOthers<CR>", { desc = "delete all buffer except current" })
 unmap("t", "<Tab>")

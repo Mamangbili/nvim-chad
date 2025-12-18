@@ -153,4 +153,5 @@ else
     }
 
     require("autocmd").setup()
+    require("usercmd").setup()
 end
