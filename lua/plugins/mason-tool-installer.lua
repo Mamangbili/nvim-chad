@@ -13,6 +13,7 @@ return {
             "codelldb",
             "ast-grep",
             "fixjson",
+            "ty",
             {
                 "gersemi",
                 condition = function()
