@@ -1,7 +1,7 @@
 return {
     "kevinhwang91/nvim-ufo",
     dependencies = { "kevinhwang91/promise-async" },
-    -- event = "VeryLazy",
+    event = "VeryLazy",
     config = require "configs.ufo",
     init = function()
         vim.o.foldenable = true

@@ -47,11 +47,6 @@ remap(
     { expr = true, noremap = true, silent = true, desc = "Paste from clipboard (no trailing newline)" }
 )
 
-local harpoon = require "harpoon"
-remap("n", "<leader>e", function()
-    harpoon.ui:toggle_quick_menu(harpoon:list())
-end, { desc = "Harpoon quick menu", noremap = true })
-
 remap("n", "<leader>y", ":setf cpp<Cr>", { desc = "setfile to cpp", noremap = true })
 
 local telescope = require "telescope.builtin"

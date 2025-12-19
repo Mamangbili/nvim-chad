@@ -1,5 +1,6 @@
 return function()
     local harpoon = require "harpoon"
+    local extensions = require "harpoon.extensions"
 
     -- REQUIRED
     harpoon:setup {
@@ -7,12 +8,15 @@ return function()
             save_on_toggle = true,
         },
     }
+    harpoon:extend(extensions.builtins.command_on_nav "UfoEnableFold")
     -- REQUIRED
-
     vim.keymap.set("n", "<leader>a", function()
         harpoon:list():add()
         print "File added to Harpoon list"
     end, { desc = "Add file to Harpoon list" })
+    vim.keymap.set("n", "<leader>e", function()
+        harpoon.ui:toggle_quick_menu(harpoon:list())
+    end)
 
     vim.keymap.set("n", "<leader>1", function()
         harpoon:list():select(1)
