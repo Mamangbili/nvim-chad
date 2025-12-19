@@ -72,9 +72,9 @@ M.term = {
 -- This ensures your "Namespace" rules beat the default "Uppercase = Type" rule
 M.plugin = {
     override = {
-      ["hrs7n/nvim-cmp-npm"] = {
-        disable = false,
-      },
+        ["hrs7n/nvim-cmp-npm"] = {
+            disable = false,
+        },
     },
 }
 

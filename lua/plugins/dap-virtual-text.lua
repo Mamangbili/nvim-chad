@@ -4,6 +4,7 @@ return {
         "mfussenegger/nvim-dap",
         "nvim-treesitter/nvim-treesitter",
     },
+    cmd = { "DapViewToggle", "DapContinue" },
     config = function()
         require("nvim-dap-virtual-text").setup {
             commented = true,
