@@ -8,21 +8,25 @@ local M = {}
 M.base46 = {
     theme = "vscode_dark",
     transparency = true,
-
+    hl_add = {
+        ["@constructor.cpp"] = { underline = true },
+    },
     hl_override = {
-        --   Comment = { italic = true },
+        ["@function"] = { underline = false, nocombine = true },
         ["@comment"] = { italic = true },
         Type = { fg = "#26d988", bold = false },
         ["@type.builtin"] = { fg = "#26d988", bold = false },
         ["@variable.builtin"] = { fg = "base08" },
         ["@variable.parameter"] = { fg = "base08" },
         ["@variable.member"] = { fg = "#0885c4" },
+        ["@property"] = { fg = "#0885c4" },
         ["@constructor"] = { fg = "base0D" },
         ["@module"] = { fg = "#09a530" },
         ["@type.cpp"] = { fg = "#ff0000" },
         ["@keyword.repeat"] = { fg = "purple" },
         ["@keyword"] = { fg = "#5252e0" },
         ["@constant"] = { fg = "#2239e9", bold = true },
+        ["@constant.macro"] = { fg = "#2239e9" },
         ["@character"] = { fg = "base0B" },
     },
     --
@@ -48,6 +52,7 @@ M.ui = {
 }
 M.colorify = {
     enabled = false,
+    virt_text = "",
 }
 
 M.term = {
