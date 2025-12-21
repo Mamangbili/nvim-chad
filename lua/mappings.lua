@@ -111,6 +111,8 @@ end, { desc = "terminal toggle floating term" })
 
 remap("n", "gf", vim.lsp.buf.code_action, { desc = "quick fix" })
 remap("n", "gi", vim.lsp.buf.implementation, { desc = "lsp implementation" })
+remap("n", "gd", vim.lsp.buf.definition, { desc = "lsp definition" })
+remap("n", "gD", vim.lsp.buf.declaration, { desc = "lsp declaration" })
 
 -- redo
 remap("n", "U", function()

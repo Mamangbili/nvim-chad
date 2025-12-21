@@ -6,5 +6,5 @@ return {
         "nvim-treesitter/nvim-treesitter",
     },
     opts = {},
-    -- event = "VeryLazy",
+    event = "VeryLazy",
 }

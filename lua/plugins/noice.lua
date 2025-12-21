@@ -14,6 +14,8 @@ return {
         cmdline = {
             enable = true,
             format = {
+
+                filter = {},
                 lua = {
                     icon = "", -- ← no icon (was "tolua")
                     name = "lua", -- keep name for filtering (optional)
