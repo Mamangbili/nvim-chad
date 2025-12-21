@@ -1,7 +1,19 @@
 -- load defaults i.e lua_lsp
 require("nvchad.configs.lspconfig").defaults()
 
-local servers = { "html", "cssls", "yamlls", "glsl_analyzer", "rust_analyzer", "gopls", "elixirls", "ty", "cmake" }
+local servers = {
+    "html",
+    "cssls",
+    "yamlls",
+    "glsl_analyzer",
+    "rust_analyzer",
+    "gopls",
+    "elixirls",
+    "ty",
+    "cmake",
+    "ts_ls",
+    "clangd",
+}
 local nvlsp = require "nvchad.configs.lspconfig"
 
 nvlsp.capabilities.textDocument.foldingRange = {
@@ -19,27 +31,6 @@ vim.lsp.config("*", {
     on_init = nvlsp.on_init,
     capabilities = nvlsp.capabilities,
 })
-
-vim.lsp.enable { "ts_ls" }
-vim.lsp.config("ts_ls", {
-    on_attach = nvlsp.on_attach,
-    on_init = nvlsp.on_init,
-    capabilities = capabilities,
-    cmd = { "typescript-language-server", "--stdio" },
-    root_dir = require("lspconfig.util").root_pattern("tsconfig.json", "jsconfig.json", "package.json", ".git"),
-    settings = {
-        tsserver = {
-            filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
-            format = {
-                enable = true,
-                insertSpaces = true,
-                tabSize = 2,
-            },
-        },
-    },
-})
-
-vim.lsp.enable "clangd"
 
 vim.lsp.enable "omnisharp"
 vim.lsp.config("omnisharp", {
