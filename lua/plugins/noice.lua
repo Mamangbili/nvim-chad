@@ -7,15 +7,22 @@ return {
         "rcarriga/nvim-notify",
     },
     opts = {
-        popupmenu = {
-            enabled = false,
-            backend = "cmp",
+        routes = {
+            {
+                filter = { event = "msg_show", kind = { "shell_out", "shell_err" } },
+                view = "split",
+                opts = {
+                    level = "info",
+                    skip = false,
+                    replace = false,
+                },
+            },
         },
         cmdline = {
             enable = true,
             format = {
 
-                filter = {},
+                filter = { pattern = "" },
                 lua = {
                     icon = "", -- ← no icon (was "tolua")
                     name = "lua", -- keep name for filtering (optional)
@@ -40,10 +47,33 @@ return {
             lsp_doc_border = true, -- Preserve borders
         },
         views = {
+            filter_options = {},
             cmdline_popup = {
+                position = {
+                    row = "50%",
+                    col = "50%",
+                },
+                size = {
+                    width = 60,
+                    height = "auto",
+                },
+            },
+            popupmenu = {
+                relative = "editor",
+                position = {
+                    row = "63%",
+                    col = "50%",
+                },
+                size = {
+                    width = 60,
+                    height = 10,
+                },
                 border = {
                     style = "rounded",
-                    padding = { 1, 2 },
+                    padding = { 0, 1 },
+                },
+                win_options = {
+                    winhighlight = { Normal = "Normal", FloatBorder = "DiagnosticInfo" },
                 },
             },
         },
