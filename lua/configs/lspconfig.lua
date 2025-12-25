@@ -13,6 +13,7 @@ local servers = {
     "cmake",
     "ts_ls",
     "clangd",
+    "powershell_es",
 }
 local nvlsp = require "nvchad.configs.lspconfig"
 
@@ -30,6 +31,25 @@ vim.lsp.config("*", {
     on_attach = nvlsp.on_attach,
     on_init = nvlsp.on_init,
     capabilities = nvlsp.capabilities,
+})
+
+vim.lsp.config.clangd = {
+    init_options = {
+        fallbackFlags = { "-std=c++23" },
+    },
+}
+
+vim.lsp.config("powershell_es", {
+    settings = {
+        powershell = {
+            codeFormatting = {
+                autoCorrectAliases = true,
+                openBraceOnSameLine = true,
+                spacesBeforeOpenBrace = 1,
+                spacesAroundOperator = true,
+            },
+        },
+    },
 })
 
 vim.lsp.enable "omnisharp"

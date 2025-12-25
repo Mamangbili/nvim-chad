@@ -150,7 +150,7 @@ return function(_, opts)
     end
     --
     -- Keymaps for levels 1–9
-    for level = 1, 9 do
+    for level = 0, 9 do
         vim.keymap.set("n", "z" .. level .. "c", function()
             -- fold_exact_level_close(level)
             require("ufo").closeFoldsWith(level)

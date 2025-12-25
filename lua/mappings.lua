@@ -52,7 +52,7 @@ remap("n", "<leader>y", ":setf cpp<Cr>", { desc = "setfile to cpp", noremap = tr
 local telescope = require "telescope.builtin"
 remap("n", "<leader>fx", telescope.lsp_workspace_symbols, { desc = "Find symbols in workspace", noremap = true })
 remap("n", "<leader>fs", telescope.lsp_document_symbols, { desc = "Find document symbols", noremap = true })
--- map("n", "<leader>fr", telescope.lsp_references, { desc = "Find document symbols", noremap = true })
+remap("n", "<leader>fr", telescope.lsp_references, { desc = "Find document symbols", noremap = true })
 remap(
     "n",
     "<leader>fi",
@@ -113,6 +113,7 @@ remap("n", "gf", vim.lsp.buf.code_action, { desc = "quick fix" })
 remap("n", "gi", vim.lsp.buf.implementation, { desc = "lsp implementation" })
 remap("n", "gd", vim.lsp.buf.definition, { desc = "lsp definition" })
 remap("n", "gD", vim.lsp.buf.declaration, { desc = "lsp declaration" })
+remap("n", "<leader>ra", vim.lsp.buf.rename, { desc = "lsp rename" })
 
 -- redo
 remap("n", "U", function()

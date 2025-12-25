@@ -13,6 +13,7 @@ else
     vim.o.termguicolors = true
 end
 
+vim.opt_local.conceallevel = 2
 vim.o.clipboard = "unnamedplus"
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -153,5 +154,4 @@ else
     }
 
     require("autocmd").setup()
-    require("usercmd").setup()
 end

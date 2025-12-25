@@ -12,6 +12,7 @@ M.base46 = {
         ["@constructor.cpp"] = { underline = true },
     },
     hl_override = {
+        ["LspSignatureActiveParameter"] = { underline = true, fg = "NONE", italic = true, bold = true, standout = true },
         ["@function"] = { underline = false, nocombine = true },
         ["@comment"] = { italic = true },
         Type = { fg = "#26d988", bold = false },
@@ -36,7 +37,7 @@ M.base46 = {
                 base08 = "#6dcbf9",
                 base0B = "#c27246",
                 base09 = "#73ad9e",
-                base0D = "#dcdcaa",
+                -- base0D = "#dcdcaa",
             },
         },
     },
@@ -57,10 +58,10 @@ M.colorify = {
 
 M.term = {
     float = {
-        col = 0.2,
-        row = 0.2,
-        width = 0.6,
-        height = 0.6,
+        col = 0.05,
+        row = 0.02,
+        width = 0.9,
+        height = 0.9,
     },
 }
 
@@ -75,12 +76,6 @@ M.term = {
 --
 ---- Place in init.lua
 -- This ensures your "Namespace" rules beat the default "Uppercase = Type" rule
-M.plugin = {
-    override = {
-        ["hrs7n/nvim-cmp-npm"] = {
-            disable = false,
-        },
-    },
-}
+M.plugin = {}
 
 return M

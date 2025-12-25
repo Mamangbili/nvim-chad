@@ -4,5 +4,6 @@ return {
     ---@module 'render-markdown'
     opts = {},
     cmd = { "DevdocsOpen", "DevdocsOpenCurrent", "DevdocsKeywordprgs" },
+    ft = "markdown",
     -- event = "VeryLazy",
 }
