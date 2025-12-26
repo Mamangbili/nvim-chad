@@ -1,6 +1,7 @@
 vim.cmd [[
   cabbrev <expr> h ((getcmdtype() == ':' && getcmdline() ==# 'h') ? 'vert help' : 'h')
 ]]
+vim.loader.enable()
 -- if windows
 if vim.loop.os_uname().sysname == "Windows_NT" then
     vim.g._jukit_python_os_cmd = "python"
@@ -8,150 +9,71 @@ if vim.loop.os_uname().sysname == "Windows_NT" then
     vim.opt.shellcmdflag = "-NoProfile -ExecutionPolicy RemoteSigned -Command"
     vim.opt.shellquote = ""
     vim.opt.shellxquote = ""
+    vim.g.python3_host_prog = "C:\\python313\\python3.exe"
 else
     vim.g._jukit_python_os_cmd = "/usr/bin/python3"
     vim.o.termguicolors = true
 end
 
+vim.o.cmdheight = 0
 vim.opt_local.conceallevel = 2
 vim.o.clipboard = "unnamedplus"
 vim.opt.number = true
 vim.opt.relativenumber = true
 
-if vim.g.vscode then
-    -- Set leader key
-    print "✅ VSCode detected!"
-    vim.g.mapleader = " "
+vim.opt.guicursor =
+    "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175"
+vim.o.sessionoptions = "blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,localoptions"
 
-    local vscode = require "vscode"
+vim.o.sessionoptions = "blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,localoptions"
+vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
+vim.g.mapleader = " "
+vim.o.relativenumber = true
+vim.o.scrolloff = 17
 
-    -- INSERT MODE
-    vim.keymap.set("i", "jk", "<Esc><Right>", { noremap = true, silent = true })
+-- bootstrap lazy and all plugins
+local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
 
-    -- NORMAL MODE
-    vim.keymap.set("i", "<C-k>", function()
-        vscode.call "editor.action.accessibleViewAcceptInlineCompletion"
-    end, { silent = true })
-    vim.keymap.set("n", "<C-k>", function()
-        vscode.call "editor.action.accessibleViewAcceptInlineCompletion"
-    end, { silent = true })
-    vim.keymap.set("n", "<S-l>", function()
-        vscode.call "workbench.action.nextEditor"
-    end, { silent = true })
-    vim.keymap.set("n", "<S-h>", function()
-        vscode.call "workbench.action.previousEditor"
-    end, { silent = true })
-    vim.keymap.set("n", "<C-j>", function()
-        vscode.call "editor.action.showDefinitionPreviewHover"
-    end, { silent = true })
-    vim.keymap.set("n", "<A-q>", function()
-        vscode.call "workbench.action.closeActiveEditor"
-    end, { silent = true })
-    vim.keymap.set("n", "<leader><leader>q", function()
-        vscode.call "workbench.action.closeEditorsInGroup"
-    end, { silent = true })
-    vim.keymap.set("n", "tc", function()
-        vscode.call "workbench.files.action.collapseExplorerFolders"
-    end, { silent = true })
-    vim.keymap.set("n", "gh", function()
-        vscode.call "editor.action.triggerParameterHints"
-    end, { silent = true })
-    vim.keymap.set("n", "s", function()
-        vscode.call "leap.findForward"
-    end, { silent = true })
-    vim.keymap.set("n", "S", function()
-        vscode.call "leap.findBackward"
-    end, { silent = true })
-    vim.keymap.set("n", "z", function()
-        vscode.call "editor.action.addselectiontonextfindmatch"
-    end, { silent = true })
-    vim.keymap.set("n", "<C-l>", function()
-        vscode.call "workbench.action.focusNextGroup"
-    end, { silent = true })
-    vim.keymap.set("n", "<C-h>", function()
-        vscode.call "workbench.action.focusPreviousGroup"
-    end, { silent = true })
-    vim.keymap.set("n", "tt", function()
-        vscode.call "workbench.action.toggleSidebarVisibility"
-    end, { silent = true })
-    vim.keymap.set("n", "<leader>t", function()
-        vscode.call "workbench.view.explorer"
-    end, { silent = true })
-    vim.keymap.set("n", "<leader>q", function()
-        vscode.call "workbench.action.closeActiveEditor"
-    end, { silent = true })
-    vim.keymap.set("n", "<leader><leader>v", function()
-        vscode.call "workbench.action.splitEditorRight"
-    end, { silent = true })
-    vim.keymap.set("n", "<C-n>", function()
-        vscode.call "workbench.action.nextEditor"
-    end, { silent = true })
-    vim.keymap.set("n", "<C-p>", function()
-        vscode.call "workbench.action.previousEditor"
-    end, { silent = true })
-    vim.keymap.set("n", "]", function()
-        vscode.call "workbench.action.increaseViewWidth"
-    end, { silent = true })
-    vim.keymap.set("n", "[", function()
-        vscode.call "workbench.action.decreaseViewWidth"
-    end, { silent = true })
-    vim.keymap.set("n", "<leader>f", function()
-        vscode.call "workbench.action.quickOpen"
-    end, { silent = true })
-    vim.keymap.set("n", "<leader>n", ":nohl<CR>", { silent = true })
-else
-    vim.opt.guicursor =
-        "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175"
-    vim.o.sessionoptions = "blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,localoptions"
-
-    vim.o.sessionoptions = "blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,localoptions"
-    vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
-    vim.g.mapleader = " "
-    vim.o.relativenumber = true
-    vim.o.scrolloff = 17
-
-    -- bootstrap lazy and all plugins
-    local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
-
-    if not vim.uv.fs_stat(lazypath) then
-        local repo = "https://github.com/folke/lazy.nvim.git"
-        vim.fn.system { "git", "clone", "--filter=blob:none", repo, "--branch=stable", lazypath }
-    end
-
-    vim.opt.rtp:prepend(lazypath)
-    vim.opt.rtp:append(vim.fn.stdpath "config" .. "/lua")
-
-    local lazy_config = require "configs.lazy"
-
-    -- load plugins
-    require("lazy").setup({
-        {
-            "NvChad/NvChad",
-            lazy = false,
-            branch = "v2.5",
-            import = "nvchad.plugins",
-        },
-
-        { import = "plugins" },
-    }, lazy_config)
-
-    -- load theme
-    dofile(vim.g.base46_cache .. "defaults")
-    dofile(vim.g.base46_cache .. "statusline")
-
-    require "options"
-    require "nvchad.autocmds"
-
-    vim.schedule(function()
-        require "mappings"
-    end)
-
-    vim.filetype.add {
-        filename = {
-            ["CMakelists.txt"] = "cmake",
-            ["CMakeLists.txt"] = "cmake",
-        },
-    }
-
-    require("autocmd").setup()
+if not vim.uv.fs_stat(lazypath) then
+    local repo = "https://github.com/folke/lazy.nvim.git"
+    vim.fn.system { "git", "clone", "--filter=blob:none", repo, "--branch=stable", lazypath }
 end
+
+vim.opt.rtp:prepend(lazypath)
+vim.opt.rtp:append(vim.fn.stdpath "config" .. "/lua")
+
+local lazy_config = require "configs.lazy"
+
+local t = os.clock()
+-- load plugins
+require("lazy").setup({
+    {
+        "NvChad/NvChad",
+        lazy = false,
+        branch = "v2.5",
+        import = "nvchad.plugins",
+    },
+
+    { import = "plugins" },
+}, lazy_config)
+print(os.clock() - t)
+
+-- load theme
+dofile(vim.g.base46_cache .. "defaults")
+dofile(vim.g.base46_cache .. "statusline")
+
+require "options"
+require "nvchad.autocmds"
+
+vim.schedule(function()
+    require "mappings"
+end)
+
+vim.filetype.add {
+    filename = {
+        ["CMakelists.txt"] = "cmake",
+        ["CMakeLists.txt"] = "cmake",
+    },
+}
+
+require("autocmd").setup()

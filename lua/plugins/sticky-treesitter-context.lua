@@ -1,6 +1,6 @@
 return {
     "nvim-treesitter/nvim-treesitter-context",
-    lazy = false,
+    lazy = "FileType",
     opts = {
         mode = "cursor",
     },

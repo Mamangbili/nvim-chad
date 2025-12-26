@@ -6,5 +6,12 @@ return {
         "nvim-treesitter/nvim-treesitter",
     },
     opts = {},
-    event = "VeryLazy",
+    cmd = {
+        "DevdocsInstall",
+        "DevdocsSearch",
+        "DevdocsOpen",
+        "DevdocsFetchs",
+        "DevdocsKeywordprg",
+        "DevdocsKeywordprgs",
+    },
 }

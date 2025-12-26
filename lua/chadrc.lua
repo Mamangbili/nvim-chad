@@ -10,8 +10,10 @@ M.base46 = {
     transparency = true,
     hl_add = {
         ["@constructor.cpp"] = { underline = true },
+        ["SnacksPickerDir"] = { fg = "#2239e9" },
     },
     hl_override = {
+        ["snack.pciker.list"] = { fg = "red" },
         ["LspSignatureActiveParameter"] = { underline = true, fg = "NONE", italic = true, bold = true, standout = true },
         ["@function"] = { underline = false, nocombine = true },
         ["@comment"] = { italic = true },
@@ -43,6 +45,9 @@ M.base46 = {
     },
 }
 
+local recordingStartSeparator = "%#RecSeparatorStartStyle#" .. "< "
+local recordingEndSeparator = "%#RecSeparatorEndStyle#" .. " >"
+
 M.ui = {
     telescope = {
         style = "borderless",
@@ -50,10 +55,37 @@ M.ui = {
     tabufline = {
         lazyload = false,
     },
+    statusline = {
+        theme = "default",
+        separator_style = "default",
+        order = {
+            "mode",
+            "file",
+            "git",
+            "recording",
+            "%=",
+            "lsp_msg",
+            "%=",
+            "lsp",
+            "diagnostics",
+            "cwd",
+            "cursor",
+        },
+        modules = {
+            recording = function()
+                local rec = vim.fn.reg_recording()
+                return rec ~= ""
+                        and " " .. recordingStartSeparator .. "%#RecIndicatorStyle#" .. "Recording @" .. rec .. recordingEndSeparator
+                    or ""
+            end,
+        },
+    },
 }
+
 M.colorify = {
     enabled = false,
-    virt_text = "",
+    mode = "fg", -- fg, bg, virtual
+    highlight = { hex = true, lspvars = true },
 }
 
 M.term = {
@@ -65,17 +97,6 @@ M.term = {
     },
 }
 
--- M.nvdash = { load_on_startup = true }
--- M.ui = {
---   theme="gruvbox",
---       tabufline = {
---          lazyload = false
---      }
--- }
---
---
----- Place in init.lua
--- This ensures your "Namespace" rules beat the default "Uppercase = Type" rule
 M.plugin = {}
 
 return M

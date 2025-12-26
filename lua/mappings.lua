@@ -1,12 +1,13 @@
 require "nvchad.mappings"
 local u = require "utils"
-local tree = require("nvim-tree.api").tree
 
 -- add yours here
 -- telescope outgoing calls expand <l>, fold <h>
 
 local remap = vim.keymap.set
 local unmap = vim.keymap.del
+
+remap("n", "<leader>9", "<cmd>Lazy<Cr>")
 
 vim.opt.timeoutlen = 10000
 remap("v", "r", "<nop>")
@@ -16,17 +17,12 @@ end, { noremap = true, silent = true, expr = true, desc = "show autocompletion" 
 
 remap("i", "<C-i>", "cpm#complete()", { desc = "show autocompletion" })
 
-remap({ "n", "v" }, "<leader>z", function()
-    tree.close()
-    vim.cmd "CopilotChatToggle"
-end, { desc = "copilot chat toggle", noremap = true })
-
 remap("n", "<leader>ng", "<cmd>Neogit<cr>", { desc = "neogit", noremap = true })
 
 remap("n", "<leader>dq", "<cmd>DiffviewClose<cr>", { desc = "close diff", noremap = true })
 
 -- glance reference
-remap("n", "<leader>fr", "<cmd>Glance references<cr>", { desc = "glance references", noremap = true })
+-- remap("n", "<leader>fr", "<cmd>Glance references<cr>", { desc = "glance references", noremap = true })
 remap("n", "<leader>fd", "<cmd>Glance definitions<cr>", { desc = "glance definitions", noremap = true })
 
 vim.g.copilot_no_tab_map = true
@@ -49,22 +45,6 @@ remap(
 
 remap("n", "<leader>y", ":setf cpp<Cr>", { desc = "setfile to cpp", noremap = true })
 
-local telescope = require "telescope.builtin"
-remap("n", "<leader>fx", telescope.lsp_workspace_symbols, { desc = "Find symbols in workspace", noremap = true })
-remap("n", "<leader>fs", telescope.lsp_document_symbols, { desc = "Find document symbols", noremap = true })
-remap("n", "<leader>fr", telescope.lsp_references, { desc = "Find document symbols", noremap = true })
-remap(
-    "n",
-    "<leader>fi",
-    "<Cmd>Telescope hierarchy incoming_calls<Cr>",
-    { desc = "Hierarchy incoming_calls", noremap = true }
-)
-remap(
-    "n",
-    "<leader>fo",
-    "<Cmd>Telescope hierarchy outgoing_calls<Cr>",
-    { desc = "Hierarchy outgoin calls", noremap = true }
-)
 -- e,l untuk expand. c,h untuk fold tree hierarchy. t untuk toggle buka tutup
 -- d untuk defini current node hierarchy
 
@@ -137,8 +117,9 @@ remap(
     { desc = "increase width", noremap = true, silent = true }
 )
 
--- aerial
-remap({ "n", "v" }, "<leader>nb", require("nvim-navbuddy").open, { desc = "navboddy toggle", noremap = true })
+-- remap({ "n", "v" }, "<leader>nb", function()
+--     require("nvim-navbuddy").open()
+-- end, { desc = "navboddy toggle", noremap = true })
 
 -- inlay hint
 -- shift + k
@@ -150,8 +131,8 @@ remap("n", "q/", "<Nop>", { desc = "Disable command-line window", noremap = true
 -- Start listening
 vim.on_key(u.on_key)
 
-remap({ "n", "v", "t" }, "<C-u>", "10<C-y>", { desc = "undotree toggle", noremap = true })
-remap({ "n", "v", "t" }, "<C-d>", "10<C-e>", { desc = "undotree toggle", noremap = true })
+remap({ "n", "v", "t" }, "<C-u>", "10<C-y>", { desc = "scroll up", noremap = true })
+remap({ "n", "v", "t" }, "<C-d>", "10<C-e>", { desc = "scroll down", noremap = true })
 
 remap("t", "<C-i>", u.toggle_betwee, { desc = "toggle terminal mode", noremap = true })
 remap("v", "rb", ":s/", { desc = "substitute in block", noremap = true })

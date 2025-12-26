@@ -1,7 +1,6 @@
 return {
     "nvim-mini/mini.nvim",
     version = false,
-    event = "VeryLazy",
     config = function(_, opts)
         require("mini.surround").setup {
             mappings = {
@@ -14,4 +13,9 @@ return {
             },
         }
     end,
+    keys = {
+        { "Sa", desc = "Add surrounding", mode = { "n", "v" } },
+        { "Sd", desc = "Delete surrounding" },
+        { "Sr", desc = "Replace surrounding" },
+    },
 }

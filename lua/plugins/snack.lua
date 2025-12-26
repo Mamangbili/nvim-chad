@@ -2,6 +2,9 @@ return {
     "folke/snacks.nvim",
     -- enable = false,
     priority = 1000,
+    depedencies = {
+        "nvim-treesitter/nvim-treesitter",
+    },
     lazy = false,
     ---@type snacks.Config
     opts = {

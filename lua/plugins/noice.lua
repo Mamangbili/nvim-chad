@@ -1,10 +1,12 @@
 return {
     "folke/noice.nvim",
     -- enabled = false,
-    event = "VeryLazy",
     dependencies = {
         "MunifTanjim/nui.nvim",
         "rcarriga/nvim-notify",
+    },
+    keys = {
+        ":",
     },
     opts = {
         routes = {
@@ -79,7 +81,6 @@ return {
         },
     },
     init = function(_, opts)
-        -- require("noice").setup(opts)
         require("notify").setup {
             fps = 10,
             top_down = false,
