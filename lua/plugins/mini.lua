@@ -1,6 +1,7 @@
 return {
     "nvim-mini/mini.nvim",
     version = false,
+    event = "FileType",
     config = function(_, opts)
         require("mini.surround").setup {
             mappings = {

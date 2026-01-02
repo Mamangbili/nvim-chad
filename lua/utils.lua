@@ -34,7 +34,7 @@ local function paste_without_newline()
 end
 
 local function Close_buffer()
-    local tree = require("nvim-tree.api").tree
+local tree = require("nvim-tree.api").tree
     if vim.bo.filetype == "copilot-chat" then
         vim.cmd "CopilotChatClose"
         return

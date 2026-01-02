@@ -52,4 +52,8 @@ return {
             desc = "Open Obsidian Work Vault",
         },
     },
+    config = function(_, opts)
+        require("obsidian").setup(opts)
+        vim.g.enable_render_markdown = false
+    end,
 }

@@ -3,14 +3,25 @@ return {
     -- enabled = false,
     branch = "harpoon2",
     dependencies = { "nvim-lua/plenary.nvim", "kevinhwang91/nvim-ufo" },
-    config = require "configs.harpoon",
+    config = function()
+        local harpoon = require "harpoon"
+        local extensions = require "harpoon.extensions"
+
+        -- REQUIRED
+        harpoon:setup {
+            settings = {
+                save_on_toggle = true,
+            },
+        }
+        harpoon:extend(extensions.builtins.command_on_nav "UfoEnableFold")
+    end,
 
     keys = {
         {
             "<leader>a",
             function()
+                vim.notify "File added to Harpoon list"
                 require("harpoon"):list():add()
-                print "File added to Harpoon list"
             end,
             desc = "Add file to Harpoon list",
         },

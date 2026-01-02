@@ -1,8 +1,9 @@
 return {
     "nvim-treesitter/nvim-treesitter",
-    depedencies = {
+    dependencies = {
         "neovim/nvim-lspconfig",
         "lukas-reineke/indent-blankline.nvim",
+        "nvim-treesitter/nvim-treesitter-context",
     },
     opts = {
         ensure_installed = {

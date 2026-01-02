@@ -21,6 +21,10 @@ local options = {
         clang_format = {
             prepend_args = clangd_format_exists_in_root(),
         },
+        fallback_indent = function()
+            vim.cmd "silent! normal! m`gg=G``"
+            print "using fallback formatter"
+        end,
     },
 
     formatters_by_ft = {
@@ -36,6 +40,7 @@ local options = {
         elixir = { "mix" },
         cmake = { "gersemi" },
         json = { "fixjson" },
+        ps1 = { "fallback_indent" },
     },
     default_format_opts = {},
     -- Set up format-on-save

@@ -5,5 +5,4 @@ return {
         "mfussenegger/nvim-dap",
         "williamboman/mason.nvim",
     },
-    opts = require "configs.dap-debugger",
 }
