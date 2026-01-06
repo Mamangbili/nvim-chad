@@ -7,11 +7,12 @@ local function ensure_dir(path)
 end
 return {
     "obsidian-nvim/obsidian.nvim",
-    version = "*", -- recommended, use latest release instead of latest commit
+    -- version = "*", -- recommended, use latest release instead of latest commit
+    tag = "v3.14.8",
     ft = "markdown",
     cmd = { "Obsidian" },
-    ---@module 'obsidian'
-    ---@type obsidian.config
+    --@module 'obsidian'
+    --@type obsidian.config
     opts = {
         legacy_commands = false,
         workspaces = {
@@ -22,6 +23,33 @@ return {
             {
                 name = "work",
                 path = "~/vaults/work",
+            },
+        },
+        note_id_func = function(title)
+            if title ~= nil then
+                local suffix = title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
+                return suffix .. "_" .. tostring(os.time())
+            else
+                return tostring(os.time())
+            end
+        end,
+        templates = {
+            folder = "templates",
+            date_format = "%Y-%m-%d-%a",
+            time_format = "%H:%M",
+            substitutions = {
+                titleSubs = function(ctx)
+                    return string.gsub(ctx.partial_note.title, " ", "-")
+                end,
+                titleSubsUpper = function(ctx)
+                    local title = string.gsub(ctx.partial_note.title, "(%w)(%w*)", function(first, rest)
+                        return string.upper(first) .. rest
+                    end)
+                    return title
+                end,
+                titleSubsLower = function(ctx)
+                    return string.lower(ctx.partial_note.title)
+                end,
             },
         },
     },

@@ -11,6 +11,7 @@ M.base46 = {
     hl_add = {
         ["@constructor.cpp"] = { underline = true },
         ["SnacksPickerDir"] = { fg = "#2239e9" },
+        ["@lsp.type.macro.cpp"] = {},
     },
     hl_override = {
         ["snack.pciker.list"] = { fg = "red" },
