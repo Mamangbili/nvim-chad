@@ -85,3 +85,4 @@ vim.filetype.add {
 }
 
 require("autocmd").setup()
+require("usercmd").setup()

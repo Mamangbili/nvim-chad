@@ -32,6 +32,7 @@ M.base46 = {
         ["@constant"] = { fg = "#2239e9", bold = true },
         ["@constant.macro"] = { fg = "#2239e9" },
         ["@character"] = { fg = "base0B" },
+        ["@markup.link.label"] = { fg = "purple" },
     },
     --
     changed_themes = {
