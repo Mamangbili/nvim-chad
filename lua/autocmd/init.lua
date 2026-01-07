@@ -137,47 +137,14 @@ M.setup = function()
         end,
     })
 
-    -- autocmd("BufEnter", {
-    --     pattern = "*.md",
-    --     callback = function(args)
-    --         local bufnr = args.buf
-    --         local bufname = vim.api.nvim_buf_get_name(bufnr)
-    --         local bufdir = vim.fn.fnamemodify(bufname, ":p:h")
-    --
-    --         if bufdir:match "vaults" then
-    --             local plugins = pcall(function()
-    --                 return require("lazy.core.config").plugins["obsidian.nvim"]._.loaded or false
-    --             end)
-    --             if plugins then
-    --                 vim.cmd "RenderMarkdown disable"
-    --             end
-    --         end
-    --     end,
-    -- })
-    -- autocmd("BufLeave", {
-    --     pattern = "*.md",
-    --     callback = function(args)
-    --         local bufnr = args.buf
-    --         local bufname = vim.api.nvim_buf_get_name(bufnr)
-    --         local bufdir = vim.fn.fnamemodify(bufname, ":p:h")
-    --
-    --         if bufdir:match "vaults" then
-    --             vim.cmd "RenderMarkdown enable"
-    --         end
-    --     end,
-    -- })
-
-    -- autocmd("FileType", {
-    --     pattern = "vim",
-    --     callback = function()
-    --         vim.schedule(function()
-    --             -- Optional: double-check we’re still in a vim filetype buffer
-    --             if vim.bo.filetype == "vim" then
-    --                 vim.cmd "silent! q!"
-    --             end
-    --         end)
-    --     end,
-    -- })
+    autocmd("FileType", {
+        pattern = "markdown",
+        callback = function()
+            vim.api.nvim_set_hl(0, "@comment", {
+                fg = "#c27246",
+            })
+        end,
+    })
 end
 
 return M
