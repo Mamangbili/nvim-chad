@@ -136,15 +136,6 @@ M.setup = function()
             end
         end,
     })
-
-    autocmd("FileType", {
-        pattern = "markdown",
-        callback = function()
-            vim.api.nvim_set_hl(0, "@comment", {
-                fg = "#c27246",
-            })
-        end,
-    })
 end
 
 return M

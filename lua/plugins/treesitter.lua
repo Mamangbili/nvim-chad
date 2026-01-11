@@ -4,6 +4,7 @@ return {
         "neovim/nvim-lspconfig",
         "lukas-reineke/indent-blankline.nvim",
         "nvim-treesitter/nvim-treesitter-context",
+        "kevinhwang91/nvim-ufo",
     },
     opts = {
         ensure_installed = {
