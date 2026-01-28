@@ -68,6 +68,7 @@ M.ui = {
             "%=",
             "lsp_msg",
             "%=",
+            "clock",
             "lsp",
             "diagnostics",
             "cwd",
@@ -79,6 +80,9 @@ M.ui = {
                 return rec ~= ""
                         and " " .. recordingStartSeparator .. "%#RecIndicatorStyle#" .. "Recording @" .. rec .. recordingEndSeparator
                     or ""
+            end,
+            clock = function()
+                return " " .. os.date "%H:%M"
             end,
         },
     },
