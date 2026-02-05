@@ -83,3 +83,4 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
     pattern = { "CMakeLists.txt", "*.cmake", "CmakeLists.txt", "cmakelists.txt" },
     command = "set filetype=cmake",
 })
+vim.diagnostic.config { virtual_text = false } -- disable neovim's default virtual text diagnostics
