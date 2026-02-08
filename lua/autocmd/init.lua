@@ -27,16 +27,18 @@ M.setup = function()
     })
 
     local u = require "utils"
-    autocmd("FileType", {
+    autocmd("BufEnter", {
         pattern = "NvTerm_float",
         callback = function()
+            vim.keymap.set("i", "<C-v>", u.paste_without_newline, {
+                expr = true,
+                noremap = true,
+                silent = true,
+                desc = "Paste from clipboard (no trailing newline)",
+                buffer = true,
+            })
             vim.opt_local.timeoutlen = 100
-            vim.keymap.set(
-                { "t", "n" },
-                "<Esc>",
-                u.toggle_betwee,
-                { desc = "toggle terminal mode", noremap = true, buffer = true }
-            )
+
             vim.keymap.set("t", "<C-v>", function()
                 local text = vim.fn.getreg "+"
 
@@ -48,6 +50,8 @@ M.setup = function()
 
                 vim.api.nvim_paste(text, false, -1)
             end, { desc = "Paste trimmed", noremap = true, buffer = true })
+
+            vim.keymap.del("t", "<tab>", { buffer = true })
         end,
     })
 

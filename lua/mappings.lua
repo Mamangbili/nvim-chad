@@ -36,12 +36,6 @@ unmap("n", "<leader>fo")
 
 remap("i", "<C-h>", "<C-w>")
 remap("t", "<F9>", require("nvchad.tabufline").close_buffer, { desc = "terminal toggle floating term" })
-remap(
-    "i",
-    "<C-v>",
-    u.paste_without_newline,
-    { expr = true, noremap = true, silent = true, desc = "Paste from clipboard (no trailing newline)" }
-)
 
 remap("n", "<leader>y", ":setf cpp<Cr>", { desc = "setfile to cpp", noremap = true })
 
@@ -134,7 +128,7 @@ vim.on_key(u.on_key)
 remap({ "n", "v", "t" }, "<C-u>", "10<C-y>", { desc = "scroll up", noremap = true })
 remap({ "n", "v", "t" }, "<C-d>", "10<C-e>", { desc = "scroll down", noremap = true })
 
-remap("t", "<C-i>", u.toggle_betwee, { desc = "toggle terminal mode", noremap = true })
+-- remap("t", "<C-i>", u.toggle_betwee, { desc = "toggle terminal mode", noremap = true })
 remap("v", "rb", ":s/", { desc = "substitute in block", noremap = true })
 remap("n", "<leader>rr", ":.,$s/", { desc = "substitute until end", noremap = true })
 remap("n", "<leader>wb", ":BDeleteOthers<CR>", { desc = "delete all buffer except current" })
