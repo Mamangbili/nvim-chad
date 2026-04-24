@@ -1,8 +1,10 @@
 return {
     "nvim-mini/mini.nvim",
     version = false,
-    event = "FileType",
+    event = "VeryLazy",
     config = function(_, opts)
+        vim.keymap.set({ "n", "v" }, "S", "<Nop>", { noremap = true })
+
         require("mini.surround").setup {
             mappings = {
                 add = "Sa", -- Add surrounding in Normal and Visual modes
@@ -19,7 +21,7 @@ return {
     end,
     keys = {
         { "Sa", desc = "Add surrounding", mode = { "n", "v" } },
-        { "Sd", desc = "Delete surrounding" },
-        { "Sr", desc = "Replace surrounding" },
+        { "Sd", desc = "Delete surrounding", mode = { "n" } },
+        { "Sr", desc = "Replace surrounding", mode = { "n" } },
     },
 }
