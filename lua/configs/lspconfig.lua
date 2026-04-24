@@ -14,6 +14,7 @@ local servers = {
     "ts_ls",
     "clangd",
     "powershell_es",
+    "tailwindcss",
 }
 local nvlsp = require "nvchad.configs.lspconfig"
 

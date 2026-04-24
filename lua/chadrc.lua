@@ -12,6 +12,7 @@ M.base46 = {
         ["@constructor.cpp"] = { underline = true },
         ["SnacksPickerDir"] = { fg = "#2239e9" },
         ["@lsp.type.macro.cpp"] = {},
+        ["@tag.builtin.tsx"] = { fg = "#0885c4" },
     },
     hl_override = {
         ["snack.pciker.list"] = { fg = "red" },
