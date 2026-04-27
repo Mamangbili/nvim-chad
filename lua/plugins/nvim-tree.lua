@@ -2,6 +2,23 @@ return {
     "nvim-tree/nvim-tree.lua",
     -- event = "VeryLazy",
     config = {
+        filters = {
+            custom = {
+                "dotfiles",
+                "node_modules",
+                "env",
+                "tmp",
+                "build",
+                "dist",
+                "vendor",
+                "builds",
+                "__pycache__",
+                "target",
+                "bin",
+                "obj",
+            },
+            enable = false,
+        },
         filesystem_watchers = {
             enable = false, -- enable = nvim tree leaks when cmake generate script
         },
