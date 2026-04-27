@@ -33,7 +33,7 @@ unmap("n", "<leader>b")
 unmap("n", "<leader>th")
 unmap("n", "<leader>fo")
 
-remap("n", "<leader>e", function()
+remap("n", "t", function()
     require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
 end, { desc = "Harpoon Menu", noremap = true })
 
@@ -122,8 +122,8 @@ remap(
 -- shift + k
 
 -- remove q: to disable command-line window
-remap("n", "q:", "<nop>", { desc = "Disable command-line window", noremap = true })
-remap("n", "q/", "<Nop>", { desc = "Disable command-line window", noremap = true })
+-- remap("n", "q:", "<nop>", { desc = "Disable command-line window", noremap = true })
+-- remap("n", "q/", "<Nop>", { desc = "Disable command-line window", noremap = true })
 
 -- Start listening
 vim.on_key(u.on_key)
@@ -137,3 +137,10 @@ remap("n", "<leader>rr", ":.,$s/", { desc = "substitute until end", noremap = tr
 remap("n", "<leader>wb", ":BDeleteOthers<CR>", { desc = "delete all buffer except current" })
 
 unmap("n", "<Tab>")
+
+-- bufferline jump
+for i = 1, 9 do
+    remap("n", "<leader>b" .. i, function()
+        require("bufferline").go_to(i)
+    end)
+end

@@ -102,6 +102,16 @@ M.setup = function()
         end,
     })
 
+    autocmd({ "FileType", "BufEnter" }, {
+        pattern = "harpoon",
+        callback = function(ev)
+            vim.keymap.set("n", "w", ":close<CR>", {
+                buffer = ev.buf,
+                desc = "close",
+            })
+        end,
+    })
+
     autocmd("BufWritePost", {
         pattern = "*",
         callback = function(args)

@@ -56,7 +56,9 @@ M.ui = {
         style = "borderless",
     },
     tabufline = {
-        lazyload = false,
+        enabled = false,
+        lazyload = true,
+        order = { "buffers" },
     },
     statusline = {
         theme = "default",
@@ -91,8 +93,6 @@ M.ui = {
 
 M.colorify = {
     enabled = false,
-    mode = "fg", -- fg, bg, virtual
-    highlight = { hex = true, lspvars = true },
 }
 
 M.term = {
