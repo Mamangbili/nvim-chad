@@ -29,10 +29,13 @@ vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<C-K>", "copilot#Accept('<CR>')", { silent = true, expr = true }) -- DON"T USE REMAP"
 
 unmap("n", "<leader>n")
-unmap("n", "<leader>e")
 unmap("n", "<leader>b")
 unmap("n", "<leader>th")
 unmap("n", "<leader>fo")
+
+remap("n", "<leader>e", function()
+    require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
+end, { desc = "Harpoon Menu", noremap = true })
 
 remap("i", "<C-h>", "<C-w>")
 remap("t", "<F9>", require("nvchad.tabufline").close_buffer, { desc = "terminal toggle floating term" })

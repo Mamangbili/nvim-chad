@@ -52,7 +52,6 @@ return {
         "nvim-tree/nvim-web-devicons",
     },
     cmd = { "NvimTreeToggle", "NvimTreeFocus", "NvimTreeOpen", "NvimTreeClose" },
-    enable = false,
     keys = {
         {
             "<leader>z",

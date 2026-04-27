@@ -12,6 +12,11 @@ return {
             settings = {
                 save_on_toggle = true,
             },
+            global_settings = {
+                tabline = true,
+                tabline_prefix = "   ",
+                tabline_suffix = "   ",
+            },
         }
         harpoon:extend(extensions.builtins.command_on_nav "UfoEnableFold")
     end,
@@ -24,13 +29,6 @@ return {
                 require("harpoon"):list():add()
             end,
             desc = "Add file to Harpoon list",
-        },
-        {
-            "<leader>e",
-            function()
-                require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
-            end,
-            desc = "Toggle Harpoon quick menu",
         },
         {
             "<leader>1",
