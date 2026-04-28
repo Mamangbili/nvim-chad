@@ -12,7 +12,7 @@ remap("n", "<leader>9", "<cmd>Lazy<Cr>")
 vim.opt.timeoutlen = 10000
 remap("v", "r", "<nop>")
 remap("i", "<C-i>", function()
-    require("cmp").complete()
+	require("cmp").complete()
 end, { noremap = true, silent = true, expr = true, desc = "show autocompletion" })
 
 remap("i", "<C-i>", "cpm#complete()", { desc = "show autocompletion" })
@@ -34,7 +34,7 @@ unmap("n", "<leader>th")
 unmap("n", "<leader>fo")
 
 remap("n", "t", function()
-    require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
+	require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
 end, { desc = "Harpoon Menu", noremap = true })
 
 remap("i", "<C-h>", "<C-w>")
@@ -46,18 +46,18 @@ remap("n", "<leader>y", ":setf cpp<Cr>", { desc = "setfile to cpp", noremap = tr
 -- d untuk defini current node hierarchy
 
 remap("n", "<leader>t", function()
-    vim.cmd "CopilotChatClose"
-    vim.cmd "NvimTreeToggle"
+	vim.cmd "CopilotChatClose"
+	vim.cmd "NvimTreeToggle"
 end, { desc = "nvimtree toggle window" })
 
 remap("i", "jk", "<ESC>")
 
 remap("n", "<leader>q", function()
-    u.Close_buffer()
+	u.Close_buffer()
 end, { desc = "close buffer/diff" })
 
 remap("n", "<leader>ww", function()
-    u.Close_window()
+	u.Close_window()
 end, { desc = "close window" })
 
 -- split window
@@ -65,11 +65,11 @@ remap("n", "<leader>h", u.telescope_hsplit, { desc = "new horizontal window" })
 remap("n", "<leader>v", u.telescope_vsplit, { desc = "new vertical window" })
 
 remap("n", "<S-l>", function()
-    require("nvchad.tabufline").next()
+	require("nvchad.tabufline").next()
 end, { desc = "buffer goto next" })
 
 remap("n", "<S-h>", function()
-    require("nvchad.tabufline").prev()
+	require("nvchad.tabufline").prev()
 end, { desc = "buffer goto next" })
 
 -- terminal mode
@@ -77,13 +77,13 @@ remap("t", "<leader><Esc>", "<C-\\><C-N>", { desc = "terminal escape terminal mo
 remap({ "n", "i" }, "<A-t>", "<cmd>terminal<CR>", { desc = "enter terminal mode" })
 
 remap({ "n", "t" }, "<A-/>", function()
-    require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
+	require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
+	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
 end, { desc = "terminal toggleable horizontal term" })
 
 remap({ "n", "t" }, "<A-i>", function()
-    require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
+	require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
+	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
 end, { desc = "terminal toggle floating term" })
 
 remap("n", "gf", vim.lsp.buf.code_action, { desc = "quick fix" })
@@ -94,7 +94,7 @@ remap("n", "<leader>ra", vim.lsp.buf.rename, { desc = "lsp rename" })
 
 -- redo
 remap("n", "U", function()
-    vim.cmd "redo"
+	vim.cmd "redo"
 end, { desc = "redo" })
 -- map for indenting in visual mode
 
@@ -102,16 +102,16 @@ end, { desc = "redo" })
 remap({ "n", "i", "x" }, "<C-Up>", ":resize +5<CR>", { desc = "increase height", noremap = true, silent = true })
 remap({ "n", "i", "x" }, "<C-Down>", ":resize -5<CR>", { desc = "decrease height", noremap = true, silent = true })
 remap(
-    { "n", "i", "x" },
-    "<C-Left>",
-    ":vertical resize -5<CR>",
-    { desc = "decrease width", noremap = true, silent = true }
+	{ "n", "i", "x" },
+	"<C-Left>",
+	":vertical resize -5<CR>",
+	{ desc = "decrease width", noremap = true, silent = true }
 )
 remap(
-    { "n", "i", "x" },
-    "<C-Right>",
-    ":vertical resize +5<CR>",
-    { desc = "increase width", noremap = true, silent = true }
+	{ "n", "i", "x" },
+	"<C-Right>",
+	":vertical resize +5<CR>",
+	{ desc = "increase width", noremap = true, silent = true }
 )
 
 -- remap({ "n", "v" }, "<leader>nb", function()
@@ -140,7 +140,7 @@ unmap("n", "<Tab>")
 
 -- bufferline jump
 for i = 1, 9 do
-    remap("n", "<leader>b" .. i, function()
-        require("bufferline").go_to(i)
-    end)
+	remap("n", "<leader>b" .. i, function()
+		require("bufferline").go_to(i)
+	end)
 end

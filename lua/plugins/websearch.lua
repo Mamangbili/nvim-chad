@@ -1,3 +1,0 @@
-return {
-    "KaitoMuraoka/websearcher.nvim",
-}

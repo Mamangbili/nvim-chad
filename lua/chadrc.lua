@@ -6,102 +6,102 @@
 local M = {}
 
 M.base46 = {
-    theme = "vscode_dark",
-    transparency = true,
-    hl_add = {
-        ["@constructor.cpp"] = { underline = true },
-        ["SnacksPickerDir"] = { fg = "#2239e9" },
-        ["@lsp.type.macro.cpp"] = {},
-        ["@tag.builtin.tsx"] = { fg = "#0885c4" },
-    },
-    hl_override = {
-        ["snack.pciker.list"] = { fg = "red" },
-        ["LspSignatureActiveParameter"] = { underline = true, fg = "NONE", italic = true, bold = true, standout = true },
-        ["@function"] = { underline = false, nocombine = true },
-        ["@comment"] = { italic = true },
-        Type = { fg = "#26d988", bold = false },
-        ["@type.builtin"] = { fg = "#26d988", bold = false },
-        ["@variable.builtin"] = { fg = "base08" },
-        ["@variable.parameter"] = { fg = "base08" },
-        ["@variable.member"] = { fg = "#0885c4" },
-        ["@property"] = { fg = "#0885c4" },
-        ["@constructor"] = { fg = "base0D" },
-        ["@module"] = { fg = "#09a530" },
-        ["@type.cpp"] = { fg = "#ff0000" },
-        ["@keyword.repeat"] = { fg = "purple" },
-        ["@keyword"] = { fg = "#5252e0" },
-        ["@constant"] = { fg = "#2239e9", bold = true },
-        ["@constant.macro"] = { fg = "#2239e9" },
-        ["@character"] = { fg = "base0B" },
-        ["@markup.link.label"] = { fg = "purple" },
-    },
-    --
-    changed_themes = {
-        vscode_dark = {
-            base_16 = {
-                base08 = "#6dcbf9",
-                base0B = "#c27246",
-                base09 = "#73ad9e",
-                -- base0D = "#dcdcaa",
-            },
-        },
-    },
+	theme = "vscode_dark",
+	transparency = true,
+	hl_add = {
+		["@constructor.cpp"] = { underline = false },
+		["SnacksPickerDir"] = { fg = "#2239e9" },
+		["@lsp.type.macro.cpp"] = {},
+		["@tag.builtin.tsx"] = { fg = "#0885c4" },
+	},
+	hl_override = {
+		["snack.pciker.list"] = { fg = "red" },
+		["LspSignatureActiveParameter"] = { underline = true, fg = "NONE", italic = true, bold = true, standout = true },
+		["@function"] = { underline = false, nocombine = true },
+		["@comment"] = { italic = true },
+		Type = { fg = "#26d988", bold = false },
+		["@type.builtin"] = { fg = "#26d988", bold = false },
+		["@variable.builtin"] = { fg = "base08" },
+		["@variable.parameter"] = { fg = "base08" },
+		["@variable.member"] = { fg = "#0885c4" },
+		["@property"] = { fg = "#0885c4" },
+		["@constructor"] = { fg = "base0D" },
+		["@module"] = { fg = "#09a530" },
+		["@type.cpp"] = { fg = "#ff0000" },
+		["@keyword.repeat"] = { fg = "purple" },
+		["@keyword"] = { fg = "#5252e0" },
+		["@constant"] = { fg = "#2239e9", bold = true },
+		["@constant.macro"] = { fg = "#2239e9" },
+		["@character"] = { fg = "base0B" },
+		["@markup.link.label"] = { fg = "purple" },
+	},
+	--
+	changed_themes = {
+		vscode_dark = {
+			base_16 = {
+				base08 = "#6dcbf9",
+				base0B = "#c27246",
+				base09 = "#73ad9e",
+				-- base0D = "#dcdcaa",
+			},
+		},
+	},
 }
 
 local recordingStartSeparator = "%#RecSeparatorStartStyle#" .. "< "
 local recordingEndSeparator = "%#RecSeparatorEndStyle#" .. " >"
 
 M.ui = {
-    telescope = {
-        style = "borderless",
-    },
-    tabufline = {
-        enabled = false,
-        lazyload = true,
-        order = { "buffers" },
-    },
-    statusline = {
-        theme = "default",
-        separator_style = "default",
-        order = {
-            "mode",
-            "file",
-            "git",
-            "recording",
-            "%=",
-            "lsp_msg",
-            "%=",
-            "clock",
-            "lsp",
-            "diagnostics",
-            "cwd",
-            "cursor",
-        },
-        modules = {
-            recording = function()
-                local rec = vim.fn.reg_recording()
-                return rec ~= ""
-                        and " " .. recordingStartSeparator .. "%#RecIndicatorStyle#" .. "Recording @" .. rec .. recordingEndSeparator
-                    or ""
-            end,
-            clock = function()
-                return " " .. os.date "%H:%M"
-            end,
-        },
-    },
+	telescope = {
+		style = "borderless",
+	},
+	tabufline = {
+		enabled = false,
+		lazyload = true,
+		order = { "buffers" },
+	},
+	statusline = {
+		theme = "default",
+		separator_style = "default",
+		order = {
+			"mode",
+			"file",
+			"git",
+			"recording",
+			"%=",
+			"lsp_msg",
+			"%=",
+			"clock",
+			"lsp",
+			"diagnostics",
+			"cwd",
+			"cursor",
+		},
+		modules = {
+			recording = function()
+				local rec = vim.fn.reg_recording()
+				return rec ~= ""
+						and " " .. recordingStartSeparator .. "%#RecIndicatorStyle#" .. "Recording @" .. rec .. recordingEndSeparator
+					or ""
+			end,
+			clock = function()
+				return " " .. os.date("%H:%M")
+			end,
+		},
+	},
 }
 
 M.colorify = {
-    enabled = false,
+	enabled = false,
 }
 
 M.term = {
-    float = {
-        col = 0.05,
-        row = 0.02,
-        width = 0.9,
-        height = 0.9,
-    },
+	float = {
+		col = 0.05,
+		row = 0.02,
+		width = 0.9,
+		height = 0.9,
+	},
 }
 
 M.plugin = {}
