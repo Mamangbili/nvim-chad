@@ -11,8 +11,9 @@ M.base46 = {
 	hl_add = {
 		["@constructor.cpp"] = { underline = false },
 		["SnacksPickerDir"] = { fg = "#2239e9" },
-		["@lsp.type.macro.cpp"] = {},
+		["@lsp.type.operator.cpp"] = { fg = "purple" },
 		["@tag.builtin.tsx"] = { fg = "#0885c4" },
+		["@lsp.type.macro.cpp"] = { fg = "NONE" },
 	},
 	hl_override = {
 		["snack.pciker.list"] = { fg = "red" },
@@ -31,7 +32,7 @@ M.base46 = {
 		["@keyword.repeat"] = { fg = "purple" },
 		["@keyword"] = { fg = "#5252e0" },
 		["@constant"] = { fg = "#2239e9", bold = true },
-		["@constant.macro"] = { fg = "#2239e9" },
+		-- ["@constant.macro"] = { fg = "None" },
 		["@character"] = { fg = "base0B" },
 		["@markup.link.label"] = { fg = "purple" },
 	},

@@ -149,7 +149,7 @@ return {
 		end,
 	},
 
-	{ "famiu/bufdelete.nvim" },
+	{ "famiu/bufdelete.nvim", lazy = false },
 
 	{
 		"hrsh7th/nvim-cmp",
@@ -1674,6 +1674,7 @@ return {
 						require("nvim-tree.api").tree.close()
 						return
 					end
+
 					require("bufdelete").bufdelete(0, true)
 				end,
 				desc = "Smart Close Buffer",
