@@ -1,5 +1,5 @@
-require "nvchad.mappings"
-local u = require "utils"
+require("nvchad.mappings")
+local u = require("utils")
 
 -- add yours here
 -- telescope outgoing calls expand <l>, fold <h>
@@ -46,15 +46,15 @@ remap("n", "<leader>y", ":setf cpp<Cr>", { desc = "setfile to cpp", noremap = tr
 -- d untuk defini current node hierarchy
 
 remap("n", "<leader>t", function()
-	vim.cmd "CopilotChatClose"
-	vim.cmd "NvimTreeToggle"
+	vim.cmd("CopilotChatClose")
+	vim.cmd("NvimTreeToggle")
 end, { desc = "nvimtree toggle window" })
 
 remap("i", "jk", "<ESC>")
 
-remap("n", "<leader>q", function()
-	u.Close_buffer()
-end, { desc = "close buffer/diff" })
+-- remap("n", "<leader>q", function()
+-- 	u.Close_buffer()
+-- end, { desc = "close buffer/diff" })
 
 remap("n", "<leader>ww", function()
 	u.Close_window()
@@ -64,25 +64,17 @@ end, { desc = "close window" })
 remap("n", "<leader>h", u.telescope_hsplit, { desc = "new horizontal window" })
 remap("n", "<leader>v", u.telescope_vsplit, { desc = "new vertical window" })
 
-remap("n", "<S-l>", function()
-	require("nvchad.tabufline").next()
-end, { desc = "buffer goto next" })
-
-remap("n", "<S-h>", function()
-	require("nvchad.tabufline").prev()
-end, { desc = "buffer goto next" })
-
 -- terminal mode
 remap("t", "<leader><Esc>", "<C-\\><C-N>", { desc = "terminal escape terminal mode" })
 remap({ "n", "i" }, "<A-t>", "<cmd>terminal<CR>", { desc = "enter terminal mode" })
 
 remap({ "n", "t" }, "<A-/>", function()
-	require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
+	require("nvchad.term").toggle({ pos = "float", id = "floatTerm" })
 	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
 end, { desc = "terminal toggleable horizontal term" })
 
 remap({ "n", "t" }, "<A-i>", function()
-	require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
+	require("nvchad.term").toggle({ pos = "float", id = "floatTerm" })
 	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
 end, { desc = "terminal toggle floating term" })
 
@@ -94,7 +86,7 @@ remap("n", "<leader>ra", vim.lsp.buf.rename, { desc = "lsp rename" })
 
 -- redo
 remap("n", "U", function()
-	vim.cmd "redo"
+	vim.cmd("redo")
 end, { desc = "redo" })
 -- map for indenting in visual mode
 
