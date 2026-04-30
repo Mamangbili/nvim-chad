@@ -1,10 +1,3 @@
-local function reverse_inplace(list)
-	for i = 1, math.floor(#list / 2) do
-		local j = #list - i + 1
-		list[i], list[j] = list[j], list[i]
-	end
-end
-
 local function clamp(val, min, max)
 	return math.max(min, math.min(max, val))
 end
@@ -29,42 +22,6 @@ local function map(tbl, fn)
 		result[i] = fn(v, i)
 	end
 	return result
-end
-
-local function slice(t, i, j)
-	local n = #t
-	i = i or 1
-	j = j or n
-
-	if i < 1 then
-		i = 1
-	end
-	if j > n then
-		j = n
-	end
-
-	local result = {}
-	for k = i, j do
-		result[#result + 1] = t[k]
-	end
-
-	return result
-end
-
-local function merge(left, right, currentId, newId)
-	reverse_inplace(right)
-	local newItem = {}
-	for _, val in ipairs(left) do
-		table.insert(newItem, val)
-	end
-	for _, val in ipairs(right) do
-		table.insert(newItem, val)
-	end
-
-	table.insert(newItem, currentId)
-	table.insert(newItem, newId)
-
-	return newItem
 end
 
 local function find_index(t, value)
@@ -141,38 +98,39 @@ function Win:sync_state()
 end
 
 function Win:add(bufferid)
-	if contains(self.buffer_list, bufferid) then
-		local buf_id = find_index(self.buffer_list, bufferid)
-		return buf_id
+	--  Prevent duplicates
+	for i, id in ipairs(self.buffer_list) do
+		if id == bufferid then
+			return i
+		end
 	end
 
-	if
-		self.current_position_state == PositionStates.Empty
-		or self.current_position_state == PositionStates.Last
-		or (self.current_position_state == PositionStates.First and #self.buffer_list == 1)
-	then
+	local count = #self.buffer_list
+
+	if self.current_buf_pos == count or count == 0 then
 		table.insert(self.buffer_list, bufferid)
-		self.current_buf_pos = self.current_buf_pos + 1
-		self:sync_state()
-		return self.current_buf_pos
-	end
-
-	if self.current_position_state == PositionStates.First and #self.buffer_list == 2 then
-		reverse_inplace(self.buffer_list)
-		table.insert(self.buffer_list, bufferid)
-		self.current_buf_pos = self.current_buf_pos + 1
-		self:sync_state()
-		return self.current_buf_pos
-	end
-
-	if self.current_position_state == PositionStates.Middle then
-		local right_side = reverse_inplace(slice(self.buffer_list, self.current_buf_pos + 1, #self.buffer_list))
-		local left_side = slice(self.buffer_list, 1, self.current_buf_pos - 1)
-		self.buffer_list = merge(left_side, right_side, self.buffer_list[self.current_buf_pos], bufferid)
 		self.current_buf_pos = #self.buffer_list
-		self:sync_state()
-		return self.current_buf_pos
+	else
+		local new_list = {}
+
+		for i = 1, self.current_buf_pos - 1 do
+			table.insert(new_list, self.buffer_list[i])
+		end
+
+		for i = count, self.current_buf_pos + 1, -1 do
+			table.insert(new_list, self.buffer_list[i])
+		end
+
+		table.insert(new_list, self.buffer_list[self.current_buf_pos])
+
+		table.insert(new_list, bufferid)
+
+		self.buffer_list = new_list
+		self.current_buf_pos = #self.buffer_list
 	end
+
+	self:sync_state()
+	return self.current_buf_pos
 end
 
 function Win:remove(bufid)
@@ -268,8 +226,6 @@ local function setup()
 
 	vim.api.nvim_create_autocmd("BufWinEnter", {
 		callback = function(args)
-			-- Wait for Neovim to finish the current UI action (like a split)
-			-- Re-check if the buffer still exists and is valid
 			if not vim.api.nvim_buf_is_valid(args.buf) then
 				return
 			end
