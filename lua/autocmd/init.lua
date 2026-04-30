@@ -78,29 +78,29 @@ M.setup = function()
 		end,
 	})
 
-	-- local start = os.time()
-	-- autocmd({ "TextChanged", "InsertLeave" }, {
-	-- 	pattern = "*",
-	-- 	callback = function(args)
-	-- 		local deltaTime = os.time() - start
-	-- 		deltaTime = deltaTime
-	-- 		local sec = 10
-	-- 		if deltaTime > sec then
-	-- 			vim.cmd("silent! write")
-	-- 			local ok, notify = pcall(require, "notify")
-	--
-	-- 			if not ok then
-	-- 				print("Auto-saved at " .. os.date("%H:%M:%S"))
-	-- 			else
-	-- 				notify("💾 Auto-saved at " .. os.date("%H:%M:%S"), "info", {
-	-- 					title = "Auto-save",
-	-- 					timeout = 1000, -- 1 second
-	-- 				})
-	-- 			end
-	-- 			start = os.time()
-	-- 		end
-	-- 	end,
-	-- })
+	local start = os.time()
+	autocmd({ "TextChanged", "InsertLeave" }, {
+		pattern = "*",
+		callback = function(args)
+			local deltaTime = os.time() - start
+			deltaTime = deltaTime
+			local sec = 7
+			if deltaTime > sec then
+				vim.cmd("silent! write")
+				local ok, notify = pcall(require, "notify")
+
+				if not ok then
+					print("Auto-saved at " .. os.date("%H:%M:%S"))
+				else
+					notify("💾 Auto-saved at " .. os.date("%H:%M:%S"), "info", {
+						title = "Auto-save",
+						timeout = 1000, -- 1 second
+					})
+				end
+				start = os.time()
+			end
+		end,
+	})
 
 	-- Close quickfix window after jumping to location
 	autocmd("FileType", {
@@ -137,21 +137,6 @@ M.setup = function()
 			vim.api.nvim_echo({}, false, {})
 		end, 800)
 	end
-
-	vim.api.nvim_create_autocmd({ "TextChanged", "BufLeave" }, {
-		callback = function()
-			if #vim.api.nvim_buf_get_name(0) ~= 0 and vim.bo.buflisted then
-				vim.cmd("silent! w")
-
-				local time = os.date("%I:%M %p")
-
-				-- print nice colored msg
-				vim.api.nvim_echo({ { "󰄳", "LazyProgressDone" }, { " file autosaved at " .. time } }, false, {})
-
-				clear_cmdarea()
-			end
-		end,
-	})
 
 	autocmd("BufWritePost", {
 		pattern = "*",
@@ -195,7 +180,11 @@ M.setup = function()
 	autocmd({ "VimLeavePre" }, {
 		group = vim.api.nvim_create_augroup("fuck_shada_temp", { clear = true }),
 		pattern = { "*" },
-		callback = function()
+		callback = function(ev)
+			if vim.api.nvim_buf_get_name(ev.buf) ~= "" then
+				vim.cmd("silent! write")
+			end
+
 			local status = 0
 			for _, f in ipairs(vim.fn.globpath(vim.fn.stdpath("data") .. "/shada", "*tmp*", false, true)) do
 				if vim.tbl_isempty(vim.fn.readfile(f)) then
