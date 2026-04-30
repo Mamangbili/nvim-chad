@@ -136,3 +136,8 @@ for i = 1, 9 do
 		require("bufferline").go_to(i)
 	end)
 end
+
+remap("n", "zO", function()
+	vim.cmd("normal! zC")
+	vim.cmd("normal! zO")
+end)
