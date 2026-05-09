@@ -13,6 +13,7 @@ local M = {}
 M.setup = function()
 	local autocmd = vim.api.nvim_create_autocmd
 	local cwd = vim.fn.getcwd()
+	local utils = require("utils")
 
 	autocmd("FileType", {
 		pattern = { "cpp", "c", "h", "hpp", "cc" },
@@ -120,15 +121,17 @@ M.setup = function()
 				desc = "close",
 			})
 
-			harpoon_map(1, ev)
-			harpoon_map(2, ev)
-			harpoon_map(3, ev)
-			harpoon_map(4, ev)
-			harpoon_map(5, ev)
-			harpoon_map(6, ev)
-			harpoon_map(7, ev)
-			harpoon_map(8, ev)
-			harpoon_map(9, ev)
+			vim.keymap.set("n", "e", "<CR>", {
+				buffer = ev.buf,
+				desc = "close",
+				remap = true,
+			})
+			-- harpoon_map(4, ev)
+			-- harpoon_map(5, ev)
+			-- harpoon_map(6, ev)
+			-- harpoon_map(7, ev)
+			-- harpoon_map(8, ev)
+			-- harpoon_map(9, ev)
 		end,
 	})
 
@@ -198,6 +201,29 @@ M.setup = function()
 		end,
 		desc = "Delete empty temp ShaDa files",
 	})
+
+	autocmd("BufNew", {
+		pattern = "*",
+		callback = function()
+			vim.schedule(function()
+				vim.cmd("filetype detect")
+			end)
+		end,
+	})
+
+	-- warning : very hacky
+	-- autocmd("BufAdd", {
+	-- 	callback = function(e)
+	-- 		-- local pcall = pcall(function()
+	-- 		-- end)
+	--
+	-- 		if utils.is_normal_buffer(e.buf) then
+	-- 			vim.defer_fn(function()
+	-- 				require("ufo").closeFoldsWith(1)
+	-- 			end, 1000)
+	-- 		end
+	-- 	end,
+	-- })
 
 	-- autocmd({ "UIEnter" }, {
 	-- 	pattern = "*",

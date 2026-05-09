@@ -28,10 +28,13 @@ remap("n", "<leader>fd", "<cmd>Glance definitions<cr>", { desc = "glance definit
 vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<C-K>", "copilot#Accept('<CR>')", { silent = true, expr = true }) -- DON"T USE REMAP"
 
-unmap("n", "<leader>n")
-unmap("n", "<leader>b")
+vim.defer_fn(function()
+	unmap("n", "<leader>n")
+end, 1000)
 unmap("n", "<leader>th")
 unmap("n", "<leader>fo")
+
+remap("n", "<leader>fo", "<Cmd>Telescope hierarchy outgoing_calls<Cr>", { desc = "outgoing call ", noremap = true })
 
 remap("n", "t", function()
 	require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
@@ -128,14 +131,7 @@ remap("v", "rb", ":s/", { desc = "substitute in block", noremap = true })
 remap("n", "<leader>rr", ":.,$s/", { desc = "substitute until end", noremap = true })
 remap("n", "<leader>wb", ":BDeleteOthers<CR>", { desc = "delete all buffer except current" })
 
-unmap("n", "<Tab>")
-
--- bufferline jump
-for i = 1, 9 do
-	remap("n", "<leader>b" .. i, function()
-		require("bufferline").go_to(i)
-	end)
-end
+-- unmap("n", "<Tab>")
 
 remap("n", "zO", function()
 	vim.cmd("normal! zC")

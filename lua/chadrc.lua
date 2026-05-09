@@ -14,6 +14,7 @@ M.base46 = {
 		["@lsp.type.operator.cpp"] = { fg = "purple" },
 		["@tag.builtin.tsx"] = { fg = "#0885c4" },
 		["@lsp.type.macro.cpp"] = { fg = "NONE" },
+		["@lsp.typemod.class.constructorOrDestructor.cpp"] = { fg = "#9e9e41", bold = true },
 	},
 	hl_override = {
 		["snack.pciker.list"] = { fg = "red" },

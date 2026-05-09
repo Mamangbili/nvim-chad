@@ -1826,16 +1826,13 @@ return {
 			bundle_path = vim.fn.stdpath("data") .. "/mason/packages/powershell-editor-services",
 		},
 	},
+
 	{
-		-- nanti coba lagi ganti ke latest klo stabil
 		"ThePrimeagen/refactoring.nvim",
-		branch = "1.0",
 		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-treesitter/nvim-treesitter",
+			"lewis6991/async.nvim",
 		},
 		lazy = false,
-		opts = {},
 	},
 
 	{

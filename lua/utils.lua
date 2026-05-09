@@ -1,4 +1,10 @@
 local M = {}
+local function is_normal_buffer(buf)
+	return vim.api.nvim_buf_is_valid(buf)
+		and vim.bo[buf].buftype == "" -- must be normal buffer
+		and vim.bo[buf].buflisted -- must be listed
+		and vim.api.nvim_buf_get_name(buf) ~= "" -- must have a file name
+end
 local function Close_window()
 	vim.cmd("q!")
 end
@@ -108,4 +114,5 @@ M.subtitute_old_word = subtitute_old_word
 M.Close_window = Close_window
 M.Close_buffer = Close_buffer
 M.toggle_betwee = toggle_betwee
+M.is_normal_buffer = is_normal_buffer
 return M

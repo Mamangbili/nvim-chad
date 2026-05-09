@@ -1,3 +1,5 @@
+local utils = require("utils")
+
 local function clamp(val, min, max)
 	return math.max(min, math.min(max, val))
 end
@@ -33,12 +35,6 @@ local function find_index(t, value)
 	return 0
 end
 
-local function is_normal_buffer(buf)
-	return vim.api.nvim_buf_is_valid(buf)
-		and vim.bo[buf].buftype == "" -- must be normal buffer
-		and vim.bo[buf].buflisted -- must be listed
-		and vim.api.nvim_buf_get_name(buf) ~= "" -- must have a file name
-end
 local function contains(t, value)
 	for _, v in ipairs(t) do
 		if v == value then
@@ -203,7 +199,7 @@ local function setup()
 					vim.schedule(function()
 						local new_win_id = vim.api.nvim_get_current_win()
 						local new_win = Win.new(new_win_id)
-						if is_normal_buffer(e.buf) then
+						if utils.is_normal_buffer(e.buf) then
 							new_win:add(e.buf)
 							win_list:add(new_win)
 						end
@@ -232,14 +228,14 @@ local function setup()
 
 			local curr_win = win_list:get_current_win()
 
-			if curr_win and is_normal_buffer(args.buf) then
+			if curr_win and require("utils").is_normal_buffer(args.buf) then
 				curr_win:add(args.buf)
 			end
 		end,
 	})
 
 	vim.keymap.set("n", "<leader>q", function()
-		vim.cmd(":DeleteBuf")
+		vim.api.nvim_command("DeleteBuf")
 	end, { noremap = true })
 
 	vim.keymap.set("n", "<S-l>", function()
@@ -247,7 +243,7 @@ local function setup()
 		local nextBufPos = clamp(curr_win.current_buf_pos + 1, 1, #curr_win.buffer_list)
 		local nextBufId = curr_win.buffer_list[nextBufPos]
 		curr_win.current_buf_pos = nextBufPos
-		vim.api.nvim_set_current_buf(nextBufId)
+		vim.api.nvim_win_set_buf(0, nextBufId)
 	end, { noremap = true })
 
 	vim.keymap.set("n", "<S-h>", function()
@@ -255,7 +251,7 @@ local function setup()
 		local prevBufPos = clamp(curr_win.current_buf_pos - 1, 1, #curr_win.buffer_list)
 		local prevBufId = curr_win.buffer_list[prevBufPos]
 		curr_win.current_buf_pos = prevBufPos
-		vim.api.nvim_set_current_buf(prevBufId)
+		vim.api.nvim_win_set_buf(0, prevBufId)
 	end, { noremap = true })
 
 	vim.api.nvim_create_user_command("DeleteBuf", function()

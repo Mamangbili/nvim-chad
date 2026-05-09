@@ -2,25 +2,26 @@
 require("nvchad.configs.lspconfig").defaults()
 
 local servers = {
-    "html",
-    "cssls",
-    "yamlls",
-    "glsl_analyzer",
-    "rust_analyzer",
-    "gopls",
-    "elixirls",
-    "ty",
-    "cmake",
-    "ts_ls",
-    "clangd",
-    "powershell_es",
-    "tailwindcss",
+	"html",
+	"cssls",
+	"yamlls",
+	"glsl_analyzer",
+	"rust_analyzer",
+	"gopls",
+	"elixirls",
+	"ty",
+	"cmake",
+	"ts_ls",
+	"clangd",
+	"powershell_es",
+	"tailwindcss",
+	"",
 }
-local nvlsp = require "nvchad.configs.lspconfig"
+local nvlsp = require("nvchad.configs.lspconfig")
 
 nvlsp.capabilities.textDocument.foldingRange = {
-    dynamicRegistration = false,
-    lineFoldingOnly = true,
+	dynamicRegistration = false,
+	lineFoldingOnly = true,
 }
 
 local capabilities = nvlsp.capabilities
@@ -29,36 +30,36 @@ capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true
 -- use this syntax for newer lspconfig
 vim.lsp.enable(servers)
 vim.lsp.config("*", {
-    on_attach = nvlsp.on_attach,
-    on_init = nvlsp.on_init,
-    capabilities = nvlsp.capabilities,
+	on_attach = nvlsp.on_attach,
+	on_init = nvlsp.on_init,
+	capabilities = nvlsp.capabilities,
 })
 
 vim.lsp.config.clangd = {
-    init_options = {
-        fallbackFlags = { "-std=c++23" },
-    },
+	init_options = {
+		fallbackFlags = { "-std=c++23" },
+	},
 }
 
 vim.lsp.config("powershell_es", {
-    settings = {
-        powershell = {
-            codeFormatting = {
-                autoCorrectAliases = true,
-                openBraceOnSameLine = true,
-                spacesBeforeOpenBrace = 1,
-                spacesAroundOperator = true,
-            },
-        },
-    },
+	settings = {
+		powershell = {
+			codeFormatting = {
+				autoCorrectAliases = true,
+				openBraceOnSameLine = true,
+				spacesBeforeOpenBrace = 1,
+				spacesAroundOperator = true,
+			},
+		},
+	},
 })
 
-vim.lsp.enable "omnisharp"
+vim.lsp.enable("omnisharp")
 vim.lsp.config("omnisharp", {
-    on_attach = nvlsp.on_attach,
-    on_init = nvlsp.on_init,
-    capabilities = capabilities,
-    root_dir = require("lspconfig.util").root_pattern(".sln", ".csproj", ".git"),
+	on_attach = nvlsp.on_attach,
+	on_init = nvlsp.on_init,
+	capabilities = capabilities,
+	-- root_dir = require("lspconfig.util").root_pattern(".sln", ".csproj", ".git"),
 })
 
 -- vim.lsp.enable "pyright"
@@ -81,7 +82,7 @@ vim.lsp.config("omnisharp", {
 -- })
 
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-    pattern = { "CMakeLists.txt", "*.cmake", "CmakeLists.txt", "cmakelists.txt" },
-    command = "set filetype=cmake",
+	pattern = { "CMakeLists.txt", "*.cmake", "CmakeLists.txt", "cmakelists.txt" },
+	command = "set filetype=cmake",
 })
-vim.diagnostic.config { virtual_text = false } -- disable neovim's default virtual text diagnostics
+vim.diagnostic.config({ virtual_text = false }) -- disable neovim's default virtual text diagnostics
