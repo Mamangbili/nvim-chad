@@ -757,10 +757,14 @@ return {
 			},
 		},
 	},
+
 	{
 		"kevinhwang91/nvim-ufo",
 		event = "BufNew",
-		dependencies = { "kevinhwang91/promise-async", "OXY2DEV/foldtext.nvim" },
+		dependencies = {
+			"kevinhwang91/promise-async",
+			"OXY2DEV/foldtext.nvim",
+		},
 		config = function(_, opts)
 			-- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
 			vim.keymap.set("n", "zR", require("ufo").openAllFolds)
@@ -814,9 +818,9 @@ return {
 		end,
 		init = function()
 			vim.o.foldenable = true
-			vim.o.foldlevel = 1
+			vim.o.foldlevel = 99
 			vim.o.foldcolumn = "1"
-			vim.o.foldlevelstart = 1
+			vim.o.foldlevelstart = 99
 		end,
 		keys = keys,
 	},

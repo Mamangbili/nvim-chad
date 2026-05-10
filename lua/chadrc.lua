@@ -18,7 +18,14 @@ M.base46 = {
 	},
 	hl_override = {
 		["snack.pciker.list"] = { fg = "red" },
-		["LspSignatureActiveParameter"] = { underline = true, fg = "NONE", italic = true, bold = true, standout = true },
+		["LspSignatureActiveParameter"] = {
+			underline = true,
+			fg = "NONE",
+			italic = true,
+			bold = true,
+			standout = true,
+			bg = "NONE",
+		},
 		["@function"] = { underline = false, nocombine = true },
 		["@comment"] = { italic = true },
 		Type = { fg = "#26d988", bold = false },
