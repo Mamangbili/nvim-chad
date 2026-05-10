@@ -6,6 +6,7 @@ local u = require("utils")
 
 local remap = vim.keymap.set
 local unmap = vim.keymap.del
+local autocmd = vim.api.nvim_create_autocmd
 
 remap("n", "<leader>9", "<cmd>Lazy<Cr>")
 
@@ -81,7 +82,14 @@ remap({ "n", "t" }, "<A-i>", function()
 	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
 end, { desc = "terminal toggle floating term" })
 
-remap("n", "gf", vim.lsp.buf.code_action, { desc = "quick fix" })
+local function open_definition_on_new_window()
+	local cursor_row, cursor_column = unpack(vim.api.nvim_win_get_cursor(0))
+	vim.cmd("vsplit")
+	vim.api.nvim_win_set_cursor(0, { cursor_row, cursor_column })
+	vim.lsp.buf.definition()
+end
+
+remap("n", "gvd", open_definition_on_new_window, { desc = "open defintion on new window" })
 remap("n", "gi", vim.lsp.buf.implementation, { desc = "lsp implementation" })
 remap("n", "gd", vim.lsp.buf.definition, { desc = "lsp definition" })
 remap("n", "gD", vim.lsp.buf.declaration, { desc = "lsp declaration" })
@@ -137,3 +145,17 @@ remap("n", "zO", function()
 	vim.cmd("normal! zC")
 	vim.cmd("normal! zO")
 end)
+
+remap({ "n", "v", "x" }, "<leader>rf", function()
+	vim.lsp.buf.code_action({})
+end, {
+	noremap = true,
+	desc = "code action",
+})
+
+autocmd("FileType", {
+	pattern = "cpp",
+	callback = function(ev)
+		remap("x", "<leader>rm", u.cpp_move_to_file, { desc = "Cpp move to files", buffer = ev.buf, noremap = true })
+	end,
+})
