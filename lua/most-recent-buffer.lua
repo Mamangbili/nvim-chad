@@ -55,12 +55,14 @@ local PositionStates = {
 ---@class Win
 ---@field id number
 ---@field buffer number[]
+---@field current_position number
 ---@field current_position_state PositionStates
 ---@field current_buf_pos number
 local Win = {
 	id = 0,
 	buffer_list = {},
 	curret_position = 0,
+	current_position_state = PositionStates.Empty,
 	current_buf_pos = 0,
 }
 Win.__index = Win
@@ -239,16 +241,6 @@ local function setup()
 		end,
 	})
 
-	vim.keymap.set("n", "<leader>q", function()
-		local curr_win = win_list:get_current_win()
-		local curr_buf_id = curr_win:get_current_buf_id()
-		vim.api.nvim_command("DeleteBuf")
-
-		if not win_list:buf_exist_in_atleast_one_win(curr_buf_id) then
-			vim.api.nvim_buf_delete(curr_buf_id, { force = true })
-		end
-	end, { noremap = true })
-
 	vim.keymap.set("n", "<S-l>", function()
 		local curr_win = win_list:get_current_win()
 		local nextBufPos = clamp(curr_win.current_buf_pos + 1, 1, #curr_win.buffer_list)
@@ -267,20 +259,34 @@ local function setup()
 
 	vim.api.nvim_create_user_command("DeleteBuf", function()
 		local curr_win = win_list:get_current_win()
+		local curr_buf_id = curr_win:get_current_buf_id()
 
-		if is_empty_buf(curr_win.buffer_list[curr_win.curret_position]) and #curr_win.buffer_list == 1 then
+		-- 1. SWITCHING LOGIC
+		if is_empty_buf(curr_win.buffer_list[curr_win.current_position]) and #curr_win.buffer_list == 1 then
+			-- Already empty, nothing to do
 			return
 		elseif #curr_win.buffer_list > 1 then
-			local newBufId = curr_win:remove(curr_win:get_current_buf_id())
-			vim.api.nvim_set_current_buf(curr_win.buffer_list[newBufId])
+			local newBufIndex = curr_win:remove(curr_buf_id)
+			vim.api.nvim_set_current_buf(curr_win.buffer_list[newBufIndex])
 		else
-			curr_win:remove(curr_win:get_current_buf_id())
+			-- Last buffer: Create a replacement BEFORE deleting
+			curr_win:remove(curr_buf_id)
 			local emptyBufid = vim.api.nvim_create_buf(true, true)
 			vim.api.nvim_set_current_buf(emptyBufid)
 			curr_win:add(emptyBufid)
 		end
+
+		-- We wait until Neovim is "idle" to delete, ensuring the new buffer is focused.
+		if vim.api.nvim_buf_is_valid(curr_buf_id) then
+			-- Only delete if no other window is looking at it
+			if not win_list:buf_exist_in_atleast_one_win(curr_buf_id) then
+				-- use pcall to prevent crash if buffer was already closed
+				pcall(vim.api.nvim_buf_delete, curr_buf_id, { force = true })
+			end
+		end
 	end, {})
 
+	-- For Debugging
 	vim.api.nvim_create_user_command("Buflist", function()
 		local curr_win = win_list:get_current_win()
 		print("current buff pos : ", curr_win.current_buf_pos)

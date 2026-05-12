@@ -169,7 +169,7 @@ return {
 		end,
 	},
 
-	{ "famiu/bufdelete.nvim", lazy = false },
+	-- { "famiu/bufdelete.nvim", lazy = false },
 
 	{
 		"hrsh7th/nvim-cmp",
@@ -1704,16 +1704,13 @@ return {
 				function()
 					if vim.bo.filetype == "copilot-chat" then
 						vim.cmd("CopilotChatClose")
-						return
-					end
-					if vim.bo.filetype == "NvimTree" then
+					elseif vim.bo.filetype == "NvimTree" then
 						require("nvim-tree.api").tree.close()
-						return
+					else
+						vim.cmd("DeleteBuf")
 					end
-
-					require("bufdelete").bufdelete(0, true)
 				end,
-				desc = "Smart Close Buffer",
+				desc = "Smart Close",
 			},
 		},
 	},
