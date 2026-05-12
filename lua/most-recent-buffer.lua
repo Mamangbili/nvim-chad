@@ -204,12 +204,13 @@ local function setup()
 	})
 
 	vim.api.nvim_create_autocmd("WinNew", {
-		callback = function(e)
+		callback = function()
 			vim.schedule(function()
 				local new_win_id = vim.api.nvim_get_current_win()
 				local new_win = Win.new(new_win_id)
-				if utils.is_normal_buffer(e.buf) then
-					new_win:add(e.buf)
+				local current_buf = vim.api.nvim_win_get_buf(new_win_id)
+				if utils.is_normal_buffer(current_buf) then
+					new_win:add(current_buf)
 					win_list:add(new_win)
 				end
 			end)
@@ -223,6 +224,13 @@ local function setup()
 
 			if contains(winids, current_win_id) then
 				win_list:remove(current_win_id)
+
+				-- delete buffer that no longer use in any windows after deleting current window from list
+				for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+					if not win_list:buf_exist_in_atleast_one_win(buf) and vim.api.nvim_buf_is_valid(buf) then
+						vim.api.nvim_buf_delete(buf, { force = true })
+					end
+				end
 			end
 		end,
 	})
@@ -276,12 +284,11 @@ local function setup()
 			curr_win:add(emptyBufid)
 		end
 
-		-- We wait until Neovim is "idle" to delete, ensuring the new buffer is focused.
 		if vim.api.nvim_buf_is_valid(curr_buf_id) then
 			-- Only delete if no other window is looking at it
 			if not win_list:buf_exist_in_atleast_one_win(curr_buf_id) then
 				-- use pcall to prevent crash if buffer was already closed
-				pcall(vim.api.nvim_buf_delete, curr_buf_id, { force = true })
+				vim.api.nvim_buf_delete(curr_buf_id, { force = true })
 			end
 		end
 	end, {})

@@ -38,7 +38,6 @@ vim.opt.relativenumber = true
 -- vim.opt.autoindent = true
 -- vim.opt.copyindent = true
 -- vim.opt.preserveindent = true
-
 vim.opt.guicursor =
 	"n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175"
 vim.o.sessionoptions = "blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,localoptions"
@@ -92,3 +91,5 @@ vim.filetype.add({
 require("autocmd").setup()
 require("usercmd").setup()
 require("most-recent-buffer").setup()
+
+vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#515151", bg = "NONE", bold = true })
