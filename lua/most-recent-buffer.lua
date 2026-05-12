@@ -153,47 +153,47 @@ function Win:remove(bufid)
 	return self.current_buf_pos
 end
 
+---@class WinList
+---@field [integer] Win
+local win_list = {}
+
+function win_list:buf_exist_in_atleast_one_win(bufid)
+	for _, win in ipairs(self) do
+		if win:contain(bufid) then
+			return true
+		end
+	end
+	return false
+end
+
+function win_list:get_current_win()
+	local current_win_id = vim.api.nvim_get_current_win()
+	local winids = self:get_ids()
+	local win_i = find_index(winids, current_win_id)
+	return self[win_i]
+end
+
+function win_list:get_ids()
+	return map(self, function(e)
+		return e.id
+	end)
+end
+
+function win_list:add(win)
+	local winids = self:get_ids()
+	if contains(winids, win.id) then
+		return
+	end
+	table.insert(self, win)
+end
+
+function win_list:remove(winid)
+	local winids = self:get_ids()
+	local win_i = find_index(winids, winid)
+	table.remove(self, win_i)
+end
+
 local function setup()
-	---@class WinList
-	---@field [integer] Win
-	local win_list = {}
-
-	function win_list:buf_exist_in_atleast_one_win(bufid)
-		for _, win in ipairs(self) do
-			if win:contain(bufid) then
-				return true
-			end
-		end
-		return false
-	end
-
-	function win_list:get_current_win()
-		local current_win_id = vim.api.nvim_get_current_win()
-		local winids = self:get_ids()
-		local win_i = find_index(winids, current_win_id)
-		return self[win_i]
-	end
-
-	function win_list:get_ids()
-		return map(self, function(e)
-			return e.id
-		end)
-	end
-
-	function win_list:add(win)
-		local winids = self:get_ids()
-		if contains(winids, win.id) then
-			return
-		end
-		table.insert(self, win)
-	end
-
-	function win_list:remove(winid)
-		local winids = self:get_ids()
-		local win_i = find_index(winids, winid)
-		table.remove(self, win_i)
-	end
-
 	vim.api.nvim_create_autocmd("VimEnter", {
 		callback = function(e)
 			local new_win_id = vim.api.nvim_get_current_win()
@@ -241,23 +241,23 @@ local function setup()
 		end,
 	})
 
-	vim.keymap.set("n", "<S-l>", function()
+	vim.api.nvim_create_user_command("BufNextCycle", function()
 		local curr_win = win_list:get_current_win()
 		local nextBufPos = clamp(curr_win.current_buf_pos + 1, 1, #curr_win.buffer_list)
 		local nextBufId = curr_win.buffer_list[nextBufPos]
 		curr_win.current_buf_pos = nextBufPos
 		vim.api.nvim_win_set_buf(0, nextBufId)
-	end, { noremap = true })
+	end, {})
 
-	vim.keymap.set("n", "<S-h>", function()
+	vim.api.nvim_create_user_command("BufPrevCycle", function()
 		local curr_win = win_list:get_current_win()
 		local prevBufPos = clamp(curr_win.current_buf_pos - 1, 1, #curr_win.buffer_list)
 		local prevBufId = curr_win.buffer_list[prevBufPos]
 		curr_win.current_buf_pos = prevBufPos
 		vim.api.nvim_win_set_buf(0, prevBufId)
-	end, { noremap = true })
+	end, {})
 
-	vim.api.nvim_create_user_command("DeleteBuf", function()
+	vim.api.nvim_create_user_command("BufDelete", function()
 		local curr_win = win_list:get_current_win()
 		local curr_buf_id = curr_win:get_current_buf_id()
 
@@ -287,7 +287,7 @@ local function setup()
 	end, {})
 
 	-- For Debugging
-	vim.api.nvim_create_user_command("Buflist", function()
+	vim.api.nvim_create_user_command("BufDebug", function()
 		local curr_win = win_list:get_current_win()
 		print("current buff pos : ", curr_win.current_buf_pos)
 		local winids = "id : "

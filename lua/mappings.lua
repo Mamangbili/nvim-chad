@@ -159,3 +159,6 @@ autocmd("FileType", {
 		remap("x", "<leader>rm", u.cpp_move_to_file, { desc = "Cpp move to files", buffer = ev.buf, noremap = true })
 	end,
 })
+
+vim.keymap.set("n", "<S-h>", ":BufPrevCycle<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<S-l>", ":BufNextCycle<CR>", { noremap = true, silent = true })

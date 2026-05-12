@@ -1707,7 +1707,7 @@ return {
 					elseif vim.bo.filetype == "NvimTree" then
 						require("nvim-tree.api").tree.close()
 					else
-						vim.cmd("DeleteBuf")
+						vim.cmd("BufDelete")
 					end
 				end,
 				desc = "Smart Close",
