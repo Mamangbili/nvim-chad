@@ -156,6 +156,15 @@ local function setup()
 	---@field [integer] Win
 	local win_list = {}
 
+	function win_list:buf_exist_in_atleast_one_win(bufid)
+		for _, win in ipairs(self) do
+			if win:contain(bufid) then
+				return true
+			end
+		end
+		return false
+	end
+
 	function win_list:get_current_win()
 		local current_win_id = vim.api.nvim_get_current_win()
 		local winids = self:get_ids()
@@ -193,19 +202,15 @@ local function setup()
 	})
 
 	vim.api.nvim_create_autocmd("WinNew", {
-		callback = function()
-			vim.api.nvim_create_autocmd("BufNew", {
-				callback = function(e)
-					vim.schedule(function()
-						local new_win_id = vim.api.nvim_get_current_win()
-						local new_win = Win.new(new_win_id)
-						if utils.is_normal_buffer(e.buf) then
-							new_win:add(e.buf)
-							win_list:add(new_win)
-						end
-					end)
-				end,
-			})
+		callback = function(e)
+			vim.schedule(function()
+				local new_win_id = vim.api.nvim_get_current_win()
+				local new_win = Win.new(new_win_id)
+				if utils.is_normal_buffer(e.buf) then
+					new_win:add(e.buf)
+					win_list:add(new_win)
+				end
+			end)
 		end,
 	})
 
@@ -235,7 +240,13 @@ local function setup()
 	})
 
 	vim.keymap.set("n", "<leader>q", function()
+		local curr_win = win_list:get_current_win()
+		local curr_buf_id = curr_win:get_current_buf_id()
 		vim.api.nvim_command("DeleteBuf")
+
+		if not win_list:buf_exist_in_atleast_one_win(curr_buf_id) then
+			vim.api.nvim_buf_delete(curr_buf_id, { force = true })
+		end
 	end, { noremap = true })
 
 	vim.keymap.set("n", "<S-l>", function()
