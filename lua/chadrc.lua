@@ -27,7 +27,7 @@ M.base46 = {
 			bg = "NONE",
 		},
 		["@function"] = { underline = false, nocombine = true },
-		["@comment"] = { italic = true },
+		["@comment"] = { italic = true, fg = "#6d7d72" },
 		Type = { fg = "#26d988", bold = false },
 		["@type.builtin"] = { fg = "#26d988", bold = false },
 		["@variable.builtin"] = { fg = "base08" },

@@ -4,6 +4,28 @@ local function clamp(val, min, max)
 	return math.max(min, math.min(max, val))
 end
 
+local function slice(arr, start_i, end_i)
+	local new = {}
+	start_i = start_i or 1
+	end_i = end_i or #arr
+	local j = 1
+	for i = start_i, end_i do
+		if arr[i] ~= nil then
+			new[j] = arr[i]
+			j = j + 1
+		end
+	end
+	return new
+end
+
+local function reverse_inplace(arr)
+	local n = #arr
+	for i = 1, n / 2 do
+		local j = n - i + 1
+		arr[i], arr[j] = arr[j], arr[i]
+	end
+	return arr
+end
 --- @param bufnr number|table|nil
 local function is_empty_buf(bufnr)
 	if bufnr == nil or bufnr == 0 then
@@ -193,6 +215,220 @@ function win_list:remove(winid)
 	table.remove(self, win_i)
 end
 
+---@class JumpEntry
+---@field row number
+---@field col number
+
+---@class BufState
+---@field entries JumpEntry[]
+---@field curr_jump_i number
+
+---@class BufEntries
+---@field [number] BufState
+
+---@class JumpList
+---@field [number] BufEntries
+local buf_jumplist = {
+	-- [winid]  = {
+	-- [bufid] = {
+	-- curr_jump_i,
+	--  entries = {col,row},...
+	-- }
+}
+
+---@param winid number
+---@param bufid number
+function buf_jumplist:exist_or_create(winid, bufid)
+	local both_exist = true
+	if not self[winid] then
+		print("Win id is nill")
+		print("Win id is inserted")
+		self[winid] = {}
+		both_exist = false
+	end
+
+	if not self[winid][bufid] then
+		print("win id exist, buf id is nill")
+		print("win id is inserted")
+		self[winid][bufid] = { entries = {}, curr_jump_i = 0 }
+		both_exist = false
+	end
+
+	return both_exist
+end
+
+function buf_jumplist:get_current_jump_i(winid, bufid)
+	return self[winid][bufid].curr_jump_i
+end
+
+---@param winid number
+---@param bufid number
+---@return JumpEntry[]
+function buf_jumplist:get_entries(winid, bufid)
+	return buf_jumplist[winid][bufid].entries
+end
+
+---@param winid number
+---@param bufid number
+---@param entry JumpEntry
+function buf_jumplist:add_entry(winid, bufid, entry)
+	self:exist_or_create(winid, bufid)
+
+	local entries = self:get_entries(winid, bufid)
+	local curr_jump_i = self:get_current_jump_i(winid, bufid)
+
+	local is_center = curr_jump_i > 0 and curr_jump_i < #entries
+	if is_center then
+		local left_side = slice(entries, 1, curr_jump_i - 1)
+		local right_side = slice(entries, curr_jump_i + 1, #entries)
+		right_side = reverse_inplace(right_side)
+
+		local new_order = {}
+		for _, val in ipairs(left_side) do
+			table.insert(new_order, val)
+		end
+
+		for _, val in ipairs(right_side) do
+			table.insert(new_order, val)
+		end
+
+		table.insert(new_order, entries[curr_jump_i])
+		table.insert(new_order, entry)
+
+		self[winid][bufid].entries = new_order
+		self[winid][bufid].curr_jump_i = #new_order
+	else
+		table.insert(entries, entry)
+		self[winid][bufid].curr_jump_i = #entries
+	end
+	vim.notify("curr jump i :" .. self[winid][bufid].curr_jump_i)
+end
+
+---@param winid number
+---@param bufid number
+---@param index number
+function buf_jumplist:remove_entry(winid, bufid, index)
+	-- normal linked list deletion with safety
+	local exists = self:exist_or_create(winid, bufid)
+
+	local entries = self:get_entries(winid, bufid)
+	local length = #entries
+
+	if exists and index >= 1 and index <= length then
+		table.remove(entries, index)
+
+		if self[winid][bufid].curr_jump_i >= index then
+			local new_i = self[winid][bufid].curr_jump_i - 1
+			self[winid][bufid].curr_jump_i = math.max(0, new_i)
+		end
+	end
+end
+
+local last_jump_row = 0
+---@param winid number
+---@return  JumpEntry | nil
+function buf_jumplist:check_new_jumps(winid)
+	local jumplist_data = vim.fn.getjumplist(winid)
+	local entries = jumplist_data[1]
+
+	local new_entry = entries[#entries]
+
+	vim.notify("old row : " .. last_jump_row .. " new row : " .. new_entry.lnum)
+	if new_entry.lnum ~= last_jump_row then
+		last_jump_row = new_entry.lnum
+		return { row = new_entry.lnum, col = new_entry.col }
+	end
+	return nil
+end
+
+local function jump_prev(winid, bufid)
+	local jump_data = vim.fn.getjumplist(winid)
+	local entries = jump_data[1]
+	local curr_idx = jump_data[2] -- This is a 0-based index
+
+	for i = curr_idx, 1, -1 do
+		local entry = entries[i]
+
+		if entry and entry.bufnr == bufid then
+			-- Calculate the jump distance (relative steps backward)
+			local steps = curr_idx - (i - 1)
+
+			if steps > 0 and vim.api.nvim_win_is_valid(winid) then
+				-- Ensure the window is focused or use win_execute
+				vim.api.nvim_set_current_win(winid)
+				vim.cmd("normal! " .. steps .. "\x0f")
+				return
+			end
+		end
+	end
+	vim.notify("No previous jump found in this buffer", vim.log.levels.WARN)
+end
+
+local function jump_next(winid, bufid)
+	local jump_data = vim.fn.getjumplist(winid)
+	local entries = jump_data[1]
+	local curr_idx = jump_data[2] -- 0-based index pointing to current position
+	local list_size = #entries
+
+	for i = curr_idx + 2, list_size do
+		local entry = entries[i]
+
+		if entry and entry.bufnr == bufid then
+			-- Calculate steps forward
+			-- (i - 1) converts Lua index back to 0-based to compare with curr_idx
+			local steps = (i - 1) - curr_idx
+
+			if steps > 0 and vim.api.nvim_win_is_valid(winid) then
+				vim.api.nvim_set_current_win(winid)
+				-- \x09 is the code for <C-i> (Forward)
+				vim.cmd("normal! " .. steps .. "\x09")
+				return
+			end
+		end
+	end
+	vim.notify("No newer jump found in this buffer", vim.log.levels.WARN)
+end
+---@param winid number
+---@param bufid number
+---@param offset number
+function buf_jumplist:jump(winid, bufid, offset)
+	self:exist_or_create(winid, bufid)
+
+	local data = self[winid][bufid]
+	local entries = data.entries
+	local target = data.curr_jump_i + offset
+
+	if entries[target] then
+		data.curr_jump_i = target
+
+		local entry = entries[target]
+
+		if vim.api.nvim_win_is_valid(winid) then
+			vim.api.nvim_win_set_cursor(winid, { entry.row, entry.col })
+		end
+	else
+		vim.notify("End of jump list", vim.log.levels.WARN)
+	end
+	vim.notify("curr jump i :" .. self[winid][bufid].curr_jump_i)
+end
+
+vim.api.nvim_create_autocmd("CursorMoved", {
+	callback = function()
+		local win = win_list:get_current_win()
+		if not win then
+			return
+		end
+		local curr_buf_id = win:get_current_buf_id()
+		local curr_win_id = win.id
+		local new_entry = buf_jumplist:check_new_jumps(curr_win_id)
+
+		if new_entry and utils.is_normal_buffer(curr_buf_id) then
+			local true_pos = vim.api.nvim_win_get_cursor(0)
+			buf_jumplist:add_entry(curr_win_id, curr_buf_id, { row = true_pos[1], col = true_pos[2] })
+		end
+	end,
+})
+
 local function setup()
 	vim.api.nvim_create_autocmd("VimEnter", {
 		callback = function(e)
@@ -225,7 +461,6 @@ local function setup()
 			if contains(winids, current_win_id) then
 				win_list:remove(current_win_id)
 
-				-- delete buffer that no longer use in any windows after deleting current window from list
 				for _, buf in ipairs(vim.api.nvim_list_bufs()) do
 					if not win_list:buf_exist_in_atleast_one_win(buf) and vim.api.nvim_buf_is_valid(buf) then
 						vim.api.nvim_buf_delete(buf, { force = true })
@@ -269,7 +504,6 @@ local function setup()
 		local curr_win = win_list:get_current_win()
 		local curr_buf_id = curr_win:get_current_buf_id()
 
-		-- 1. SWITCHING LOGIC
 		if is_empty_buf(curr_win.buffer_list[curr_win.current_position]) and #curr_win.buffer_list == 1 then
 			-- Already empty, nothing to do
 			return
@@ -285,12 +519,24 @@ local function setup()
 		end
 
 		if vim.api.nvim_buf_is_valid(curr_buf_id) then
-			-- Only delete if no other window is looking at it
 			if not win_list:buf_exist_in_atleast_one_win(curr_buf_id) then
-				-- use pcall to prevent crash if buffer was already closed
 				vim.api.nvim_buf_delete(curr_buf_id, { force = true })
 			end
 		end
+	end, {})
+
+	vim.api.nvim_create_user_command("BufJumpNext", function()
+		local win = win_list:get_current_win()
+		local curr_buf_id = win:get_current_buf_id()
+		local curr_win_id = win.id
+		jump_next(curr_win_id, curr_buf_id)
+	end, {})
+
+	vim.api.nvim_create_user_command("BufJumpPrev", function()
+		local win = win_list:get_current_win()
+		local curr_buf_id = win:get_current_buf_id()
+		local curr_win_id = win.id
+		jump_prev(curr_win_id, curr_buf_id)
 	end, {})
 
 	-- For Debugging
@@ -310,6 +556,17 @@ local function setup()
 		end
 		print(buffids)
 		print("current buf id :" .. curr_win:get_current_buf_id())
+	end, {})
+
+	vim.api.nvim_create_user_command("BufDebugJumpList", function()
+		local win = win_list:get_current_win()
+		local curr_buf_id = win:get_current_buf_id()
+		local curr_win_id = win.id
+		local entries = buf_jumplist:get_entries(curr_win_id, curr_buf_id)
+
+		for i, val in ipairs(entries) do
+			print("No. " .. i .. " Row: " .. val.row .. " Col: " .. val.col)
+		end
 	end, {})
 end
 

@@ -160,5 +160,7 @@ autocmd("FileType", {
 	end,
 })
 
-vim.keymap.set("n", "<S-h>", ":BufPrevCycle<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<S-l>", ":BufNextCycle<CR>", { noremap = true, silent = true })
+remap("n", "<S-h>", ":BufPrevCycle<CR>", { noremap = true, silent = true })
+remap("n", "<S-l>", ":BufNextCycle<CR>", { noremap = true, silent = true })
+remap("n", "<C-o>", ":BufJumpPrev<CR>", { noremap = true, silent = true })
+remap("n", "<C-i>", ":BufJumpNext<CR>", { noremap = true, silent = true })
