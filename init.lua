@@ -6,6 +6,7 @@ if vim.loader then
 end
 vim.o.shada = "!,'100,<50,s10,h"
 
+
 -- if windows
 if vim.loop.os_uname().sysname == "Windows_NT" then
 	vim.g._jukit_python_os_cmd = "python"

@@ -169,8 +169,6 @@ return {
 		end,
 	},
 
-	-- { "famiu/bufdelete.nvim", lazy = false },
-
 	{
 		"hrsh7th/nvim-cmp",
 		opts = function(_, opts)
