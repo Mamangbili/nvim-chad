@@ -15,7 +15,7 @@ local servers = {
 	"clangd",
 	"powershell_es",
 	"tailwindcss",
-	"",
+	"ols",
 }
 local nvlsp = require("nvchad.configs.lspconfig")
 
@@ -38,6 +38,13 @@ vim.lsp.config("*", {
 vim.lsp.config.clangd = {
 	init_options = {
 		fallbackFlags = { "-std=c++23" },
+	},
+}
+
+vim.lsp.config.ols = {
+	settings = {
+		enable_checker_only_saved = false,
+		checker_args = "-strict-style",
 	},
 }
 

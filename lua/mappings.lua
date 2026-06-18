@@ -36,6 +36,7 @@ unmap("n", "<leader>th")
 unmap("n", "<leader>fo")
 
 remap("n", "<leader>fo", "<Cmd>Telescope hierarchy outgoing_calls<Cr>", { desc = "outgoing call ", noremap = true })
+remap("n", "<leader>ft", "<Cmd>Telescope tags<Cr>", { desc = "outgoing call ", noremap = true })
 
 remap("n", "t", function()
 	require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
@@ -163,4 +164,10 @@ autocmd("FileType", {
 remap("n", "<S-h>", ":BufPrevCycle<CR>", { noremap = true, silent = true })
 remap("n", "<S-l>", ":BufNextCycle<CR>", { noremap = true, silent = true })
 remap("n", "<C-o>", ":BufJumpPrev<CR>", { noremap = true, silent = true })
-remap("n", "<C-i>", ":BufJumpNext<CR>", { noremap = true, silent = true })
+
+-- Copy absolute path to clipboard
+vim.keymap.set("n", "<leader>cp", function()
+	local path = vim.fn.expand("%:p")
+	vim.fn.setreg("+", path)
+	vim.notify("Copied: " .. path)
+end, { desc = "Copy current buffer path" })

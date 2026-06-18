@@ -10,7 +10,7 @@ local function clangd_format_exists_in_root()
 		return {}
 	else
 		return {
-			"--style={BasedOnStyle: Chromium, IndentWidth: 4, AlignConsecutiveDeclarations: true, SortIncludes: false, AllowShortFunctionsOnASingleLine: None, BinPackArguments: false, BinPackParameters: false, }",
+			"--style={BasedOnStyle: Chromium, IndentWidth: 4, AlignConsecutiveDeclarations: true, SortIncludes: false, AllowShortFunctionsOnASingleLine: None, BinPackArguments: false, BinPackParameters: false, ColumnLimit: 120 }",
 			"--fallback-style=Google",
 		}
 	end
@@ -18,6 +18,12 @@ end
 
 local options = {
 	formatters = {
+		odinfmt = {
+			-- Change where to find the command if it isn't in your path.
+			command = "odinfmt",
+			args = { "-stdin" },
+			stdin = true,
+		},
 		clang_format = {
 			prepend_args = clangd_format_exists_in_root(),
 		},
@@ -28,6 +34,7 @@ local options = {
 	},
 
 	formatters_by_ft = {
+		odin = { "odinfmt" },
 		lua = { "stylua" },
 		py = { "ast-grep" },
 		javascript = { "ast-grep" },

@@ -288,6 +288,7 @@ M.setup = function()
 		end,
 		desc = "Disable focus autoresize for FileType",
 	})
+
 	-- warning : very hacky
 	-- autocmd("BufAdd", {
 	-- group=mySetting,

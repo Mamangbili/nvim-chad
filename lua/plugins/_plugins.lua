@@ -683,6 +683,7 @@ return {
 
 	{
 		"nvim-focus/focus.nvim",
+		-- enabled = false,
 		version = false,
 		event = "CursorMoved",
 		config = function()
@@ -1987,6 +1988,7 @@ return {
 		--commit = "90cd658",
 		opts = {
 			ensure_installed = {
+				"odin",
 				"c",
 				"cpp",
 				"lua",
