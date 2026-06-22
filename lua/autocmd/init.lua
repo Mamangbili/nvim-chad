@@ -288,7 +288,43 @@ M.setup = function()
 		end,
 		desc = "Disable focus autoresize for FileType",
 	})
+	-- local odin_lsp_group = vim.api.nvim_create_augroup("OdinLSPFirstOpen", { clear = true })
+	--
+	-- vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
+	-- 	pattern = "*.odin",
+	-- 	group = odin_lsp_group,
+	-- 	callback = function(args)
+	-- 		vim.api.nvim_create_autocmd("LspAttach", {
+	-- 			group = vim.api.nvim_create_augroup("OdinLspAttach", { clear = true }),
+	-- 			buffer = 0,
+	-- 			callback = function(args)
+	-- 				local client = vim.lsp.get_client_by_id(args.data.client_id)
+	-- 				if client and client.name == "ols" then
+	-- 					vim.lsp.buf_notify(args.buf, "textDocument/didSave", {
+	-- 						textDocument = { uri = vim.uri_from_bufnr(args.buf) },
+	-- 					})
+	-- 				end
+	-- 			end,
+	-- 		})
+	-- 	end,
+	-- })
 
+	--
+	-- -- This fires ONCE per file when it is initially loaded into a buffer
+	-- vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
+	-- 	pattern = "*.odin",
+	-- 	group = odin_lsp_group,
+	-- 	callback = function(args)
+	-- 		local bufnr = args.buf
+	-- 		if not vim.api.nvim_buf_is_valid(bufnr) then
+	-- 			return
+	-- 		end
+	--
+	-- 		vim.schedule(function()
+	-- 			vim.cmd("w")
+	-- 		end)
+	-- 	end,
+	-- })
 	-- warning : very hacky
 	-- autocmd("BufAdd", {
 	-- group=mySetting,

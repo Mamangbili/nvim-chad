@@ -357,6 +357,28 @@ local function setup()
 				vim.api.nvim_buf_delete(curr_buf_id, { force = true })
 			end
 		end
+		-- Defer execution slightly to allow the buffer list to update accurately
+		vim.schedule(function()
+			-- Get all active LSP clients
+			local active_clients = vim.lsp.get_clients()
+
+			for _, client in ipairs(active_clients) do
+				-- Check if the client is attached to any remaining buffers
+				local has_attached_buffers = false
+				for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+					if vim.api.nvim_buf_is_loaded(buf) and vim.lsp.buf_is_attached(buf, client.id) then
+						has_attached_buffers = true
+						break
+					end
+				end
+
+				-- If the client has no buffers left, stop it
+				if not has_attached_buffers then
+					vim.notify("Stopping orphan LSP client: " .. client.name, vim.log.levels.INFO)
+					client.stop()
+				end
+			end
+		end)
 	end, {})
 
 	vim.api.nvim_create_user_command("BufJumpNext", function()

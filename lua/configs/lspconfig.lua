@@ -27,6 +27,8 @@ nvlsp.capabilities.textDocument.foldingRange = {
 local capabilities = nvlsp.capabilities
 capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true
 
+vim.diagnostic.config({ update_in_insert = true })
+
 -- use this syntax for newer lspconfig
 vim.lsp.enable(servers)
 vim.lsp.config("*", {
@@ -36,6 +38,7 @@ vim.lsp.config("*", {
 })
 
 vim.lsp.config.clangd = {
+	root_dir = require("lspconfig.util").root_pattern(".git", "main.odin"),
 	init_options = {
 		fallbackFlags = { "-std=c++23" },
 	},
@@ -44,7 +47,7 @@ vim.lsp.config.clangd = {
 vim.lsp.config.ols = {
 	settings = {
 		enable_checker_only_saved = false,
-		checker_args = "-strict-style",
+		struct_fields_underscore_visibility = "file",
 	},
 }
 

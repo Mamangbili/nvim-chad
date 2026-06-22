@@ -36,7 +36,7 @@ unmap("n", "<leader>th")
 unmap("n", "<leader>fo")
 
 remap("n", "<leader>fo", "<Cmd>Telescope hierarchy outgoing_calls<Cr>", { desc = "outgoing call ", noremap = true })
-remap("n", "<leader>ft", "<Cmd>Telescope tags<Cr>", { desc = "outgoing call ", noremap = true })
+remap("n", "<leader>ft", "<Cmd>Telescope treesitter<Cr>", { desc = "outgoing call ", noremap = true })
 
 remap("n", "t", function()
 	require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
