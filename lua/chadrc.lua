@@ -17,6 +17,19 @@ M.base46 = {
 		["@lsp.typemod.class.constructorOrDestructor.cpp"] = { fg = "#9e9e41", bold = true },
 	},
 	hl_override = {
+		DiffAdd = { bg = "#457341" },
+		DiffRemoved = { bg = "#c23232" },
+		DiffDelete = { bg = "#c23232" },
+		LineNr = { fg = "#6d7d72" },
+		TelescopeSelection = {
+			bg = "#424141",
+		},
+		CursorLine = {
+			bg = "#424141",
+		},
+		Visual = {
+			bg = "#424141",
+		},
 		["snack.pciker.list"] = { fg = "red" },
 		["LspSignatureActiveParameter"] = {
 			underline = true,
