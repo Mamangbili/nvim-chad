@@ -177,6 +177,7 @@ end
 
 ---@class WinList
 ---@field [integer] Win
+---@field active_win number
 local win_list = {}
 
 function win_list:buf_exist_in_atleast_one_win(bufid)
@@ -213,6 +214,13 @@ function win_list:remove(winid)
 	local winids = self:get_ids()
 	local win_i = find_index(winids, winid)
 	table.remove(self, win_i)
+end
+
+function win_list:set_active_win(winid)
+	if vim.api.nvim_win_is_valid(winid) then
+		win_list.active_win = winid
+	end
+	print("win is not valid")
 end
 
 local function jump_prev(winid, bufid)
@@ -261,6 +269,49 @@ local function jump_next(winid, bufid)
 		end
 	end
 	vim.notify("No newer jump found in this buffer", vim.log.levels.WARN, { timeout = 800 })
+end
+
+--- comment
+--- @param winlist WinList
+--- @param curr_bufid number
+--- @param target_bufid number
+--- @param target_winid number
+local function rearrage_buffer(winlist, curr_bufid, target_bufid, target_winid)
+	local curr_win = winlist:get_current_win()
+	if curr_win:contain(target_bufid) and winlist:get_current_win() == target_winid then
+		return
+	end
+
+	local curr_bufid_idx = find_index(winlist:get_current_win().buffer_list, curr_bufid)
+	if curr_bufid_idx == #winlist:get_current_win().buffer_list then
+		return
+	end
+
+	if #winlist:get_current_win().buffer_list <= 2 then
+		return
+	end
+
+	-- swap
+	local bufid_list = curr_win:buffer_list()
+	local last_bufids = { curr_bufid, target_bufid }
+	local target_idx = find_index(bufid_list, target_bufid)
+
+	local ids_right_side_of_target = slice(bufid_list, target_idx)
+	reverse_inplace(ids_right_side_of_target)
+	local ids_left_side_of_target = slice(bufid_list, 0, target_bufid)
+
+	-- remove any duplicate target id and current id
+	table.remove(ids_left_side_of_target, target_bufid)
+	table.remove(ids_left_side_of_target, curr_bufid)
+	table.remove(ids_right_side_of_target, target_bufid)
+	table.remove(ids_right_side_of_target, curr_bufid)
+
+	-- final form = left + right + last
+	local result = ids_left_side_of_target + ids_right_side_of_target + last_bufids
+
+	curr_win.buffer_list = result
+	curr_win.current_buf_pos = #result
+	curr_win.sync_state(curr_win)
 end
 
 local function setup()
@@ -315,6 +366,25 @@ local function setup()
 			if curr_win and require("utils").is_normal_buffer(args.buf) then
 				curr_win:add(args.buf)
 			end
+		end,
+	})
+
+	vim.api.nvim_create_autocmd("BufEnter", {
+		callback = function()
+			local win = win_list:get_current_win()
+			if win == nil then
+				return
+			end
+
+			local curr_buf = vim.api.nvim_get_current_buf()
+			if not win:contain(curr_buf) then
+				win:add(curr_buf)
+			end
+
+			local curr_bufid_idx = find_index(win.buffer_list, curr_buf)
+			win.current_buf_pos = curr_bufid_idx
+			win.current_position = curr_bufid_idx
+			win:sync_state()
 		end,
 	})
 
@@ -413,6 +483,18 @@ local function setup()
 		print(buffids)
 		print("current buf id :" .. curr_win:get_current_buf_id())
 	end, {})
+
+	-- vim.api.nvim_create_autocmd("BufEnter", {
+	-- 	callback = function(args)
+	-- 		if utils.is_normal_buffer(args.buf) then
+	-- 			local win = win_list:get_current_win()
+	-- 			local curr_buf_id = win:get_current_buf_id()
+	-- 			local target_bufid = args.buf
+	-- 			local target_winid = vim.api.nvim_get_current_win()
+	-- 			already_open(win_list, curr_buf_id, target_bufid, target_winid)
+	-- 		end
+	-- 	end,
+	-- })
 
 	vim.api.nvim_create_user_command("BufDebugJumpList", function()
 		local win = win_list:get_current_win()

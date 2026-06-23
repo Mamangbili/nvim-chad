@@ -15,11 +15,13 @@ M.base46 = {
 		["@tag.builtin.tsx"] = { fg = "#0885c4" },
 		["@lsp.type.macro.cpp"] = { fg = "NONE" },
 		["@lsp.typemod.class.constructorOrDestructor.cpp"] = { fg = "#9e9e41", bold = true },
+		NeogitDiffDeleteInline = { bg = "" },
+		NeogitDiffAddInline = { bg = "" },
 	},
 	hl_override = {
-		DiffAdd = { bg = "#457341" },
-		DiffRemoved = { bg = "#c23232" },
-		DiffDelete = { bg = "#c23232" },
+		DiffAdd = { bg = "#006614" },
+		DiffRemoved = { bg = "#491204" },
+		DiffDelete = { bg = "#491204" },
 		LineNr = { fg = "#6d7d72" },
 		TelescopeSelection = {
 			bg = "#424141",

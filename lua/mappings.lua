@@ -55,8 +55,9 @@ remap("n", "<leader>t", function()
 	vim.cmd("NvimTreeToggle")
 end, { desc = "nvimtree toggle window" })
 
-remap("i", "jk", "<ESC>")
-
+remap("i", "jk", "<Esc>`^")
+remap("n", "O", "O<Space><BS>")
+remap("n", "o", "o<Space><BS>")
 -- remap("n", "<leader>q", function()
 -- 	u.Close_buffer()
 -- end, { desc = "close buffer/diff" })

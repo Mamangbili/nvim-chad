@@ -86,30 +86,30 @@ M.setup = function()
 		end,
 	})
 
-	local start = os.time()
-	autocmd({ "TextChanged", "InsertLeave" }, {
-		group = mySetting,
-		pattern = "*",
-		callback = function(args)
-			local deltaTime = os.time() - start
-			deltaTime = deltaTime
-			local sec = 7
-			if deltaTime > sec then
-				vim.cmd("silent! write")
-				local ok, notify = pcall(require, "notify")
-
-				if not ok then
-					print("Auto-saved at " .. os.date("%H:%M:%S"))
-				else
-					notify("💾 Auto-saved at " .. os.date("%H:%M:%S"), "info", {
-						title = "Auto-save",
-						timeout = 1000, -- 1 second
-					})
-				end
-				start = os.time()
-			end
-		end,
-	})
+	-- local start = os.time()
+	-- autocmd({ "TextChanged", "InsertLeave" }, {
+	-- 	group = mySetting,
+	-- 	pattern = "*",
+	-- 	callback = function(args)
+	-- 		local deltaTime = os.time() - start
+	-- 		deltaTime = deltaTime
+	-- 		local sec = 7
+	-- 		if deltaTime > sec then
+	-- 			vim.cmd("silent! write")
+	-- 			local ok, notify = pcall(require, "notify")
+	--
+	-- 			if not ok then
+	-- 				print("Auto-saved at " .. os.date("%H:%M:%S"))
+	-- 			else
+	-- 				notify("💾 Auto-saved at " .. os.date("%H:%M:%S"), "info", {
+	-- 					title = "Auto-save",
+	-- 					timeout = 1000, -- 1 second
+	-- 				})
+	-- 			end
+	-- 			start = os.time()
+	-- 		end
+	-- 	end,
+	-- })
 
 	-- Close quickfix window after jumping to location
 	autocmd("FileType", {
@@ -184,14 +184,14 @@ M.setup = function()
 		return "a"
 	end, { expr = true, noremap = true })
 
-	autocmd("InsertLeave", {
-		group = mySetting,
-		callback = function()
-			if trigger_key == "i" then
-				vim.cmd("normal! l")
-			end
-		end,
-	})
+	-- autocmd("InsertLeave", {
+	-- 	group = mySetting,
+	-- 	callback = function()
+	-- 		if trigger_key == "i" then
+	-- 			vim.cmd("normal! l")
+	-- 		end
+	-- 	end,
+	-- })
 
 	autocmd("VimEnter", {
 		group = mySetting,
@@ -288,6 +288,7 @@ M.setup = function()
 		end,
 		desc = "Disable focus autoresize for FileType",
 	})
+
 	-- local odin_lsp_group = vim.api.nvim_create_augroup("OdinLSPFirstOpen", { clear = true })
 	--
 	-- vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
