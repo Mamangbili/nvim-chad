@@ -21,7 +21,9 @@ local options = {
 		odinfmt = {
 			-- Change where to find the command if it isn't in your path.
 			command = "odinfmt",
-			args = { "-stdin" },
+			args = {
+				"-stdin",
+			},
 			stdin = true,
 		},
 		clang_format = {

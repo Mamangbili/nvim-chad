@@ -496,6 +496,18 @@ local function setup()
 	-- 	end,
 	-- })
 
+	vim.api.nvim_create_user_command("BufDeleteOthers", function()
+		local win = win_list:get_current_win()
+		local curr_buf = win:get_current_buf_id()
+
+		if #win.buffer_list > 1 then
+			win.buffer_list = { curr_buf }
+			win.current_buf_pos = 1
+			win.current_position = 1
+			win:sync_state()
+		end
+	end, {})
+
 	vim.api.nvim_create_user_command("BufDebugJumpList", function()
 		local win = win_list:get_current_win()
 		local curr_buf_id = win:get_current_buf_id()

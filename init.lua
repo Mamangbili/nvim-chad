@@ -6,7 +6,6 @@ if vim.loader then
 end
 vim.o.shada = "!,'100,<50,s10,h"
 
-
 -- if windows
 if vim.loop.os_uname().sysname == "Windows_NT" then
 	vim.g._jukit_python_os_cmd = "python"
@@ -23,7 +22,7 @@ else
 	vim.o.termguicolors = true
 end
 
-vim.opt.conceallevel = 1
+vim.opt.conceallevel = 3
 vim.o.cmdheight = 0
 vim.o.clipboard = "unnamedplus"
 vim.opt.number = true

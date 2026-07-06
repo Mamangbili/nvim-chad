@@ -56,6 +56,24 @@ local function ensure_dir(path)
 end
 return {
 	{
+		"stevearc/aerial.nvim",
+		opts = {},
+		event = "VeryLazy",
+		-- Optional dependencies
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter",
+			"nvim-tree/nvim-web-devicons",
+		},
+
+		config = function()
+			require("aerial").setup({
+				on_attach = function(bufnr)
+					vim.keymap.set("n", "<leader>ni", "<cmd>AerialToggle<CR>", { buffer = bufnr })
+				end,
+			})
+		end,
+	},
+	{
 		"lervag/vimtex",
 		lazy = false, -- we don't want to lazy load VimTeX
 		-- tag = "v2.15", -- uncomment to pin to a specific release
@@ -250,6 +268,7 @@ return {
 
 	{
 		"CopilotC-Nvim/CopilotChat.nvim",
+		enable = false,
 		dependencies = {
 			{ "nvim-lua/plenary.nvim", branch = "master" },
 			"github/copilot.vim",
@@ -558,24 +577,6 @@ return {
 	},
 
 	{
-		"luckasRanarison/nvim-devdocs",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-telescope/telescope.nvim",
-			"nvim-treesitter/nvim-treesitter",
-		},
-		opts = {},
-		cmd = {
-			"DevdocsInstall",
-			"DevdocsSearch",
-			"DevdocsOpen",
-			"DevdocsFetchs",
-			"DevdocsKeywordprg",
-			"DevdocsKeywordprgs",
-		},
-	},
-
-	{
 		"rachartier/tiny-inline-diagnostic.nvim",
 		event = "LspAttach",
 		priority = 1000,
@@ -683,7 +684,7 @@ return {
 
 	{
 		"nvim-focus/focus.nvim",
-		-- enabled = false,
+		enabled = false,
 		version = false,
 		event = "CursorMoved",
 		config = function()
@@ -740,6 +741,7 @@ return {
 
 	{
 		"github/copilot.vim",
+		enabled = false,
 	},
 
 	{
@@ -1814,7 +1816,6 @@ return {
 		},
 		config = function(_, opts)
 			require("obsidian").setup(opts)
-			vim.g.enable_render_markdown = false
 		end,
 	},
 
@@ -1840,18 +1841,11 @@ return {
 		dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.nvim" }, -- if you use the mini.nvim suite
 		---@module 'render-markdown'
 		opts = {
-			link = {
-				wiki = {
-					icon = " ",
-					body = function()
-						return nil
-					end,
-					highlight = "RenderMarkdownWikiLink",
-					scope_highlight = nil,
-				},
+			anti_conceal = {
+				enabled = false, -- Turns off anti-conceal entirely so it stays rendered
 			},
+			code = { highlight = "Visual" },
 		},
-		cmd = { "DevdocsOpen", "DevdocsOpenCurrent", "DevdocsKeywordprgs" },
 		ft = "markdown",
 		-- event = "VeryLazy",
 	},

@@ -17,6 +17,7 @@ M.base46 = {
 		["@lsp.typemod.class.constructorOrDestructor.cpp"] = { fg = "#9e9e41", bold = true },
 		NeogitDiffDeleteInline = { bg = "" },
 		NeogitDiffAddInline = { bg = "" },
+		["OdinProcLine"] = { bg = "#2b303c" },
 	},
 	hl_override = {
 		DiffAdd = { bg = "#006614" },
@@ -130,4 +131,47 @@ M.term = {
 
 M.plugin = {}
 
+local ns_id = vim.api.nvim_create_namespace("odin_proc_lines")
+
+local function highlight_odin_procedures(bufnr)
+	bufnr = bufnr or vim.api.nvim_get_current_buf()
+	vim.api.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
+
+	local ok, parser = pcall(vim.treesitter.get_parser, bufnr, "odin")
+	if not ok or not parser then
+		return
+	end
+
+	local tree = parser:parse()[1]
+	local root = tree:root()
+
+	-- Target the actual 'procedure' token inside the declaration block
+	local query = vim.treesitter.query.parse(
+		"odin",
+		[[
+    (procedure_declaration (procedure) @proc_token)
+  ]]
+	)
+
+	for id, node, _ in query:iter_captures(root, bufnr, 0, -1) do
+		if query.captures[id] == "proc_token" then
+			-- This will get the row where 'proc "contextless"' is written
+			local start_row, _, _, _ = node:range()
+
+			-- Highlight that specific line all the way across the screen
+			vim.api.nvim_buf_set_extmark(bufnr, ns_id, start_row, 0, {
+				line_hl_group = "OdinProcLine",
+				priority = 10,
+			})
+		end
+	end
+end
+
+-- Re-trigger whenever the file is loaded or changed
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "TextChanged" }, {
+	pattern = "*.odin",
+	callback = function(ev)
+		highlight_odin_procedures(ev.buf)
+	end,
+})
 return M

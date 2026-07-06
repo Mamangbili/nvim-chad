@@ -61,7 +61,7 @@
   "powershell.nvim": { "branch": "main", "commit": "3ac437e45ff54bb4c0ce64ff044cd0c47e396a25" },
   "promise-async": { "branch": "main", "commit": "119e8961014c9bfaf1487bf3c2a393d254f337e2" },
   "refactoring.nvim": { "branch": "develop", "commit": "6018e9325546950a92a3a518b6d1ae88b8c6a9af" },
-  "render-markdown.nvim": { "branch": "main", "commit": "629eb9533ec989d9d5c6cab8f3ad5372422c24e0" },
+  "render-markdown.nvim": { "branch": "main", "commit": "f422cb5c6855f150e2ddcfaf44e7157b98b34f6a" },
   "simpleCppTreesitterTools.nvim": { "branch": "main", "commit": "6c57b478dac61c4e9940482cc4dafebd22fadcb4" },
   "smear-cursor.nvim": { "branch": "main", "commit": "9e9378d6ee34bb3782e0e8c63d9ec8ca618b479b" },
   "snacks.nvim": { "branch": "main", "commit": "ad9ede6a9cddf16cedbd31b8932d6dcdee9b716e" },
