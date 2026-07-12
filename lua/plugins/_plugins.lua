@@ -1529,6 +1529,7 @@ return {
 
 	{
 		"folke/noice.nvim",
+		-- enabled = false,
 		event = "VeryLazy",
 		dependencies = {
 			"MunifTanjim/nui.nvim",
@@ -1852,6 +1853,7 @@ return {
 
 	{
 		"sphamba/smear-cursor.nvim",
+		enabled = false,
 		event = "CursorMoved",
 		opts = {
 			stiffness = 0.8,
@@ -1862,7 +1864,7 @@ return {
 
 	{
 		"folke/snacks.nvim",
-		-- enable = false,
+		enabled = false,
 		priority = 1000,
 		depedencies = {
 			"nvim-treesitter/nvim-treesitter",

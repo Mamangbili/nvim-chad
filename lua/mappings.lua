@@ -32,7 +32,16 @@ local function open_definition_on_new_sp_window()
 	vim.api.nvim_win_set_cursor(0, { cursor_row, cursor_column })
 	vim.lsp.buf.definition()
 end
+local terms = vim.g.nvchad_terms or {}
 
+for key, term in pairs(terms) do
+	if term.id == "floatTerm" then
+		if not (term.buf and vim.api.nvim_buf_is_valid(term.buf)) then
+			terms[key] = nil
+		end
+		break
+	end
+end
 -- =============================================================================
 -- WHICH-KEY MAPPINGS CONFIGURATION
 -- =============================================================================
@@ -81,7 +90,22 @@ whichkey.add({
 
 	-- Leader r (Refactor / Rename / Replace)
 	{ "<leader>ra", vim.lsp.buf.rename, desc = "lsp rename", mode = "n" },
-	{ "<leader>rr", ":.,$s/", desc = "substitute until end", mode = "n" },
+	{
+		"<leader>rr",
+		function()
+			vim.fn.feedkeys(":.,$s/\\v", "n")
+		end,
+		desc = "substitute until end",
+		mode = { "n" },
+	},
+	{
+		"<leader>rr",
+		function()
+			vim.fn.feedkeys(":s/\\v", "n")
+		end,
+		desc = "substitute block",
+		mode = { "x" },
+	},
 	{
 		"<leader>rf",
 		function()
@@ -121,7 +145,6 @@ whichkey.add({
 
 	-- Terminal Mode Maps
 	{ "<F9>", require("nvchad.tabufline").close_buffer, desc = "terminal toggle floating term", mode = "t" },
-	{ "<leader><Esc>", "<C-\\><C-N>", desc = "terminal escape terminal mode", mode = "t" },
 
 	-- Hybrid Modes (Alt/Ctrl binds across multiple modes)
 	{ "<A-t>", "<cmd>terminal<CR>", desc = "enter terminal mode", mode = { "n", "i" } },

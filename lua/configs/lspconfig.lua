@@ -5,7 +5,7 @@ local servers = {
 	"html",
 	"cssls",
 	"yamlls",
-	"glsl_analyzer",
+	-- "glsl_analyzer",
 	"rust_analyzer",
 	"gopls",
 	"elixirls",
@@ -16,6 +16,7 @@ local servers = {
 	"powershell_es",
 	"tailwindcss",
 	"ols",
+	"glsl_analyzer",
 }
 local nvlsp = require("nvchad.configs.lspconfig")
 

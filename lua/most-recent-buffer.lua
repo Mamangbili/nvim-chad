@@ -101,6 +101,9 @@ function Win:contain(bufferid)
 end
 
 function Win:get_current_buf_id()
+	if #self.buffer_list == 0 then
+		return nil
+	end
 	return self.buffer_list[self.current_buf_pos]
 end
 
@@ -347,7 +350,11 @@ local function setup()
 				win_list:remove(current_win_id)
 
 				for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-					if not win_list:buf_exist_in_atleast_one_win(buf) and vim.api.nvim_buf_is_valid(buf) then
+					if
+						vim.api.nvim_buf_is_valid(buf)
+						and utils.is_normal_buffer(buf)
+						and not win_list:buf_exist_in_atleast_one_win(buf)
+					then
 						vim.api.nvim_buf_delete(buf, { force = true })
 					end
 				end
@@ -370,20 +377,23 @@ local function setup()
 	})
 
 	vim.api.nvim_create_autocmd("BufEnter", {
-		callback = function()
+		callback = function(args)
+			if not utils.is_normal_buffer(args.buf) then
+				return
+			end
+
 			local win = win_list:get_current_win()
 			if win == nil then
 				return
 			end
 
-			local curr_buf = vim.api.nvim_get_current_buf()
-			if not win:contain(curr_buf) then
-				win:add(curr_buf)
+			if not win:contain(args.buf) then
+				win:add(args.buf)
 			end
 
-			local curr_bufid_idx = find_index(win.buffer_list, curr_buf)
-			win.current_buf_pos = curr_bufid_idx
-			win.current_position = curr_bufid_idx
+			local idx = find_index(win.buffer_list, args.buf)
+			win.current_buf_pos = idx
+			win.current_position = idx
 			win:sync_state()
 		end,
 	})
@@ -406,6 +416,10 @@ local function setup()
 
 	vim.api.nvim_create_user_command("BufDelete", function()
 		local curr_win = win_list:get_current_win()
+		if curr_win == nil then
+			vim.cmd("q")
+			return
+		end
 		local curr_buf_id = curr_win:get_current_buf_id()
 
 		if is_empty_buf(curr_win.buffer_list[curr_win.current_position]) and #curr_win.buffer_list == 1 then
@@ -499,6 +513,9 @@ local function setup()
 	vim.api.nvim_create_user_command("BufDeleteOthers", function()
 		local win = win_list:get_current_win()
 		local curr_buf = win:get_current_buf_id()
+		if curr_buf == nil then
+			return
+		end
 
 		if #win.buffer_list > 1 then
 			win.buffer_list = { curr_buf }
