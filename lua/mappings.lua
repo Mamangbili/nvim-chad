@@ -42,6 +42,10 @@ for key, term in pairs(terms) do
 		break
 	end
 end
+
+vim.keymap.set({ "n", "x" }, "d", '"_d')
+vim.keymap.set("n", "D", "dd")
+vim.keymap.set("x", "D", "d")
 -- =============================================================================
 -- WHICH-KEY MAPPINGS CONFIGURATION
 -- =============================================================================

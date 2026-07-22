@@ -56,6 +56,14 @@ local function ensure_dir(path)
 end
 return {
 	{
+		"nvim-mini/mini.splitjoin",
+		event = "VeryLazy",
+		version = "*",
+		config = function()
+			require("mini.splitjoin").setup()
+		end,
+	},
+	{
 		"stevearc/aerial.nvim",
 		opts = {},
 		event = "VeryLazy",

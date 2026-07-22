@@ -92,4 +92,7 @@ require("autocmd").setup()
 require("usercmd").setup()
 require("most-recent-buffer").setup()
 
+require("luasnip.loaders.from_lua").load({
+	paths = vim.fn.stdpath("config") .. "/lua/snippets",
+})
 vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#515151", bg = "NONE", bold = true })
