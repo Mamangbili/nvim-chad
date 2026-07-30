@@ -1,3 +1,19 @@
+vim.api.nvim_create_autocmd("BufWritePre", {
+	pattern = "*.odin",
+	callback = function()
+		local bufnr = vim.api.nvim_get_current_buf()
+		local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+		for i, line in ipairs(lines) do
+			local new_line = line:gsub("%s*::%s*", " :: ")
+			if new_line ~= line then
+				-- Update only the line that actually changed
+				vim.api.nvim_buf_set_lines(bufnr, i - 1, i, false, { new_line })
+			end
+		end
+	end,
+})
+
 -- check if .clangd-format exist
 local function clangd_format_exists_in_root()
 	local cwd = vim.fn.getcwd()

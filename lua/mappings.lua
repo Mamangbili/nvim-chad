@@ -43,9 +43,15 @@ for key, term in pairs(terms) do
 	end
 end
 
+-- do not put in which key
 vim.keymap.set({ "n", "x" }, "d", '"_d')
 vim.keymap.set("n", "D", "dd")
 vim.keymap.set("x", "D", "d")
+
+vim.g.VM_Maps = {
+	["Transpose"] = "leader-T",
+}
+
 -- =============================================================================
 -- WHICH-KEY MAPPINGS CONFIGURATION
 -- =============================================================================
@@ -171,8 +177,8 @@ whichkey.add({
 		mode = { "n", "t" },
 	},
 
-	{ "<C-u>", "10<C-y>", desc = "scroll up", mode = { "n", "v", "t" } },
-	{ "<C-d>", "10<C-e>", desc = "scroll down", mode = { "n", "v", "t" } },
+	{ "<C-u>", "15<C-y>", desc = "scroll up", mode = { "n", "v", "t" } },
+	{ "<C-d>", "15<C-e>", desc = "scroll down", mode = { "n", "v", "t" } },
 
 	-- Global 'g' Shortcuts
 	{ "gvd", open_definition_on_new_vsp_window, desc = "open definition on new vsp window", mode = "n" },
@@ -182,6 +188,7 @@ whichkey.add({
 	{ "gD", vim.lsp.buf.declaration, desc = "lsp declaration", mode = "n" },
 
 	-- Navigation & Editing Adjustments
+
 	{
 		"t",
 		function()

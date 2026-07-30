@@ -13,7 +13,7 @@ return {
 		t({ "", "}" }),
 	}),
 
-	s("union", {
+	s("uni", {
 		i(1, "Name"),
 		t(" :: union {"),
 		t({ "", "\t" }),

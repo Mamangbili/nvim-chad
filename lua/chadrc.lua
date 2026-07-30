@@ -4,7 +4,6 @@
 
 ---@type ChadrcConfig
 local M = {}
-
 M.base46 = {
 	theme = "vscode_dark",
 	transparency = true,
@@ -15,12 +14,20 @@ M.base46 = {
 		["@tag.builtin.tsx"] = { fg = "#0885c4" },
 		["@lsp.type.macro.cpp"] = { fg = "NONE" },
 		["@lsp.typemod.class.constructorOrDestructor.cpp"] = { fg = "#9e9e41", bold = true },
-		NeogitDiffDeleteInline = { bg = "" },
-		NeogitDiffAddInline = { bg = "" },
+		NeogitDiffDeleteInline = { bg = "#491204" },
+		NeogitDiffAddInline = { bg = "#006614" },
+
+		NeogitDiffDelete = { bg = "#491204" },
+		NeogitDiffAdd = { bg = "#006614" },
+		DiffRemoved = { bg = "#491204" },
+		DiffDelete = { bg = "#491204" },
+
 		["OdinProcLine"] = { bg = "#2b303c" },
 	},
 	hl_override = {
-		DiffAdd = { bg = "#006614" },
+		NeogitDiffDelete = { bg = "#491204" },
+
+		Folded = { link = "NONE" },
 		DiffRemoved = { bg = "#491204" },
 		DiffDelete = { bg = "#491204" },
 		LineNr = { fg = "#6d7d72" },
@@ -172,6 +179,28 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "TextChanged" }, {
 	pattern = "*.odin",
 	callback = function(ev)
 		highlight_odin_procedures(ev.buf)
+	end,
+})
+
+-- Create an autocommand group
+local cmdline_bg_group = vim.api.nvim_create_augroup("CmdlineBgHighlight", { clear = true })
+
+local cmd_bg = "#2d3139"
+local cmd_fg = "#ffffff"
+
+vim.api.nvim_create_autocmd("CmdlineEnter", {
+	group = cmdline_bg_group,
+	callback = function()
+		vim.api.nvim_set_hl(0, "MsgArea", { bg = cmd_bg, fg = cmd_fg })
+		vim.cmd("redraw")
+	end,
+})
+
+vim.api.nvim_create_autocmd("CmdlineLeave", {
+	group = cmdline_bg_group,
+	callback = function()
+		-- Reset MsgArea back to default background
+		vim.api.nvim_set_hl(0, "MsgArea", { link = "Normal" })
 	end,
 })
 return M

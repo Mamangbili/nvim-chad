@@ -1,6 +1,19 @@
 local keys = {}
 
 for level = 0, 9 do
+	vim.keymap.set("n", "z" .. level .. "c", function()
+		vim.wo.foldlevel = level
+	end, { desc = "Set fold level " .. level })
+
+	vim.keymap.set("n", "z" .. level .. "o", function()
+		vim.wo.foldlevel = 99
+	end, { desc = "Open all folds" })
+end
+
+vim.keymap.set("n", "zM", "zM", { remap = true, desc = "Close all folds" })
+vim.keymap.set("n", "zR", "zR", { remap = true, desc = "Open all folds" })
+
+for level = 0, 9 do
 	table.insert(keys, {
 		"z" .. level .. "c",
 		function()
@@ -66,7 +79,6 @@ return {
 	{
 		"stevearc/aerial.nvim",
 		opts = {},
-		event = "VeryLazy",
 		-- Optional dependencies
 		dependencies = {
 			"nvim-treesitter/nvim-treesitter",
@@ -80,9 +92,13 @@ return {
 				end,
 			})
 		end,
+		keys = {
+			{ "<leader>ni", desc = "toggle aerial" },
+		},
 	},
 	{
 		"lervag/vimtex",
+		enabled = false,
 		lazy = false, -- we don't want to lazy load VimTeX
 		-- tag = "v2.15", -- uncomment to pin to a specific release
 		init = function()
@@ -197,9 +213,15 @@ return {
 
 	{
 		"hrsh7th/nvim-cmp",
+		-- enabled = false,
+		event = "VeryLazy",
 		opts = function(_, opts)
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
+
+			require("luasnip.loaders.from_lua").load({
+				paths = vim.fn.stdpath("config") .. "/lua/snippets",
+			})
 
 			-- Assign the new mappings to the opts table
 			opts.mapping = cmp.mapping.preset.insert({
@@ -342,6 +364,10 @@ return {
 		config = function(_, _)
 			local dap = require("dap")
 			local opts = {
+				windows = {
+					size = 0.5,
+					position = "right",
+				},
 				winbar = {
 					show = true,
 					sections = {
@@ -401,6 +427,7 @@ return {
 
 	{
 		"mfussenegger/nvim-dap",
+		event = "VeryLazy",
 		cmd = { "DapContinue", "DapToggleBreakpoint" },
 		dependencies = {
 			"igorlfs/nvim-dap-view",
@@ -408,7 +435,7 @@ return {
 			"igorlfs/nvim-dap-view",
 			"Jorenar/nvim-dap-disasm",
 		},
-		config = function(_, opts)
+		config = function()
 			local adapter_path = vim.fn.stdpath("data")
 			local debugger_path = {
 				debugpy = vim.fs.joinpath(
@@ -506,7 +533,20 @@ return {
 					sourceLanguages = { "cpp" },
 				},
 			}
-
+			dap.configurations.odin = {
+				{
+					name = "Launch file (codelldb)",
+					type = "codelldb",
+					request = "launch",
+					program = function()
+						return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "\\", "file")
+					end,
+					cwd = "${workspaceFolder}",
+					stopOnEntry = false,
+					args = {},
+					sourceLanguages = { "odin" },
+				},
+			}
 			dap.adapters.debugpy = {
 				type = "executable",
 				command = debugger_path.debugpy,
@@ -554,15 +594,33 @@ return {
 			vim.api.nvim_set_hl(0, "green", { fg = "#9ece6a" })
 			vim.api.nvim_set_hl(0, "yellow", { fg = "#FFFF00" })
 			vim.api.nvim_set_hl(0, "orange", { fg = "#f09000" })
-		end,
-		init = function()
-			-- local dap = require "dap"
-			-- vim.keymap.set("n", "<leader>db", function()
-			--     dap.toggle_breakpoint()
-			-- end, { desc = "Toggle breakpoint" })
-			-- vim.keymap.set("n", "<leader>dc", function()
-			--     dap.continue()
-			-- end, { desc = "dap Continue" })
+
+			-- hack for unmap flash and mini.surround S<char>
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = { "dap-view", "dap-view-scopes" },
+				callback = function(args)
+					vim.schedule(function()
+						-- Find dap-view's built-in callback for "S" in normal mode
+						local original_rhs = nil
+						for _, map in ipairs(vim.api.nvim_buf_get_keymap(args.buf, "n")) do
+							if map.lhs == "S" then
+								original_rhs = map.rhs or map.callback
+								break
+							end
+						end
+
+						-- If found, re-set it with nowait = true
+						if original_rhs then
+							vim.keymap.set("n", "S", original_rhs, {
+								buffer = args.buf,
+								nowait = true, -- Fires S immediately, ignoring global Sr, Sd, Sa, St
+								silent = true,
+								desc = "Jump to Scopes (nowait)",
+							})
+						end
+					end)
+				end,
+			})
 		end,
 		keys = {
 			{
@@ -634,19 +692,18 @@ return {
 			})
 		end,
 	},
-
 	{
 		"folke/flash.nvim",
-		-- event = "VeryLazy",
-		config = function()
-			require("flash").setup()
-			vim.keymap.del("n", "t")
-			vim.keymap.set("n", "t", function()
-				require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
-			end, { desc = "Harpoon Menu", noremap = true })
-		end,
+		-- enabled=false,
+		-- Do NOT use event = "VeryLazy" here so opts applies immediately on load
+		opts = {
+			modes = {
+				char = {
+					enabled = false, -- Disables Flash char hooks completely
+				},
+			},
+		},
 		keys = {
-			{ "t", false },
 			{
 				"s",
 				mode = { "n", "x", "o" },
@@ -686,6 +743,14 @@ return {
 					require("flash").toggle()
 				end,
 				desc = "Toggle Flash Search",
+			},
+			{
+				"t",
+				mode = "n",
+				function()
+					require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
+				end,
+				desc = "Harpoon Menu",
 			},
 		},
 	},
@@ -769,6 +834,7 @@ return {
 
 	{
 		"kevinhwang91/nvim-ufo",
+		-- enabled = false,
 		event = "BufNew",
 		dependencies = {
 			"kevinhwang91/promise-async",
@@ -1111,7 +1177,7 @@ return {
 
 	{
 		"mg979/vim-visual-multi",
-		event = "CursorMoved",
+		event = "VeryLazy",
 		config = function()
 			vim.g.VM_maps["Undo"] = "u"
 			vim.g.VM_maps["Redo"] = "<C-r>"
@@ -1537,7 +1603,7 @@ return {
 
 	{
 		"folke/noice.nvim",
-		-- enabled = false,
+		enabled = false,
 		event = "VeryLazy",
 		dependencies = {
 			"MunifTanjim/nui.nvim",
@@ -1642,6 +1708,7 @@ return {
 
 	{
 		"nvim-tree/nvim-tree.lua",
+		event = "VeryLazy",
 		config = {
 			filters = {
 				custom = {
@@ -1838,14 +1905,6 @@ return {
 	},
 
 	{
-		"ThePrimeagen/refactoring.nvim",
-		dependencies = {
-			"lewis6991/async.nvim",
-		},
-		lazy = false,
-	},
-
-	{
 		"MeanderingProgrammer/render-markdown.nvim",
 		dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.nvim" }, -- if you use the mini.nvim suite
 		---@module 'render-markdown'
@@ -1861,8 +1920,8 @@ return {
 
 	{
 		"sphamba/smear-cursor.nvim",
-		enabled = false,
-		event = "CursorMoved",
+		-- enabled = false,
+		event = "VeryLazy",
 		opts = {
 			stiffness = 0.8,
 			trailing_stiffness_insert_mode = 0.7,
