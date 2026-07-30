@@ -510,6 +510,22 @@ return {
 				options = {
 					detached = false,
 				},
+				args = {
+					"--settings",
+					vim.json.encode({
+						showDisassembly = "never", -- Stops CodeLLDB from serving disassembly buffers
+					}),
+				},
+			}
+
+			dap.adapters.codelldb_disasm = {
+				id = "codelldb",
+				type = "executable",
+				command = debugger_path.codelldb,
+				options = {
+					detached = false,
+				},
+				args = {},
 			}
 			dap.adapters.cppdbg = {
 				id = "cppdbg",
@@ -521,7 +537,7 @@ return {
 			}
 			dap.configurations.cpp = {
 				{
-					name = "Launch file (codelldb)",
+					name = "codelldb without disasm",
 					type = "codelldb",
 					request = "launch",
 					program = function()
@@ -535,8 +551,20 @@ return {
 			}
 			dap.configurations.odin = {
 				{
-					name = "Launch file (codelldb)",
+					name = "codelldb without dissambly",
 					type = "codelldb",
+					request = "launch",
+					program = function()
+						return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "\\", "file")
+					end,
+					cwd = "${workspaceFolder}",
+					stopOnEntry = false,
+					args = {},
+					sourceLanguages = { "odin" },
+				},
+				{
+					name = "codelldb default",
+					type = "codelldb_disasm",
 					request = "launch",
 					program = function()
 						return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "\\", "file")
