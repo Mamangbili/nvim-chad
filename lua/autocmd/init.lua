@@ -18,6 +18,14 @@ M.setup = function()
 
 	autocmd("FileType", {
 		group = mySetting,
+		pattern = { "Oil" },
+		callback = function(ev)
+			vim.keymap.set("n", "q", require("oil").close)
+		end,
+	})
+
+	autocmd("FileType", {
+		group = mySetting,
 		pattern = { "cpp", "c", "h", "hpp", "cc" },
 		callback = function()
 			vim.keymap.set("n", "gf", vim.lsp.buf.code_action, { desc = "quick fix" })

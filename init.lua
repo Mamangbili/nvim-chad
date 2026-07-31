@@ -1,9 +1,7 @@
 vim.cmd([[
   cabbrev <expr> h ((getcmdtype() == ':' && getcmdline() ==# 'h') ? 'vert help' : 'h')
 ]])
-if vim.loader then
-	vim.loader.enable()
-end
+vim.loader.enable()
 vim.o.shada = "!,'100,<50,s10,h"
 
 -- if windows
@@ -22,6 +20,7 @@ else
 	vim.o.termguicolors = true
 end
 
+vim.o.winborder = "rounded"
 vim.opt.conceallevel = 3
 vim.o.cmdheight = 0
 vim.o.clipboard = "unnamedplus"

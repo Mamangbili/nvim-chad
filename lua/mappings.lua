@@ -70,7 +70,7 @@ whichkey.add({
 		"<leader>t",
 		function()
 			vim.cmd("CopilotChatClose")
-			vim.cmd("NvimTreeToggle")
+			vim.cmd("Neotree toggle")
 		end,
 		desc = "nvimtree toggle window",
 		mode = "n",

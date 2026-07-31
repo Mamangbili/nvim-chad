@@ -388,6 +388,8 @@ return {
 			local dapview = require("dap-view")
 			dapview.setup(opts)
 
+			vim.keymap.set("n", "<leader>dh", ":DapViewHover!<CR>")
+
 			dap.listeners.after.event_initialized["dapview_config"] = function()
 				dapview.open()
 			end
@@ -422,7 +424,7 @@ return {
 				end,
 			})
 		end,
-		-- event = "VeryLazy",
+		event = "VeryLazy",
 	},
 
 	{
@@ -1733,9 +1735,139 @@ return {
 			},
 		},
 	},
+	{
+		"nvim-neo-tree/neo-tree.nvim",
+		branch = "v3.x",
+		cmd = "Neotree",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-tree/nvim-web-devicons",
+			"MunifTanjim/nui.nvim",
+			{
+				"s1n7ax/nvim-window-picker",
+				version = "2.*",
+				opts = {
+					highlights = {
+						statusline = {
+							-- Focused window gets bright pink/red badge
+							focused = { fg = "#ffffff", bg = "#e06c75", bold = true },
+							-- Unfocused windows get bright blue badge
+							unfocused = { fg = "#000000", bg = "#61afef", bold = true },
+						},
+						-- Use the same high-contrast colors for winbar
+						winbar = {
+							focused = { fg = "#ffffff", bg = "#e06c75", bold = true },
+							unfocused = { fg = "#ffffff", bg = "#61afef", bold = true },
+						},
+					},
+					autoselect_one = true,
+					include_current = false,
+					filter_rules = {
+						bo = {
+							filetype = { "neo-tree", "neo-tree-popup", "notify", "quickfix" },
+							buftype = { "terminal", "quickfix" },
+						},
+					},
+				},
+			},
+		},
+		keys = {
+			{ "<leader>e", "<cmd>Neotree toggle float right<CR>", desc = "Toggle Neo-tree Float" },
+			{
+				"<leader>z",
+				function()
+					vim.cmd("Neotree close")
+					vim.cmd("CopilotChatToggle")
+				end,
+				mode = { "n", "v" },
+				desc = "copilot chat toggle",
+				noremap = true,
+			},
+			{
+				"<leader>q",
+				function()
+					if vim.bo.filetype == "copilot-chat" then
+						vim.cmd("CopilotChatClose")
+					elseif vim.bo.filetype == "neo-tree" then
+						vim.cmd("Neotree close")
+					else
+						vim.cmd("BufDelete")
+					end
+				end,
+				desc = "Smart Close",
+			},
+		},
+		opts = {
+			popup_border_style = "rounded",
+			use_default_mappings = true,
 
+			diagnostics = {
+				enable = true,
+				show_on_dirs = true,
+			},
+
+			filesystem = {
+				use_libuv_file_watcher = false,
+				async_directory_scan = "auto",
+				filtered_items = {
+					visible = true,
+					hide_dotfiles = false,
+					hide_gitignored = false,
+					hide_by_name = {
+						"dotfiles",
+						"node_modules",
+						"env",
+						"tmp",
+						"build",
+						"dist",
+						"vendor",
+						"builds",
+						"__pycache__",
+						"target",
+						"bin",
+						"obj",
+					},
+				},
+			},
+
+			window = {
+				position = "float",
+				popup = {
+					size = {
+						width = "40",
+						height = "30",
+					},
+					position = {
+						row = "1",
+						col = "100%",
+					},
+				},
+				mappings = {
+					-- Press <CR> or 'o' to trigger the window picker
+					["<CR>"] = "open_with_window_picker",
+					["o"] = "open_with_window_picker",
+					["s"] = "open_split",
+					["v"] = "open_vsplit",
+
+					-- Custom mapping for 'D' to bulk delete
+					["D"] = {
+						function(state)
+							local inputs = require("neo-tree.ui.inputs")
+							inputs.confirm("Are you sure you want to delete selected items?", function(confirmed)
+								if confirmed then
+									vim.cmd("Neotree action delete_visual")
+								end
+							end)
+						end,
+						desc = "hapus bulk di tree buffer",
+					},
+				},
+			},
+		},
+	},
 	{
 		"nvim-tree/nvim-tree.lua",
+		enabled = false,
 		event = "VeryLazy",
 		config = {
 			filters = {
@@ -1759,8 +1891,13 @@ return {
 				enable = false, -- enable = nvim tree leaks when cmake generate script
 			},
 			diagnostics = {
+				enable = true,
+				show_on_dirs = true,
+			},
+			git = { -- git causing nvim-tree slow
 				enable = false,
 				show_on_dirs = false,
+				show_on_open_dirs = false,
 			},
 			view = {
 				side = "right",
@@ -1770,7 +1907,7 @@ return {
 						relative = "editor",
 						border = "rounded",
 						width = 40,
-						height = 50,
+						height = 30,
 						row = 1,
 						col = vim.o.columns,
 					},
@@ -1792,7 +1929,6 @@ return {
 		dependencies = {
 			"nvim-tree/nvim-web-devicons",
 		},
-		cmd = { "NvimTreeToggle", "NvimTreeFocus", "NvimTreeOpen", "NvimTreeClose" },
 		keys = {
 			{
 				"<leader>z",
