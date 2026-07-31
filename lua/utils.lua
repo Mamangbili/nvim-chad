@@ -6,7 +6,9 @@ local function is_normal_buffer(buf)
 		and vim.api.nvim_buf_get_name(buf) ~= "" -- must have a file name
 end
 local function Close_window()
-	vim.cmd("q!")
+	local win = vim.api.nvim_get_current_win()
+	-- Parameter 2 set to `true` acts like `q!` (force close)
+	pcall(vim.api.nvim_win_close, win, true)
 end
 local function telescope_vsplit()
 	require("telescope.builtin").find_files({

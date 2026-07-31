@@ -1835,10 +1835,10 @@ return {
 				popup = {
 					size = {
 						width = "40",
-						height = "30",
+						height = "40",
 					},
 					position = {
-						row = "1",
+						row = "2",
 						col = "100%",
 					},
 				},
@@ -1848,6 +1848,8 @@ return {
 					["o"] = "open_with_window_picker",
 					["s"] = "open_split",
 					["v"] = "open_vsplit",
+					["?"] = "show_help",
+					["g?"] = "show_help",
 
 					-- Custom mapping for 'D' to bulk delete
 					["D"] = {

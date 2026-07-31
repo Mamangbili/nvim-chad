@@ -28,6 +28,20 @@ nvlsp.capabilities.textDocument.foldingRange = {
 local capabilities = nvlsp.capabilities
 capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true
 
+local orig = vim.lsp.handlers["textDocument/publishDiagnostics"]
+
+vim.lsp.handlers["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
+	if result and result.diagnostics then
+		for _, d in ipairs(result.diagnostics) do
+			if d.severity == vim.diagnostic.severity.WARN then
+				d.severity = vim.diagnostic.severity.ERROR
+			end
+		end
+	end
+
+	return orig(err, result, ctx, config)
+end
+
 vim.diagnostic.config({ update_in_insert = true })
 
 -- use this syntax for newer lspconfig
