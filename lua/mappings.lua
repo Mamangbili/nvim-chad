@@ -18,6 +18,7 @@ vim.defer_fn(function()
 end, 1000)
 unmap("n", "<leader>th")
 unmap("n", "<leader>fo")
+unmap("n", "<Tab>")
 
 -- Custom definition window helper function
 local function open_definition_on_new_vsp_window()
@@ -40,6 +41,34 @@ for key, term in pairs(terms) do
 			terms[key] = nil
 		end
 		break
+	end
+end
+
+local function bnext()
+	local current = vim.fn.bufnr()
+	local buffers = vim.fn.getbufinfo({ buflisted = 1 })
+
+	for i, buf in ipairs(buffers) do
+		if buf.bufnr == current then
+			if buffers[i + 1] then
+				vim.cmd("buffer " .. buffers[i + 1].bufnr)
+			end
+			return
+		end
+	end
+end
+
+local function bprev()
+	local current = vim.fn.bufnr()
+	local buffers = vim.fn.getbufinfo({ buflisted = 1 })
+
+	for i, buf in ipairs(buffers) do
+		if buf.bufnr == current then
+			if buffers[i - 1] then
+				vim.cmd("buffer " .. buffers[i - 1].bufnr)
+			end
+			return
+		end
 	end
 end
 
@@ -69,12 +98,29 @@ whichkey.add({
 	{
 		"<leader>t",
 		function()
-			vim.cmd("CopilotChatClose")
-			vim.cmd("Neotree toggle")
+			local Snacks = require("snacks")
+			local explorer_win = nil
+			for _, win in ipairs(vim.api.nvim_list_wins()) do
+				local buf = vim.api.nvim_win_get_buf(win)
+				if vim.bo[buf].filetype == "snacks_picker_list" then
+					explorer_win = win
+					break
+				end
+			end
+
+			if explorer_win and vim.api.nvim_get_current_win() == explorer_win then
+				vim.api.nvim_win_close(explorer_win, true)
+			elseif explorer_win then
+				vim.api.nvim_set_current_win(explorer_win)
+			else
+				Snacks.explorer({ focus = "list" })
+			end
 		end,
 		desc = "nvimtree toggle window",
 		mode = "n",
 	},
+
+	-- { "<leader>q", ":bdelete<Cr>", desc = "Delete/quit", mode = "n" },
 	{ "<leader>y", ":setf cpp<Cr>", desc = "setfile to cpp", mode = "n" },
 
 	-- Leader d (Diff)
@@ -216,13 +262,13 @@ whichkey.add({
 		mode = "n",
 	},
 
-	{ "<S-h>", ":BufPrevCycle<CR>", silent = true, mode = "n" },
-	{ "<S-l>", ":BufNextCycle<CR>", silent = true, mode = "n" },
-	{ "<C-o>", ":BufJumpPrev<CR>", silent = true, mode = "n" },
+	{ "<S-h>", bprev, silent = true, mode = "n" },
+	{ "<S-h>", bprev, silent = true, mode = "n" },
+	{ "<S-l>", bnext, silent = true, mode = "n" },
 
 	-- Window Resizing Maps
-	{ "<C-Up>", ":resize +5<CR>", desc = "increase height", silent = true, mode = { "n", "i", "x" } },
-	{ "<C-Down>", ":resize -5<CR>", desc = "decrease height", silent = true, mode = { "n", "i", "x" } },
+	{ "<C-S-Up>", ":resize +5<CR>", desc = "increase height", silent = true, mode = { "n", "i", "x" } },
+	{ "<C-S-Down>", ":resize -5<CR>", desc = "decrease height", silent = true, mode = { "n", "i", "x" } },
 	{ "<C-Left>", ":vertical resize -5<CR>", desc = "decrease width", silent = true, mode = { "n", "i", "x" } },
 	{ "<C-Right>", ":vertical resize +5<CR>", desc = "increase width", silent = true, mode = { "n", "i", "x" } },
 })

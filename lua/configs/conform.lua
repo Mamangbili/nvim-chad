@@ -33,18 +33,24 @@ local function clangd_format_exists_in_root()
 end
 
 local lucyfmt = vim.fn.stdpath("config")
+local odinfmt = lucyfmt
 
 if vim.loop.os_uname().sysname == "Windows_NT" then
 	lucyfmt = lucyfmt .. "/lucyfmt/lucyfmt.exe"
+	odinfmt = odinfmt .. "/ols/odinfmt.exe"
 else
 	lucyfmt = lucyfmt .. "/lucyfmt/lucyfmt"
+	odinfmt = odinfmt .. "/ols/odinfmt"
 end
 
 local options = {
 	formatters = {
 		odinfmt = {
 			-- Change where to find the command if it isn't in your path.
+			-- command = odinfmt,
 			-- command = "odinfmt",
+			--    args = {
+			--    }
 			command = lucyfmt,
 			args = {
 				"-w",

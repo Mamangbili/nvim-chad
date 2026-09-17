@@ -21,10 +21,20 @@ M.base46 = {
 		NeogitDiffAdd = { bg = "#006614" },
 		DiffRemoved = { bg = "#491204" },
 		DiffDelete = { bg = "#491204" },
-
+		SnacksPickerGitStatusUntracked = { italic = true, fg = "#85998b" },
+		SnacksPickerPathIgnored = { italic = true, fg = "#85998b" },
 		["OdinProcLine"] = { bg = "#2b303c" },
 	},
 	hl_override = {
+		TbBufOff = {
+			fg = "#85998b",
+		},
+
+		TbBufOn = {
+			bg = "#214f40",
+		},
+		["@comment"] = { italic = true, fg = "#85998b" },
+		["Pmenu"] = { bg = "#0885c4", fg = "#ffffff" },
 		NeogitDiffDelete = { bg = "#491204" },
 
 		Folded = { link = "NONE" },
@@ -50,7 +60,6 @@ M.base46 = {
 			bg = "NONE",
 		},
 		["@function"] = { underline = false, nocombine = true },
-		["@comment"] = { italic = true, fg = "#6d7d72" },
 		Type = { fg = "#26d988", bold = false },
 		["@type.builtin"] = { fg = "#26d988", bold = false },
 		["@variable.builtin"] = { fg = "base08" },
@@ -67,9 +76,14 @@ M.base46 = {
 		["@character"] = { fg = "base0B" },
 		["@markup.link.label"] = { fg = "purple" },
 	},
-	--
+
+	---@diagnostic disable-next-line
 	changed_themes = {
+
+		---@diagnostic disable-next-line
 		vscode_dark = {
+
+			---@diagnostic disable-next-line
 			base_16 = {
 				base08 = "#6dcbf9",
 				base0B = "#c27246",
@@ -88,9 +102,9 @@ M.ui = {
 		style = "borderless",
 	},
 	tabufline = {
-		enabled = false,
-		lazyload = true,
-		order = { "buffers" },
+		enabled = true,
+		lazyload = false,
+		order = { "buffers", "tabs" },
 	},
 	statusline = {
 		theme = "default",

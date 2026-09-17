@@ -92,6 +92,6 @@ vim.filetype.add({
 
 require("autocmd").setup()
 require("usercmd").setup()
-require("most-recent-buffer").setup()
+-- require("most-recent-buffer").setup()
 
 vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#515151", bg = "NONE", bold = true })

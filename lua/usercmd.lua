@@ -16,7 +16,7 @@ M.setup = function()
 			end
 		end
 
-		vim.cmd("BufDeleteOthers")
+		-- vim.cmd("BufDeleteOthers")
 	end, {})
 end
 

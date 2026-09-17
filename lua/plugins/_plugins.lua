@@ -60,6 +60,7 @@ table.insert(keys, {
 	desc = "Peek fold or LSP hover",
 })
 
+--- @param path string
 local function ensure_dir(path)
 	path = vim.fn.expand(path)
 	local stat = vim.loop.fs_stat(path)
@@ -67,7 +68,90 @@ local function ensure_dir(path)
 		vim.fn.mkdir(path, "p") -- 0755
 	end
 end
+
+local function zoxide_query_paths()
+	local result = vim.system({ "zoxide", "query", "-l" }):wait()
+
+	local lines = vim.split(result.stdout, "\n", { trimempty = true })
+	local paths = {}
+	for _, path in ipairs(lines) do
+		table.insert(paths, path)
+	end
+	return paths
+end
+
+local pickers = require("telescope.pickers")
+local finders = require("telescope.finders")
+local conf = require("telescope.config").values
+local actions = require("telescope.actions")
+local action_state = require("telescope.actions.state")
+
+local function telescope_change_project(opts)
+	opts = opts or {}
+	local zoxide_paths = zoxide_query_paths()
+	pickers
+		.new(opts, {
+			prompt_title = "Zoxide Chane Project",
+			finder = finders.new_table({
+				results = zoxide_paths,
+			}),
+			sorter = conf.generic_sorter(opts),
+			attach_mappings = function(prompt_bufnr, map)
+				actions.select_default:replace(function()
+					actions.close(prompt_bufnr)
+					local selection = action_state.get_selected_entry()
+					vim.cmd(":tcd " .. vim.fn.fnameescape(selection[1]))
+					-- print(vim.inspect(selection))
+					-- vim.api.nvim_put({ selection[1] }, "", false, true)
+				end)
+				return true
+			end,
+		})
+		:find()
+end
+
 return {
+	{
+		"willothy/wezterm.nvim",
+		opts = {
+			create_commands = false,
+		},
+	},
+	{
+		"nvim-mini/mini.align",
+		version = false,
+		event = "VeryLazy",
+		config = function()
+			require("mini.align").setup({
+				modifiers = {
+					[","] = function(steps, opts)
+						local MiniAlign = require("mini.align")
+						opts.split_pattern = ","
+						table.insert(steps.pre_justify, MiniAlign.gen_step.trim())
+					end,
+
+					["}"] = function(steps, opts)
+						local MiniAlign = require("mini.align")
+						opts.split_pattern = "}"
+						table.insert(steps.pre_justify, MiniAlign.gen_step.trim())
+					end,
+
+					[")"] = function(steps, opts)
+						local MiniAlign = require("mini.align")
+						opts.split_pattern = "}"
+						table.insert(steps.pre_justify, MiniAlign.gen_step.trim())
+					end,
+
+					["]"] = function(steps, opts)
+						local MiniAlign = require("mini.align")
+						opts.split_pattern = "}"
+						table.insert(steps.pre_justify, MiniAlign.gen_step.trim())
+					end,
+				},
+			})
+		end,
+	},
+
 	{
 		"nvim-mini/mini.splitjoin",
 		event = "VeryLazy",
@@ -246,7 +330,7 @@ return {
 					end
 				end, { "i", "s" }),
 
-				["<S-Tab>"] = cmp.mapping(function(fallback)
+				["<S-Tab>"] = cmp.mapping(function()
 					if luasnip.locally_jumpable(-1) then
 						luasnip.jump(-1)
 					end
@@ -365,7 +449,7 @@ return {
 			local dap = require("dap")
 			local opts = {
 				windows = {
-					size = 0.5,
+					size = 0.35,
 					position = "right",
 				},
 				winbar = {
@@ -618,7 +702,10 @@ return {
 			vim.keymap.set("n", "<F1>", dap.step_over)
 			vim.keymap.set("n", "<F2>", dap.step_into)
 			vim.keymap.set("n", "<F3>", dap.step_out)
-			vim.keymap.set("n", "<F4>", dap.terminate)
+			vim.keymap.set("n", "<F4>", dap.step_back)
+			vim.keymap.set("n", "<F5>", dap.reverse_continue)
+			vim.keymap.set("n", "<F6>", dap.terminate)
+			vim.keymap.set("n", "<F8>", dap.restart)
 
 			vim.api.nvim_set_hl(0, "blue", { fg = "#ff0000" })
 			vim.api.nvim_set_hl(0, "green", { fg = "#9ece6a" })
@@ -651,7 +738,12 @@ return {
 					end)
 				end,
 			})
+			vim.cmd([[
+          amenu 1.50 PopUp.🔴\Toggle\ Breakpoint :lua require("dap").toggle_breakpoint()<CR>
+          amenu 1.60 PopUp.-SEP1- <nop>
+        ]])
 		end,
+
 		keys = {
 			{
 				"<leader>db",
@@ -665,9 +757,26 @@ return {
 				"<leader>dc",
 				mode = { "n", "x", "o" },
 				function()
+					require("dap").clear_breakpoints()
+				end,
+				desc = "clear breakpoints",
+			},
+			{
+				"<S-c>",
+				function()
 					require("dap").continue()
 				end,
-				desc = "Continue",
+				mode = "n",
+				desc = "Reset breakpoint",
+			},
+			{
+				"<S-LeftMouse>",
+				function()
+					local mouse = vim.fn.getmousepos()
+					vim.api.nvim_win_set_cursor(0, { mouse.line, mouse.column - 1 })
+					require("dap").toggle_breakpoint()
+				end,
+				desc = "Toggle Breakpoint (Mouse)",
 			},
 		},
 	},
@@ -947,11 +1056,11 @@ return {
 				settings = {
 					save_on_toggle = true,
 				},
-				global_settings = {
-					tabline = false,
-					tabline_prefix = "   ",
-					tabline_suffix = "   ",
-				},
+				-- global_settings = {
+				-- 	tabline = true,
+				-- 	tabline_prefix = "   ",
+				-- 	tabline_suffix = "   ",
+				-- },
 			})
 			harpoon:extend(extensions.builtins.command_on_nav("UfoEnableFold"))
 		end,
@@ -1735,9 +1844,86 @@ return {
 			},
 		},
 	},
+	-- lazy.nvim
 	{
 		"nvim-neo-tree/neo-tree.nvim",
+		enabled = false,
 		branch = "v3.x",
+		opts = {
+			popup_border_style = "rounded",
+			use_default_mappings = true,
+
+			diagnostics = {
+				enable = true,
+				show_on_dirs = true,
+			},
+
+			filesystem = {
+				use_libuv_file_watcher = false,
+				async_directory_scan = "auto",
+				filtered_items = {
+					visible = true,
+					hide_dotfiles = false,
+					hide_gitignored = false,
+					hide_by_name = {
+						"dotfiles",
+						"node_modules",
+						"env",
+						"tmp",
+						"build",
+						"dist",
+						"vendor",
+						"builds",
+						"__pycache__",
+						"target",
+						"bin",
+						"obj",
+					},
+				},
+			},
+
+			window = {
+				position = "float",
+				popup = {
+					title = function()
+						local cwd = vim.fn.getcwd()
+						return "  " .. vim.fn.fnamemodify(cwd, ":t") .. " "
+					end,
+					size = {
+						width = "40",
+						height = "40",
+					},
+					position = {
+						row = "2",
+						col = "100%",
+					},
+				},
+				mappings = {
+					-- Press <CR> or 'o' to trigger the window picker
+					-- ["<CR>"] = "open_with_window_picker",
+					["o"] = "open_with_window_picker",
+					["s"] = "open_split",
+					["v"] = "open_vsplit",
+					["?"] = "show_help",
+					["g?"] = "show_help",
+					["/"] = "noop",
+					["f"] = "fuzzy_finder",
+
+					-- Custom mapping for 'D' to bulk delete
+					["D"] = {
+						function(state)
+							local inputs = require("neo-tree.ui.inputs")
+							inputs.confirm("Are you sure you want to delete selected items?", function(confirmed)
+								if confirmed then
+									vim.cmd("Neotree action delete_visual")
+								end
+							end)
+						end,
+						desc = "hapus bulk di tree buffer",
+					},
+				},
+			},
+		},
 		cmd = "Neotree",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
@@ -1795,75 +1981,6 @@ return {
 					end
 				end,
 				desc = "Smart Close",
-			},
-		},
-		opts = {
-			popup_border_style = "rounded",
-			use_default_mappings = true,
-
-			diagnostics = {
-				enable = true,
-				show_on_dirs = true,
-			},
-
-			filesystem = {
-				use_libuv_file_watcher = false,
-				async_directory_scan = "auto",
-				filtered_items = {
-					visible = true,
-					hide_dotfiles = false,
-					hide_gitignored = false,
-					hide_by_name = {
-						"dotfiles",
-						"node_modules",
-						"env",
-						"tmp",
-						"build",
-						"dist",
-						"vendor",
-						"builds",
-						"__pycache__",
-						"target",
-						"bin",
-						"obj",
-					},
-				},
-			},
-
-			window = {
-				position = "float",
-				popup = {
-					size = {
-						width = "40",
-						height = "40",
-					},
-					position = {
-						row = "2",
-						col = "100%",
-					},
-				},
-				mappings = {
-					-- Press <CR> or 'o' to trigger the window picker
-					["<CR>"] = "open_with_window_picker",
-					["o"] = "open_with_window_picker",
-					["s"] = "open_split",
-					["v"] = "open_vsplit",
-					["?"] = "show_help",
-					["g?"] = "show_help",
-
-					-- Custom mapping for 'D' to bulk delete
-					["D"] = {
-						function(state)
-							local inputs = require("neo-tree.ui.inputs")
-							inputs.confirm("Are you sure you want to delete selected items?", function(confirmed)
-								if confirmed then
-									vim.cmd("Neotree action delete_visual")
-								end
-							end)
-						end,
-						desc = "hapus bulk di tree buffer",
-					},
-				},
 			},
 		},
 	},
@@ -2063,7 +2180,6 @@ return {
 
 	{
 		"TheLeoP/powershell.nvim",
-		---@type powershell.user_config
 		ft = { "ps1", "psm1", "psd1" },
 		opts = {
 			bundle_path = vim.fn.stdpath("data") .. "/mason/packages/powershell-editor-services",
@@ -2097,29 +2213,81 @@ return {
 
 	{
 		"folke/snacks.nvim",
-		enabled = false,
+		enabled = true,
 		priority = 1000,
+		event = "VeryLazy",
 		depedencies = {
 			"nvim-treesitter/nvim-treesitter",
 		},
-		lazy = false,
-		---@type snacks.Config
 		opts = {
 			-- your configuration comes here
 			-- or leave it empty to use the default settings
 			-- refer to the configuration section below
 			bigfile = { enabled = false },
-			-- dashboard = { enabled = true },
-			explorer = { enabled = false },
+			image = { enabled = false },
+			dashboard = { enabled = false },
+			explorer = {
+				enabled = true,
+			},
+			picker = {
+				sources = {
+					files = {
+						ignored = true, -- shows ignored files in file pickers
+						hidden = true,
+					},
+					explorer = {
+
+						auto_close = true,
+						ignored = true, -- shows files ignored by .gitignore in the tree
+						hidden = true, -- optional: also show hidden dotfiles
+						layout = {
+							layout = {
+								box = "horizontal",
+								width = 35,
+								height = 0.9,
+								col = vim.o.columns - 37, -- pushes the window to the right edge
+								row = 1,
+								border = "rounded",
+								{
+									box = "vertical",
+									{ win = "input", height = 1, border = "bottom" },
+									{ win = "list", border = "none" },
+								},
+							},
+						},
+					},
+				},
+			},
 			indent = { enabled = true, animate = { enabled = false } },
 			input = { enabled = false },
-			picker = { enabled = true },
 			notifier = { enabled = false },
 			quickfile = { enabled = false },
 			scope = { enabled = false },
 			scroll = { enabled = false },
 			statuscolumn = { enabled = false },
 			words = { enabled = false },
+		},
+		keys = {
+			{
+				"<leader>q",
+				function()
+					if vim.bo.filetype == "copilot-chat" then
+						vim.cmd("CopilotChatClose")
+						return
+					end
+
+					---@diagnostic disable-next-line
+					local pickers = Snacks.picker.get({ source = "explorer" })
+					local picker = pickers[1]
+
+					if picker then
+						picker:close()
+					else
+						vim.cmd("bdelete")
+					end
+				end,
+				desc = "Smart Close",
+			},
 		},
 	},
 
@@ -2201,6 +2369,13 @@ return {
 				"<leader>fi",
 				"<Cmd>Telescope hierarchy incoming_calls<Cr>",
 				desc = "Hierarchy incoming_calls",
+				mode = "n",
+			},
+
+			{
+				"<leader>fc",
+				telescope_change_project,
+				desc = "Change Project",
 				mode = "n",
 			},
 		},

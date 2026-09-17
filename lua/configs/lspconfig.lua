@@ -60,12 +60,13 @@ vim.lsp.config.clangd = {
 }
 
 vim.lsp.config.ols = {
-	settings = {
+	init_options = {
 		enable_checker_only_saved = true,
-		struct_fields_underscore_visibility = "file",
+		struct_fields_underscore_visibility = "package",
 		enable_snippets = true,
 		enable_procedure_snippet = true,
 		enable_auto_import = true,
+		verbose = true,
 	},
 }
 
