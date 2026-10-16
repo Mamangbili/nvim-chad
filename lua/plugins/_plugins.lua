@@ -80,36 +80,6 @@ local function zoxide_query_paths()
 	return paths
 end
 
-local pickers = require("telescope.pickers")
-local finders = require("telescope.finders")
-local conf = require("telescope.config").values
-local actions = require("telescope.actions")
-local action_state = require("telescope.actions.state")
-
-local function telescope_change_project(opts)
-	opts = opts or {}
-	local zoxide_paths = zoxide_query_paths()
-	pickers
-		.new(opts, {
-			prompt_title = "Zoxide Chane Project",
-			finder = finders.new_table({
-				results = zoxide_paths,
-			}),
-			sorter = conf.generic_sorter(opts),
-			attach_mappings = function(prompt_bufnr, map)
-				actions.select_default:replace(function()
-					actions.close(prompt_bufnr)
-					local selection = action_state.get_selected_entry()
-					vim.cmd(":tcd " .. vim.fn.fnameescape(selection[1]))
-					-- print(vim.inspect(selection))
-					-- vim.api.nvim_put({ selection[1] }, "", false, true)
-				end)
-				return true
-			end,
-		})
-		:find()
-end
-
 return {
 	{
 		"willothy/wezterm.nvim",
@@ -2337,9 +2307,44 @@ return {
 
 	{
 		"nvim-telescope/telescope.nvim",
-		-- event = "VeryLazy",
+		event = "VeryLazy",
 		dependencies = { "nvim-lua/plenary.nvim", "nvim-treesitter/nvim-treesitter" },
 		cmd = { "Telescope" },
+		config = function(_, opts)
+			local pickers = require("telescope.pickers")
+			local finders = require("telescope.finders")
+			local conf = require("telescope.config").values
+			local actions = require("telescope.actions")
+			local action_state = require("telescope.actions.state")
+
+			local function telescope_change_project(opts)
+				opts = opts or {}
+				local zoxide_paths = zoxide_query_paths()
+				pickers
+					.new(opts, {
+						prompt_title = "Zoxide Chane Project",
+						finder = finders.new_table({
+							results = zoxide_paths,
+						}),
+						sorter = conf.generic_sorter(opts),
+						attach_mappings = function(prompt_bufnr, map)
+							actions.select_default:replace(function()
+								actions.close(prompt_bufnr)
+								local selection = action_state.get_selected_entry()
+								vim.cmd(":tcd " .. vim.fn.fnameescape(selection[1]))
+								-- print(vim.inspect(selection))
+								-- vim.api.nvim_put({ selection[1] }, "", false, true)
+							end)
+							return true
+						end,
+					})
+					:find()
+			end
+
+			vim.keymap.set("n", "<leader>fc", telescope_change_project, { desc = "Change project" })
+
+			require("telescope").setup(opts)
+		end,
 		keys = {
 			{
 				"<leader>fx",
@@ -2369,13 +2374,6 @@ return {
 				"<leader>fi",
 				"<Cmd>Telescope hierarchy incoming_calls<Cr>",
 				desc = "Hierarchy incoming_calls",
-				mode = "n",
-			},
-
-			{
-				"<leader>fc",
-				telescope_change_project,
-				desc = "Change Project",
 				mode = "n",
 			},
 		},

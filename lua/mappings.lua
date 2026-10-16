@@ -92,6 +92,8 @@ whichkey.add({
 	{ "<leader>r", group = "Refactor / Rename / Replace" },
 	{ "<leader>w", group = "Window / Buffer Management" },
 
+	{ "t", ":Telescope find_files<CR>", group = "" },
+
 	-- Leader General
 	{ "<leader>9", "<cmd>Lazy<Cr>" },
 	{ "<leader>ng", "<cmd>Neogit<cr>", desc = "neogit", mode = "n" },
@@ -235,14 +237,14 @@ whichkey.add({
 
 	-- Navigation & Editing Adjustments
 
-	{
-		"t",
-		function()
-			require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
-		end,
-		desc = "Harpoon Menu",
-		mode = "n",
-	},
+	-- {
+	-- 	"t",
+	-- 	function()
+	-- 		require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
+	-- 	end,
+	-- 	desc = "Harpoon Menu",
+	-- 	mode = "n",
+	-- },
 	{ "O", "O<Space><BS>", mode = "n" },
 	{ "o", "o<Space><BS>", mode = "n" },
 	{
