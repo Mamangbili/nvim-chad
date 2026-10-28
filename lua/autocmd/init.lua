@@ -297,6 +297,103 @@ M.setup = function()
 		desc = "Disable focus autoresize for FileType",
 	})
 
+	vim.api.nvim_create_autocmd("FileType", {
+		pattern = "markdown",
+		callback = function(ev)
+			vim.keymap.set("n", "gx", function()
+				local line = vim.api.nvim_get_current_line()
+				local _, _, path = line:find("%[[^%]]-%]%(([^%)]+)%)")
+
+				if not path then
+					vim.notify("No Markdown link found on this line", vim.log.levels.WARN)
+					return
+				end
+
+				path = path:gsub("^<", ""):gsub(">$", "")
+				path = path:match("^[^%s]+") or path
+
+				if path:match("^https?://") then
+					vim.ui.open(path)
+					return
+				end
+
+				local dir = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(ev.buf), ":p:h")
+				local target = vim.fn.fnamemodify(dir .. "/" .. path, ":p")
+
+				if vim.fn.isdirectory(vim.fn.fnamemodify(target, ":h")) == 0 then
+					vim.notify("Parent directory does not exist: " .. target, vim.log.levels.ERROR)
+					return
+				end
+
+				-- Open existing file or create a new buffer for it.
+				vim.cmd.edit(vim.fn.fnameescape(target))
+			end, { buffer = ev.buf, desc = "Open or create Markdown link target" })
+		end,
+	})
+
+	vim.api.nvim_create_autocmd("FileType", {
+		pattern = "odin",
+		callback = function(ev)
+			local clients = vim.lsp.get_clients({ name = "ols" })
+
+			if #clients > 0 then
+				vim.lsp.buf_attach_client(ev.buf, clients[1].id)
+				return
+			end
+
+			local root = vim.fs.root(ev.buf, {
+				"ols.json",
+				"odin.work",
+				"odinfmt.json",
+			})
+
+			if root then
+				vim.lsp.start({
+					name = "ols",
+					cmd = { "ols" },
+					root_dir = root,
+					init_options = {
+						enable_auto_import = true,
+						enable_checker_only_saved = true,
+						enable_procedure_snippet = true,
+						enable_snippets = true,
+						struct_fields_underscore_visibility = "package",
+						verbose = true,
+					},
+				}, {
+					bufnr = ev.buf,
+				})
+			end
+		end,
+	})
+
+	-- vim.api.nvim_create_autocmd("FileType", {
+	-- 	pattern = "odin",
+	-- 	callback = function(ev)
+	-- 		local clients = vim.lsp.get_clients({ name = "ols" })
+	--
+	-- 		if #clients > 0 then
+	-- 			vim.lsp.buf_attach_client(ev.buf, clients[1].id)
+	-- 			return
+	-- 		end
+	--
+	-- 		local root = vim.fs.root(ev.buf, {
+	-- 			"ols.json",
+	-- 			"odinfmt.json",
+	-- 			"main.odin",
+	-- 		})
+	--
+	-- 		if root then
+	-- 			vim.lsp.start({
+	-- 				name = "ols",
+	-- 				cmd = { "ols" },
+	-- 				root_dir = root,
+	-- 			}, {
+	-- 				bufnr = ev.buf,
+	-- 			})
+	-- 		end
+	-- 	end,
+	-- })
 	-- local odin_lsp_group = vim.api.nvim_create_augroup("OdinLSPFirstOpen", { clear = true })
 	--
 	-- vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {

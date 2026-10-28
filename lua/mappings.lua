@@ -73,9 +73,9 @@ local function bprev()
 end
 
 -- do not put in which key
-vim.keymap.set({ "n", "x" }, "d", '"_d')
-vim.keymap.set("n", "D", "dd")
-vim.keymap.set("x", "D", "d")
+-- vim.keymap.set({ "n", "x" }, "d", '"_d')
+-- vim.keymap.set("n", "D", "dd")
+-- vim.keymap.set("x", "D", "d")
 
 vim.g.VM_Maps = {
 	["Transpose"] = "leader-T",
@@ -123,7 +123,7 @@ whichkey.add({
 	},
 
 	-- { "<leader>q", ":bdelete<Cr>", desc = "Delete/quit", mode = "n" },
-	{ "<leader>y", ":setf cpp<Cr>", desc = "setfile to cpp", mode = "n" },
+	{ "<leader>y", '"+yy', desc = "yank to register", mode = { "n", "v" } },
 
 	-- Leader d (Diff)
 	{ "<leader>dq", "<cmd>DiffviewClose<cr>", desc = "close diff", mode = "n" },
@@ -179,6 +179,7 @@ whichkey.add({
 		function()
 			local path = vim.fn.expand("%:p")
 			vim.fn.setreg("+", path)
+			vim.fn.setreg('"', path)
 			vim.notify("Copied: " .. path)
 		end,
 		desc = "Copy current buffer path",

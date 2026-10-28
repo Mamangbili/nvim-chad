@@ -23,10 +23,8 @@ end
 vim.o.winborder = "rounded"
 vim.opt.conceallevel = 3
 vim.o.cmdheight = 0
-vim.o.clipboard = "unnamedplus"
 vim.opt.number = true
 vim.opt.relativenumber = true
-
 -- vim.o.foldmethod = "expr"
 -- vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
@@ -94,4 +92,5 @@ require("autocmd").setup()
 require("usercmd").setup()
 -- require("most-recent-buffer").setup()
 
+vim.o.clipboard = ""
 vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#515151", bg = "NONE", bold = true })
