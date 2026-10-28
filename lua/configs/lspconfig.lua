@@ -68,6 +68,24 @@ vim.lsp.config.ols = {
 		enable_auto_import = true,
 		verbose = true,
 	},
+	root_dir = function(bufnr, on_dir)
+		local clients = vim.lsp.get_clients({ name = "ols" })
+
+		if #clients > 0 then
+			on_dir(clients[1].config.root_dir)
+			return
+		end
+
+		local root = vim.fs.root(bufnr, {
+			"ols.json",
+			"odin.work",
+			"odinfmt.json",
+		})
+
+		if root then
+			on_dir(root)
+		end
+	end,
 }
 
 vim.lsp.config("powershell_es", {
